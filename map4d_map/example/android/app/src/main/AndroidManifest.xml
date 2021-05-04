@@ -3,6 +3,10 @@
    <application
         android:label="map4d_map_example"
         android:icon="@mipmap/ic_launcher">
+       <meta-data
+           android:name="vn.map4d.map.ACCESS_KEY"
+           android:value="d9f5568c4c512c562cf0cf9f8ff487ec" />
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

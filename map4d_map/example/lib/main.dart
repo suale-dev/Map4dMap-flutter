@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
+import 'package:map4d_map/map4d_map1.dart';
 import 'package:map4d_map/map4d_map.dart';
 
 void main() {
@@ -27,7 +28,7 @@ class _MyAppState extends State<MyApp> {
     String platformVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await Map4dMap.platformVersion;
+      platformVersion = await Map4dMap1.platformVersion;
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -44,13 +45,20 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
+    final Map4dMap map = Map4dMap();
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child:  SizedBox(
+            width: 480.0,
+            height: 800.0,
+            child: map,
+          )
         ),
       ),
     );
