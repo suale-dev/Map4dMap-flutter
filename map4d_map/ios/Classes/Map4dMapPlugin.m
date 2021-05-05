@@ -1,4 +1,5 @@
 #import "Map4dMapPlugin.h"
+#import "FMFMapView.h"
 #if __has_include(<map4d_map/map4d_map-Swift.h>)
 #import <map4d_map/map4d_map-Swift.h>
 #else
@@ -11,5 +12,11 @@
 @implementation Map4dMapPlugin
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   [SwiftMap4dMapPlugin registerWithRegistrar:registrar];
+    FMFMapViewFactory* mapFactory = [[FMFMapViewFactory alloc] initWithRegistrar:registrar];
+
+    [registrar registerViewFactory:mapFactory
+                                    withId:@"plugin:map4d-map-view-type"
+          gestureRecognizersBlockingPolicy:
+              FlutterPlatformViewGestureRecognizersBlockingPolicyWaitUntilTouchesEnded];
 }
 @end

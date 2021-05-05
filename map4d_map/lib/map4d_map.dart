@@ -24,10 +24,19 @@ class _Map4dMapState extends State<Map4dMap> {
     // Pass parameters to the platform side.
     final Map<String, dynamic> creationParams = <String, dynamic>{};
 
-    return AndroidView(
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      return AndroidView(
       viewType: viewType,    
       creationParams: creationParams,
       creationParamsCodec: const StandardMessageCodec(),
     );
+    } else if (defaultTargetPlatform == TargetPlatform.iOS) {
+      return UiKitView(
+        viewType: viewType,
+        creationParams: creationParams,
+        creationParamsCodec: const StandardMessageCodec(),
+      );
+    }
+    return Text('$defaultTargetPlatform is not yet supported by the maps plugin');    
   }
 }
