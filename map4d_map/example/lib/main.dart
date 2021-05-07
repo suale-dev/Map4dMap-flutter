@@ -27,6 +27,9 @@ class _MyAppState extends State<MyApp> {
 
     final MFMapView map = MFMapView(
       onMapCreated: onMapCreated,
+      onCameraMoveStarted: onCameraMoveStarted,
+      onCameraMove: onCameraMove,
+      onCameraIdle: onCameraIdle
     );
 
     return MaterialApp(
@@ -54,6 +57,16 @@ class _MyAppState extends State<MyApp> {
     getZoomLevel();
     moveCamera();
   }
+
+  void onCameraMoveStarted() {
+    print('camera move startedddddddddddddddddd');
+  }
+
+  void onCameraMove(MFCameraPosition position) {
+    print('camera move to ${position.toString()}');
+  }
+
+  void onCameraIdle() => print('onCameraIdle');
 
   void moveCamera() {
     final cameraUpdate = MFCameraUpdate.newLatLng(LatLng(10.779348472547028, 106.71295166015625));

@@ -77,4 +77,20 @@
     return nil;
 }
 
++ (NSArray*) locationToJson:(CLLocationCoordinate2D)location {
+  return @[ @(location.latitude), @(location.longitude) ];
+}
+
++ (NSDictionary*) positionToJson:(MFCameraPosition*)position {
+  if (!position) {
+    return nil;
+  }
+  return @{
+    @"target" : [FMFConvert locationToJson:position.target],
+    @"zoom" : @(position.zoom),
+    @"bearing" : @(position.bearing),
+    @"tilt" : @(position.tilt),
+  };
+}
+
 @end

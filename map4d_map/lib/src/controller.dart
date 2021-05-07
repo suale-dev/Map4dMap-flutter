@@ -23,7 +23,26 @@ class MFMapViewController {
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
-    print('call back method: ${call.method}');
+    switch (call.method) {
+      case 'camera#onMoveStarted':
+        if (_mapState.widget.onCameraMoveStarted != null) {
+          _mapState.widget.onCameraMoveStarted!();
+        }
+        break;
+      case 'camera#onMove':
+        if (_mapState.widget.onCameraMove != null) {
+          final position = MFCameraPosition.fromMap(call.arguments['position']);
+          _mapState.widget.onCameraMove!(position!);
+        }
+        break;
+      case 'camera#onIdle':
+        if (_mapState.widget.onCameraIdle != null) {
+          _mapState.widget.onCameraIdle!();
+        }
+        break;
+      default:
+        print('Unknow callback method: ${call.method}');
+    }
   }
 
   /// Returns the current zoom level of the map

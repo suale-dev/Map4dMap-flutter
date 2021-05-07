@@ -7,12 +7,12 @@
 
 #import <Foundation/Foundation.h>
 #import <Flutter/Flutter.h>
-#import <Map4dMap/MFMapView.h>
+#import <Map4dMap/Map4dMap.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
 // Defines map overlay controllable from Flutter.
-@interface FMFMapView : NSObject<FlutterPlatformView>
+@interface FMFMapView : NSObject<FlutterPlatformView, MFMapViewDelegate>
 - (instancetype)initWithFrame:(CGRect)frame
                viewIdentifier:(int64_t)viewId
                     arguments:(nullable id)args

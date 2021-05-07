@@ -12,9 +12,11 @@ import 'package:flutter/services.dart';
 
 import 'src/location.dart';
 import 'src/camera.dart';
+import 'src/callbacks.dart';
 
 export 'src/location.dart';
 export 'src/camera.dart';
+export 'src/callbacks.dart';
 
 part 'src/map4d_map.dart';
 part 'src/controller.dart';

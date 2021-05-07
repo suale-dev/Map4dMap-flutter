@@ -7,7 +7,10 @@ class MFMapView extends StatefulWidget {
 
   const MFMapView({
     Key? key,
-    this.onMapCreated
+    this.onMapCreated,
+    this.onCameraMoveStarted,
+    this.onCameraMove,
+    this.onCameraIdle,
   })  : super(key: key);
 
   @override
@@ -16,6 +19,15 @@ class MFMapView extends StatefulWidget {
   /// Callback method for when the map is ready to be used.
   /// Used to receive a [MFMapViewController] for this [Map4dMap].
   final MapCreatedCallback? onMapCreated;
+  
+  /// Called when the camera starts moving.
+  final VoidCallback? onCameraMoveStarted;
+
+  /// Called repeatedly as the camera continues to move after an onCameraMoveStarted call.
+  final CameraPositionCallback? onCameraMove;
+
+  /// Called when camera movement has ended, there are no pending animations and the user has stopped interacting with the map.
+  final VoidCallback? onCameraIdle;
 }
 
 class _MFMapViewState extends State<MFMapView> {

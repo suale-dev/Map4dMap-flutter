@@ -23,6 +23,9 @@
 + (MFCameraPosition*)toCameraPosition:(NSDictionary*)data;
 + (MFCameraUpdate*)toCameraUpdate:(NSArray*)data;
 
+// Response
++ (NSArray*) locationToJson:(CLLocationCoordinate2D)location;
++ (NSDictionary*) positionToJson:(MFCameraPosition*)position;
 @end
 
 #endif /* FMFConvert_h */
