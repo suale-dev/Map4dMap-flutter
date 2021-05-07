@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:map4d_map/map4d_map.dart';
+import 'package:map4d_map/map4d_map_flutter.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('map4d_map');
@@ -18,6 +18,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await Map4dMap.platformVersion, '42');
+    // expect(await MFMap4dMap.platformVersion, '42');
   });
 }

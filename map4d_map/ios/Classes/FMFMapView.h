@@ -11,6 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// Defines map overlay controllable from Flutter.
 @interface FMFMapView : NSObject<FlutterPlatformView>
 - (instancetype)initWithFrame:(CGRect)frame
                viewIdentifier:(int64_t)viewId
@@ -19,7 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 
-// Allows the engine to create new Google Map instances.
+// Allows the engine to create new Map4d map instances.
 @interface FMFMapViewFactory : NSObject <FlutterPlatformViewFactory>
 - (instancetype)initWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar;
 @end
