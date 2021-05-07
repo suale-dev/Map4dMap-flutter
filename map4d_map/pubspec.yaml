@@ -29,7 +29,7 @@ flutter:
     platforms:
       android:
         package: vn.map4d.map.map4d_map
-        pluginClass: Map4dMapPlugin
+        pluginClass: FMFMapViewPlugin
       ios:
         pluginClass: Map4dMapPlugin
 
