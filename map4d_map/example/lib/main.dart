@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
@@ -37,13 +38,45 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child:  SizedBox(
-            width: 480.0,
-            height: 800.0,
-            child: map,
-          )
-        ),
+        body: Stack(
+          children: <Widget>[
+            SizedBox(
+              width: 480.0,
+              height: 800.0,
+              child: map,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: TextButton(
+                  child: Text('Move Camera', style: TextStyle(color: Colors.black)),
+                  onPressed: moveCamera,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: TextButton(
+                  child: Text('Get ZoomLevel', style: TextStyle(color: Colors.black)),
+                  onPressed: getZoomLevel,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(1.0),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: TextButton(
+                  child: Text('Animate Camera', style: TextStyle(color: Colors.black)),
+                  onPressed: animateCamera,
+                ),
+              ),
+            )
+          ],
+        )
       ),
     );
   }
@@ -54,8 +87,6 @@ class _MyAppState extends State<MyApp> {
       _controller = controller;
       _isMapCreated = true;
     });
-    getZoomLevel();
-    moveCamera();
   }
 
   void onCameraMoveStarted() {
@@ -73,6 +104,13 @@ class _MyAppState extends State<MyApp> {
     print('moveCamera to: ' + cameraUpdate.toString());
     _controller.moveCamera(cameraUpdate);
   }
+
+  void animateCamera() {
+    final cameraUpdate = MFCameraUpdate.newLatLng(LatLng(16.088414, 108.230563));
+    print('animateCamera to: ' + cameraUpdate.toString());
+    _controller.animateCamera(cameraUpdate);
+  }
+
 
   void getZoomLevel() {
     print("Get Zoom level");
