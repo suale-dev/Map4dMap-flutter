@@ -67,6 +67,11 @@
       }
     }];
     _registrar = registrar;
+    
+    MFCameraPosition* camera = [FMFConvert toCameraPosition:args[@"initialCameraPosition"]];
+    if (camera != nil) {
+      _mapView.camera = camera;
+    }
   }
   return self;
 }

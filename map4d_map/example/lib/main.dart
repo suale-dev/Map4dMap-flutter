@@ -26,7 +26,9 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
 
+    final position = MFCameraPosition(target: LatLng(21.030041, 105.8502223), zoom: 16);
     final MFMapView map = MFMapView(
+      initialCameraPosition: position,
       onMapCreated: onMapCreated,
       onCameraMoveStarted: onCameraMoveStarted,
       onCameraMove: onCameraMove,

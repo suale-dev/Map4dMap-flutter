@@ -7,6 +7,7 @@ class MFMapView extends StatefulWidget {
 
   const MFMapView({
     Key? key,
+    this.initialCameraPosition,
     this.onMapCreated,
     this.onCameraMoveStarted,
     this.onCameraMove,
@@ -19,7 +20,10 @@ class MFMapView extends StatefulWidget {
   /// Callback method for when the map is ready to be used.
   /// Used to receive a [MFMapViewController] for this [Map4dMap].
   final MapCreatedCallback? onMapCreated;
-  
+
+  /// The initial position of the map's camera.
+  final MFCameraPosition? initialCameraPosition;
+
   /// Called when the camera starts moving.
   final VoidCallback? onCameraMoveStarted;
 
@@ -41,7 +45,9 @@ class _MFMapViewState extends State<MFMapView> {
     // This is used in the platform side to register the view.
     final String viewType = 'plugin:map4d-map-view-type';
     // Pass parameters to the platform side.
-    final Map<String, dynamic> creationParams = <String, dynamic>{};
+    final Map<String, dynamic> creationParams = <String, dynamic>{
+      'initialCameraPosition': widget.initialCameraPosition?.toMap(),
+    };
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       return AndroidView(

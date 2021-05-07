@@ -37,6 +37,7 @@
 }
 
 + (MFCameraPosition*)toCameraPosition:(NSDictionary*)data {
+  if (data == nil || [data isEqual:[NSNull null]]) return nil;
   CLLocationCoordinate2D target = [FMFConvert toLocation:data[@"target"]];
   float zoom = [FMFConvert toFloat:data[@"zoom"]];
   double bearing = [FMFConvert toDouble:data[@"bearing"]];
