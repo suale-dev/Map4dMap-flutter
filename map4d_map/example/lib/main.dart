@@ -15,7 +15,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isMapCreated = false;
-  Map4dMapController _controller;
+  MFMapViewController _controller;
 
   @override
   void initState() {
@@ -25,7 +25,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
 
-    final MFMap4dMap map = MFMap4dMap(
+    final MFMapView map = MFMapView(
       onMapCreated: onMapCreated,
     );
 
@@ -45,7 +45,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void onMapCreated(Map4dMapController controller) {
+  void onMapCreated(MFMapViewController controller) {
     print('onMapCreated');
     setState(() {
       _controller = controller;

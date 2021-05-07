@@ -1,28 +1,28 @@
 part of map4d_map_flutter;
 
-/// Pass to [Map4dMap.onMapCreated] to receive a [Map4dMapController] when the map is created.
-typedef void MapCreatedCallback(Map4dMapController controller);
+/// Pass to [Map4dMap.onMapCreated] to receive a [MFMapViewController] when the map is created.
+typedef void MapCreatedCallback(MFMapViewController controller);
 
-class MFMap4dMap extends StatefulWidget {
+class MFMapView extends StatefulWidget {
 
-  const MFMap4dMap({
+  const MFMapView({
     Key? key,
     this.onMapCreated
   })  : super(key: key);
 
   @override
-  State createState() => _MFMap4dMapState();
+  State createState() => _MFMapViewState();
 
   /// Callback method for when the map is ready to be used.
-  /// Used to receive a [Map4dMapController] for this [Map4dMap].
+  /// Used to receive a [MFMapViewController] for this [Map4dMap].
   final MapCreatedCallback? onMapCreated;
 }
 
-class _MFMap4dMapState extends State<MFMap4dMap> {
+class _MFMapViewState extends State<MFMapView> {
 
   // Hmm, it's not pass to native or get from call back
   // final _mapId = _nextMapCreationId++;
-  final Completer<Map4dMapController> _controller = Completer<Map4dMapController>();
+  final Completer<MFMapViewController> _controller = Completer<MFMapViewController>();
 
   @override
   Widget build(BuildContext context) {    
@@ -50,7 +50,7 @@ class _MFMap4dMapState extends State<MFMap4dMap> {
   }
 
   Future<void> onPlatformViewCreated(int id) async {
-    final controller = await Map4dMapController.init(id, this);
+    final controller = await MFMapViewController.init(id, this);
     _controller.complete(controller);
     final MapCreatedCallback? onMapCreated = widget.onMapCreated;
     if (onMapCreated != null) {

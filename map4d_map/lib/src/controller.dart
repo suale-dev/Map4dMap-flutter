@@ -1,25 +1,25 @@
 part of map4d_map_flutter;
 
-class Map4dMapController {
+class MFMapViewController {
   final int mapId;
-  final _MFMap4dMapState _mapState;
+  final _MFMapViewState _mapState;
   final MethodChannel _channel;
 
-  Map4dMapController._(this.mapId, this._mapState, this._channel) {
+  MFMapViewController._(this.mapId, this._mapState, this._channel) {
     _channel.setMethodCallHandler((call) => _handleMethodCall(call));
   }
 
   /// Initialize control of a [Map4d] with [mapId].
   ///
-  /// Mainly for internal use when instantiating a [Map4dMapController] passed
+  /// Mainly for internal use when instantiating a [MFMapViewController] passed
   /// in [Map4dMap.onMapCreated] callback.
-  static Future<Map4dMapController> init(
+  static Future<MFMapViewController> init(
     int mapId,
-    _MFMap4dMapState mapState,
+    _MFMapViewState mapState,
   ) async {
     // await GoogleMapsFlutterPlatform.instance.init(id);
     final channel = MethodChannel('plugin:map4d-map-view-type_$mapId');
-    return Map4dMapController._(mapId, mapState, channel);
+    return MFMapViewController._(mapId, mapState, channel);
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
