@@ -1,8 +1,11 @@
 package vn.map4d.map.map4d_map;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import vn.map4d.map.camera.MFCameraPosition;
 import vn.map4d.map.camera.MFCameraUpdate;
 import vn.map4d.map.camera.MFCameraUpdateFactory;
 import vn.map4d.types.MFLocationCoordinate;
@@ -39,5 +42,17 @@ public class Convert {
       default:
         throw new IllegalArgumentException("Cannot interpret " + o + " as CameraUpdate");
     }
+  }
+
+  static Object cameraPositionToJson(MFCameraPosition position) {
+    if (position == null) {
+      return null;
+    }
+    final Map<String, Object> data = new HashMap<>();
+    data.put("bearing", position.getBearing());
+    data.put("target", latLngToJson(position.getTarget()));
+    data.put("tilt", position.getTilt());
+    data.put("zoom", position.getZoom());
+    return data;
   }
 }
