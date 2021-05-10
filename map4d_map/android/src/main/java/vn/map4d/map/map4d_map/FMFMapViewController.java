@@ -166,12 +166,17 @@ public class FMFMapViewController implements
 
   @Override
   public void onCameraMove() {
-
+    final Map<String, Object> arguments = new HashMap<>(2);
+    arguments.put("position", Convert.cameraPositionToJson(map4D.getCameraPosition()));
+    methodChannel.invokeMethod("camera#onMove", arguments);
   }
 
   @Override
-  public void onCameraMoveStarted(int i) {
-
+  public void onCameraMoveStarted(int reason) {
+    final Map<String, Object> arguments = new HashMap<>(2);
+    boolean isGesture = reason == Map4D.OnCameraMoveStartedListener.REASON_GESTURE;
+    arguments.put("isGesture", isGesture);
+    methodChannel.invokeMethod("camera#onMoveStarted", arguments);
   }
 
   @Override
