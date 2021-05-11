@@ -23,6 +23,11 @@
     return FMFMethodAnimateCamera;
   }
   
+  // Annotation
+  if ([name isEqualToString:@"circles#update"]) {
+    return FMFMethodCirclesUpdate;
+  }
+  
   return FMFMethodUnknow;
 }
 

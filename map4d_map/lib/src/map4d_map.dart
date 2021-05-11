@@ -3,6 +3,28 @@ part of map4d_map_flutter;
 /// Pass to [Map4dMap.onMapCreated] to receive a [MFMapViewController] when the map is created.
 typedef void MapCreatedCallback(MFMapViewController controller);
 
+/// Error thrown when an unknown map object ID is provided to a method.
+class UnknownMapObjectIdError extends Error {
+  /// Creates an assertion error with the provided [message].
+  UnknownMapObjectIdError(this.objectType, this.objectId, [this.context]);
+
+  /// The name of the map object whose ID is unknown.
+  final String objectType;
+
+  /// The unknown maps object ID.
+  final MapsObjectId objectId;
+
+  /// The context where the error occurred.
+  final String? context;
+
+  String toString() {
+    if (context != null) {
+      return 'Unknown $objectType ID "${objectId.value}" in $context';
+    }
+    return 'Unknown $objectType ID "${objectId.value}"';
+  }
+}
+
 class MFMapView extends StatefulWidget {
 
   const MFMapView({
@@ -12,10 +34,15 @@ class MFMapView extends StatefulWidget {
     this.onCameraMoveStarted,
     this.onCameraMove,
     this.onCameraIdle,
+
+    this.circles = const <MFCircle>{},
   })  : super(key: key);
 
   @override
   State createState() => _MFMapViewState();
+
+  /// Circles to be placed on the map.
+  final Set<MFCircle> circles;
 
   /// Callback method for when the map is ready to be used.
   /// Used to receive a [MFMapViewController] for this [Map4dMap].
@@ -36,9 +63,8 @@ class MFMapView extends StatefulWidget {
 
 class _MFMapViewState extends State<MFMapView> {
 
-  // Hmm, it's not pass to native or get from call back
-  // final _mapId = _nextMapCreationId++;
   final Completer<MFMapViewController> _controller = Completer<MFMapViewController>();
+  Map<MFCircleId, MFCircle> _circles = <MFCircleId, MFCircle>{};
 
   @override
   Widget build(BuildContext context) {    
@@ -67,6 +93,18 @@ class _MFMapViewState extends State<MFMapView> {
     return Text('$defaultTargetPlatform is not yet supported by the maps plugin');    
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _circles = keyByCircleId(widget.circles);
+  }
+
+  @override
+  void didUpdateWidget(MFMapView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _updateCircles();
+  }
+
   Future<void> onPlatformViewCreated(int id) async {
     final controller = await MFMapViewController.init(id, this);
     _controller.complete(controller);
@@ -74,5 +112,25 @@ class _MFMapViewState extends State<MFMapView> {
     if (onMapCreated != null) {
       onMapCreated(controller);
     }
+  }
+
+  void onCircleTap(MFCircleId circleId) {
+    assert(circleId != null);
+    final MFCircle? circle = _circles[circleId];
+    if (circle == null) {
+      throw UnknownMapObjectIdError('circle', circleId, 'onTap');
+    }
+    final VoidCallback? onTap = circle.onTap;
+    if (onTap != null) {
+      onTap();
+    }
+  }
+
+  void _updateCircles() async {
+    final MFMapViewController controller = await _controller.future;
+    // ignore: unawaited_futures
+    controller._updateCircles(
+        CircleUpdates.from(_circles.values.toSet(), widget.circles));
+    _circles = keyByCircleId(widget.circles);
   }
 }

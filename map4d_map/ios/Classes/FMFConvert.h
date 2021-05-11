@@ -19,6 +19,10 @@
 + (double)toDouble:(NSNumber*)data;
 + (float)toFloat:(NSNumber*)data;
 + (CLLocationCoordinate2D)toLocation:(NSArray*)data;
++ (CGPoint)toPoint:(NSArray*)data;
++ (UIColor*)toColor:(NSNumber*)data;
++ (NSArray<CLLocation*>*)toPoints:(NSArray*)data;
++ (NSArray<NSArray<CLLocation*>*>*)toHoles:(NSArray*)data;
 + (MFCoordinateBounds*) toCoordinateBounds:(NSArray*)data;
 + (MFCameraPosition*)toCameraPosition:(NSDictionary*)data;
 + (MFCameraUpdate*)toCameraUpdate:(NSArray*)data;

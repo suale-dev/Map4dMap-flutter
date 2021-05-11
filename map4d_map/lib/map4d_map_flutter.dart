@@ -14,9 +14,30 @@ import 'src/location.dart';
 import 'src/camera.dart';
 import 'src/callbacks.dart';
 
-export 'src/location.dart';
-export 'src/camera.dart';
-export 'src/callbacks.dart';
+import 'src/annotations/annotations.dart';
+
+export 'src/location.dart'
+  show
+    LatLng,
+    LatLngBounds
+  ;
+
+export 'src/camera.dart'
+  show
+    MFCameraPosition,
+    MFCameraUpdate
+  ;
+
+export 'src/callbacks.dart'
+  show
+    CameraPositionCallback
+  ;
+
+export 'src/annotations/annotations.dart'
+  show
+    MFCircle,
+    MFCircleId
+  ;
 
 part 'src/map4d_map.dart';
 part 'src/controller.dart';

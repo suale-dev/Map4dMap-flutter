@@ -17,7 +17,6 @@ class MFMapViewController {
     int mapId,
     _MFMapViewState mapState,
   ) async {
-    // await GoogleMapsFlutterPlatform.instance.init(id);
     final channel = MethodChannel('plugin:map4d-map-view-type_$mapId');
     return MFMapViewController._(mapId, mapState, channel);
   }
@@ -40,6 +39,9 @@ class MFMapViewController {
           _mapState.widget.onCameraIdle!();
         }
         break;
+      case 'circle#onTap':
+        _mapState.onCircleTap(MFCircleId(call.arguments['circleId']));
+        break;
       default:
         print('Unknow callback method: ${call.method}');
     }
@@ -56,5 +58,16 @@ class MFMapViewController {
 
   Future<void> animateCamera(MFCameraUpdate cameraUpdate) {
     return _channel.invokeMethod<void>('camera#animate', <String, Object>{'cameraUpdate': cameraUpdate.toJson()});
+  }
+
+  /// Updates circle configuration.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> _updateCircles(CircleUpdates circleUpdates) {
+    assert(circleUpdates != null);
+    return _channel.invokeMethod<void>('circles#update', circleUpdates.toJson());
   }
 }

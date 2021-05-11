@@ -1,122 +1,65 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
+// import 'animate_camera.dart';
+// import 'map_click.dart';
+// import 'map_coordinates.dart';
+import 'map_main.dart';
+import 'map_ui.dart';
+// import 'marker_icons.dart';
+// import 'move_camera.dart';
+// import 'padding.dart';
+import 'page.dart';
+import 'place_circle.dart';
+// import 'place_marker.dart';
+// import 'place_polygon.dart';
+// import 'place_polyline.dart';
+// import 'scrolling_map.dart';
+// import 'snapshot.dart';
+// import 'tile_overlay.dart';
 
-import 'package:flutter/services.dart';
-import 'package:map4d_map/map4d_map_flutter.dart';
+final List<Map4dMapExampleAppPage> _allPages = <Map4dMapExampleAppPage>[
+  Map4dApp(),
+  MapUiPage(),
+  // MapCoordinatesPage(),
+  // MapClickPage(),
+  // AnimateCameraPage(),
+  // MoveCameraPage(),
+  // PlaceMarkerPage(),
+  // MarkerIconsPage(),
+  // ScrollingMapPage(),
+  // PlacePolylinePage(),
+  // PlacePolygonPage(),
+  PlaceCirclePage(),
+  // PaddingPage(),
+  // SnapshotPage(),
+  // LiteModePage(),
+  // TileOverlayPage(),
+];
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatefulWidget {
-  @override
-  _MyAppState createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  bool _isMapCreated = false;
-  MFMapViewController _controller;
-
-  @override
-  void initState() {
-    super.initState();
+class MapsDemo extends StatelessWidget {
+  void _pushPage(BuildContext context, Map4dMapExampleAppPage page) {
+    Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (_) => Scaffold(
+              appBar: AppBar(title: Text(page.title)),
+              body: page,
+            )));
   }
 
   @override
   Widget build(BuildContext context) {
-
-    final position = MFCameraPosition(target: LatLng(21.030041, 105.8502223), zoom: 16);
-    final MFMapView map = MFMapView(
-      initialCameraPosition: position,
-      onMapCreated: onMapCreated,
-      onCameraMoveStarted: onCameraMoveStarted,
-      onCameraMove: onCameraMove,
-      onCameraIdle: onCameraIdle
-    );
-
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
+    return Scaffold(
+      appBar: AppBar(title: const Text('Map4D SDK examples')),
+      body: ListView.builder(
+        itemCount: _allPages.length,
+        itemBuilder: (_, int index) => ListTile(
+          leading: _allPages[index].leading,
+          title: Text(_allPages[index].title),
+          onTap: () => _pushPage(context, _allPages[index]),
         ),
-        body: Stack(
-          children: <Widget>[
-            SizedBox(
-              width: 480.0,
-              height: 800.0,
-              child: map,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: TextButton(
-                  child: Text('Move Camera', style: TextStyle(color: Colors.black)),
-                  onPressed: moveCamera,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Align(
-                alignment: Alignment.topCenter,
-                child: TextButton(
-                  child: Text('Get ZoomLevel', style: TextStyle(color: Colors.black)),
-                  onPressed: getZoomLevel,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(1.0),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: TextButton(
-                  child: Text('Animate Camera', style: TextStyle(color: Colors.black)),
-                  onPressed: animateCamera,
-                ),
-              ),
-            )
-          ],
-        )
       ),
     );
   }
+}
 
-  void onMapCreated(MFMapViewController controller) {
-    print('onMapCreated');
-    setState(() {
-      _controller = controller;
-      _isMapCreated = true;
-    });
-  }
-
-  void onCameraMoveStarted() {
-    print('camera move startedddddddddddddddddd');
-  }
-
-  void onCameraMove(MFCameraPosition position) {
-    print('camera move to ${position.toString()}');
-  }
-
-  void onCameraIdle() => print('onCameraIdle');
-
-  void moveCamera() {
-    final cameraUpdate = MFCameraUpdate.newLatLng(LatLng(10.779348472547028, 106.71295166015625));
-    print('moveCamera to: ' + cameraUpdate.toString());
-    _controller.moveCamera(cameraUpdate);
-  }
-
-  void animateCamera() {
-    final cameraUpdate = MFCameraUpdate.newLatLng(LatLng(16.088414, 108.230563));
-    print('animateCamera to: ' + cameraUpdate.toString());
-    _controller.animateCamera(cameraUpdate);
-  }
-
-
-  void getZoomLevel() {
-    print("Get Zoom level");
-    final zoom = _controller.getZoomLevel();
-    zoom.then((value) => print('zoom level: ' + value.toString()));
-  }
+void main() {
+  runApp(MaterialApp(home: MapsDemo()));
 }

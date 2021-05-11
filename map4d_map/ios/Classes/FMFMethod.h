@@ -22,7 +22,10 @@ typedef enum : NSUInteger {
   FMFMethodMoveCamera,
   
   // camera#animate
-  FMFMethodAnimateCamera
+  FMFMethodAnimateCamera,
+  
+  // circles#update
+  FMFMethodCirclesUpdate
 
 } FMFMethodID;
 

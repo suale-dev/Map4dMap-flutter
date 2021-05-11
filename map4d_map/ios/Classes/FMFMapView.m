@@ -8,6 +8,7 @@
 #import "FMFMapView.h"
 #import "FMFConvert.h"
 #import "FMFMethod.h"
+#import "FMFCircle.h"
 #import <Map4dMap/Map4dMap.h>
 #import <UIKit/UIKit.h>
 
@@ -47,6 +48,8 @@
   int64_t _viewId;
   FlutterMethodChannel* _channel;
   NSObject<FlutterPluginRegistrar>* _registrar;
+  
+  FMFCirclesController* _circlesController;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -72,6 +75,10 @@
     if (camera != nil) {
       _mapView.camera = camera;
     }
+    
+    _circlesController = [[FMFCirclesController alloc] init:_channel
+                                                    mapView:_mapView
+                                                  registrar:registrar];
   }
   return self;
 }
@@ -99,6 +106,21 @@
       result(nil);
       break;
     }
+    case FMFMethodCirclesUpdate: {
+      id circlesToAdd = call.arguments[@"circlesToAdd"];
+      if ([circlesToAdd isKindOfClass:[NSArray class]]) {
+        [_circlesController addCircles:circlesToAdd];
+      }
+      id circlesToChange = call.arguments[@"circlesToChange"];
+      if ([circlesToChange isKindOfClass:[NSArray class]]) {
+        [_circlesController changeCircles:circlesToChange];
+      }
+      id circleIdsToRemove = call.arguments[@"circleIdsToRemove"];
+      if ([circleIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_circlesController removeCircleIds:circleIdsToRemove];
+      }
+      break;
+    }
     default:
       NSLog(@"Unknow call method: %@", call.method);
       result(nil);
@@ -106,7 +128,64 @@
   }
 }
 
-// MARK: - MFMapViewDelegate
+#pragma mark - FMFMapViewOptionsSink methods
+
+- (void)setCamera:(MFCameraPosition*)camera {
+  _mapView.camera = camera;
+}
+
+- (void)setCameraTargetBounds:(MFCoordinateBounds*)bounds {
+  //TODO
+  //  _mapView.cameraTargetBounds = bounds;
+}
+
+- (void)setBuildingsEnabled:(BOOL)enabled {
+  _mapView.buildingsEnabled = enabled;
+}
+
+
+- (void)setMinZoom:(float)minZoom maxZoom:(float)maxZoom {
+  [_mapView setMinZoom:minZoom maxZoom:maxZoom];
+}
+
+- (void)setRotateGesturesEnabled:(BOOL)enabled {
+  _mapView.settings.rotateGestures = enabled;
+}
+
+- (void)setScrollGesturesEnabled:(BOOL)enabled {
+  _mapView.settings.scrollGestures = enabled;
+}
+
+- (void)setTiltGesturesEnabled:(BOOL)enabled {
+  _mapView.settings.tiltGestures = enabled;
+}
+
+- (void)setTrackCameraPosition:(BOOL)enabled {
+  //TODO
+  //  _trackCameraPosition = enabled;
+}
+
+- (void)setZoomGesturesEnabled:(BOOL)enabled {
+  _mapView.settings.zoomGestures = enabled;
+}
+
+- (void)setMyLocationEnabled:(BOOL)enabled {
+  _mapView.myLocationEnabled = enabled;
+}
+
+- (void)setMyLocationButtonEnabled:(BOOL)enabled {
+  _mapView.settings.myLocationButton = enabled;
+}
+
+- (void)set3DModeEnabled:(BOOL)enabled {
+  [_mapView enable3DMode:enabled];
+}
+
+- (void)setWaterEffectEnabled:(BOOL)enabled {
+  [_mapView enableWaterEffect:enabled];
+}
+
+#pragma mark - MFMapViewDelegate
 //- (BOOL)mapview: (MFMapView*)  mapView didTapMarker: (MFMarker*) marker {
 //- (void)mapview: (MFMapView*)  mapView didBeginDraggingMarker: (MFMarker*) marker;
 //- (void)mapview: (MFMapView*)  mapView didEndDraggingMarker: (MFMarker*) marker;
@@ -114,7 +193,13 @@
 //- (void)mapview: (MFMapView*)  mapView didTapInfoWindowOfMarker: (MFMarker*) marker;
 //- (void)mapview: (MFMapView*)  mapView didTapPolyline: (MFPolyline*) polyline;
 //- (void)mapview: (MFMapView*)  mapView didTapPolygon: (MFPolygon*) polygon;
-//- (void)mapview: (MFMapView*)  mapView didTapCircle: (MFCircle*) circle;
+
+- (void)mapview: (MFMapView*)  mapView didTapCircle: (MFCircle*) circle {
+  NSArray* userData = (NSArray*) circle.userData;
+  NSString* circleId = userData[0];
+  [_circlesController onCircleTap:circleId];
+}
+
 - (void)mapView: (MFMapView*)  mapView willMove: (BOOL) gesture {
   [_channel invokeMethod:@"camera#onMoveStarted" arguments:@{@"isGesture" : @(gesture)}];
 }
