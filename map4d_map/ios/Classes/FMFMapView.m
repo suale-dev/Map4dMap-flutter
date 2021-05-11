@@ -156,6 +156,12 @@
       }
       break;
     }
+    case FMFMethodEnable3DMode: {
+      BOOL isEnable = [FMFConvert toBool:call.arguments[@"enable3DMode"]];
+      [_mapView enable3DMode: isEnable];
+      result(nil);
+      break;
+    }
     default:
       NSLog(@"Unknow call method: %@", call.method);
       result(nil);
@@ -254,8 +260,15 @@
   [_channel invokeMethod:@"camera#onIdle" arguments:@{}];
 }
 
-//- (void)mapView: (MFMapView*)  mapView didTapAtCoordinate: (CLLocationCoordinate2D) coordinate;
-//- (void)mapView: (MFMapView*)  mapView onModeChange: (bool) is3DMode;
+- (void)mapView: (MFMapView*) mapView didTapAtCoordinate: (CLLocationCoordinate2D) coordinate {
+  NSArray* response = [FMFConvert locationToJson:coordinate];
+  [_channel invokeMethod:@"map#didTapAtCoordinate" arguments:@{@"coordinate": response}];
+}
+
+- (void)mapView: (MFMapView*) mapView onModeChange: (bool) is3DMode {
+  [_channel invokeMethod:@"map#onModeChange" arguments:@{@"is3DMode": @(is3DMode)}];
+}
+
 ///* Called after a building annotation has been tapped */
 //- (void)mapView: (MFMapView*)  mapView didTapBuilding: (MFBuilding*) building;
 ///* Called after a base map building has been tapped */

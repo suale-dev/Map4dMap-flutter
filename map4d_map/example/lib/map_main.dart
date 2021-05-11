@@ -24,6 +24,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _isMapCreated = false;
+  bool _is3DMode = false;
   late MFMapViewController _controller;
 
   @override
@@ -33,8 +34,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
-    final position = MFCameraPosition(target: LatLng(21.030041, 105.8502223), zoom: 16);
+    final position =
+        MFCameraPosition(target: LatLng(21.030041, 105.8502223), zoom: 16);
     final MFMapView map = MFMapView(
       initialCameraPosition: position,
       onMapCreated: onMapCreated,
@@ -43,6 +44,8 @@ class _MyAppState extends State<MyApp> {
       onCameraIdle: onCameraIdle,
       myLocationEnabled: true,
       myLocationButtonEnabled: true,
+      onTap: onTap,
+      onModeChange: onModeChange,
     );
 
     return MaterialApp(
@@ -59,7 +62,8 @@ class _MyAppState extends State<MyApp> {
               child: Align(
                 alignment: Alignment.topLeft,
                 child: TextButton(
-                  child: Text('Move Camera', style: TextStyle(color: Colors.black)),
+                  child: Text('Move Camera',
+                      style: TextStyle(color: Colors.black)),
                   onPressed: moveCamera,
                 ),
               ),
@@ -69,7 +73,8 @@ class _MyAppState extends State<MyApp> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: TextButton(
-                  child: Text('Get ZoomLevel', style: TextStyle(color: Colors.black)),
+                  child: Text('Get ZoomLevel',
+                      style: TextStyle(color: Colors.black)),
                   onPressed: getZoomLevel,
                 ),
               ),
@@ -79,13 +84,19 @@ class _MyAppState extends State<MyApp> {
               child: Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  child: Text('Animate Camera', style: TextStyle(color: Colors.black)),
+                  child: Text('Animate Camera',
+                      style: TextStyle(color: Colors.black)),
                   onPressed: animateCamera,
                 ),
               ),
             )
           ],
-        )
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: enable3Dmode,
+          tooltip: "MODE",
+          child: const Icon(Icons.mode_rounded),
+        ),
       ),
     );
   }
@@ -109,21 +120,39 @@ class _MyAppState extends State<MyApp> {
   void onCameraIdle() => print('onCameraIdle');
 
   void moveCamera() {
-    final cameraUpdate = MFCameraUpdate.newLatLng(LatLng(10.779348472547028, 106.71295166015625));
+    final cameraUpdate = MFCameraUpdate.newLatLng(
+        LatLng(10.779348472547028, 106.71295166015625));
     print('moveCamera to: ' + cameraUpdate.toString());
     _controller.moveCamera(cameraUpdate);
   }
 
   void animateCamera() {
-    final cameraUpdate = MFCameraUpdate.newLatLng(LatLng(16.088414, 108.230563));
+    final cameraUpdate =
+        MFCameraUpdate.newLatLng(LatLng(16.088414, 108.230563));
     print('animateCamera to: ' + cameraUpdate.toString());
     _controller.animateCamera(cameraUpdate);
   }
-
 
   void getZoomLevel() {
     print("Get Zoom level");
     final zoom = _controller.getZoomLevel();
     zoom.then((value) => print('zoom level: ' + value.toString()));
+  }
+
+  void enable3Dmode() {
+    _is3DMode = !_is3DMode;
+    _controller.enable3DMode(_is3DMode);
+  }
+
+  void onTap(LatLng coordinate) {
+    print('Did tap ' + coordinate.toString());
+  }
+
+  void onModeChange(bool is3Dmode) {
+    var mode = '2D';
+    if (is3Dmode) {
+      mode = '3D';
+    }
+    print('Mode of map is: ' + mode);
   }
 }

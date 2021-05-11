@@ -26,7 +26,6 @@ class UnknownMapObjectIdError extends Error {
 }
 
 class MFMapView extends StatefulWidget {
-
   const MFMapView({
     Key? key,
     this.initialCameraPosition,
@@ -43,9 +42,10 @@ class MFMapView extends StatefulWidget {
     this.onCameraMoveStarted,
     this.onCameraMove,
     this.onCameraIdle,
-
+    this.onTap,
+    this.onModeChange,
     this.circles = const <MFCircle>{},
-  })  : super(key: key);
+  }) : super(key: key);
 
   @override
   State createState() => _MFMapViewState();
@@ -95,16 +95,20 @@ class MFMapView extends StatefulWidget {
 
   /// Called when camera movement has ended, there are no pending animations and the user has stopped interacting with the map.
   final VoidCallback? onCameraIdle;
+
+  /// Called when did tap at coordinate
+  final CoordinateCallback? onTap;
+
+  final ModeChangeCallback? onModeChange;
 }
 
 class _MFMapViewState extends State<MFMapView> {
-
   final Completer<MFMapViewController> _controller = Completer<MFMapViewController>();
   late _MFMapViewOptions _mapOptions;
   Map<MFCircleId, MFCircle> _circles = <MFCircleId, MFCircle>{};
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     // This is used in the platform side to register the view.
     final String viewType = 'plugin:map4d-map-view-type';
     // Pass parameters to the platform side.
@@ -116,11 +120,11 @@ class _MFMapViewState extends State<MFMapView> {
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       return AndroidView(
-      viewType: viewType,
-      onPlatformViewCreated: onPlatformViewCreated,
-      creationParams: creationParams,
-      creationParamsCodec: const StandardMessageCodec(),
-    );
+        viewType: viewType,
+        onPlatformViewCreated: onPlatformViewCreated,
+        creationParams: creationParams,
+        creationParamsCodec: const StandardMessageCodec(),
+      );
     } else if (defaultTargetPlatform == TargetPlatform.iOS) {
       return UiKitView(
         viewType: viewType,
@@ -129,7 +133,8 @@ class _MFMapViewState extends State<MFMapView> {
         creationParamsCodec: const StandardMessageCodec(),
       );
     }
-    return Text('$defaultTargetPlatform is not yet supported by the maps plugin');    
+    return Text(
+        '$defaultTargetPlatform is not yet supported by the maps plugin');
   }
 
   @override
