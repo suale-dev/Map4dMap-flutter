@@ -14,6 +14,9 @@ typedef enum : NSUInteger {
 
   // Unknow method
   FMFMethodUnknow,
+  
+  // map#update
+  FMFMethodMapUpdate,
 
   // map#getZoomLevel
   FMFMethodGetZoomLevel,

@@ -60,6 +60,18 @@ class MFMapViewController {
     return _channel.invokeMethod<void>('camera#animate', <String, Object>{'cameraUpdate': cameraUpdate.toJson()});
   }
 
+  /// Updates configuration options of the map user interface.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> _updateMapOptions(Map<String, dynamic> optionsUpdate) {
+    assert(optionsUpdate != null);
+    return _channel.invokeMethod<void>('map#update', <String, dynamic>{'options': optionsUpdate},
+    );
+  }
+
   /// Updates circle configuration.
   ///
   /// Change listeners are notified once the update has been made on the

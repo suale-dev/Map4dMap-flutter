@@ -31,6 +31,15 @@ class MFMapView extends StatefulWidget {
     Key? key,
     this.initialCameraPosition,
     this.onMapCreated,
+    this.minMaxZoomPreference = MFMinMaxZoom.unbounded,
+    this.rotateGesturesEnabled = true,
+    this.scrollGesturesEnabled = true,
+    this.zoomGesturesEnabled = true,
+    this.tiltGesturesEnabled = true,
+    this.myLocationEnabled = false,
+    this.myLocationButtonEnabled = false,
+    this.poisEnabled = true,
+    this.buildingsEnabled = true,
     this.onCameraMoveStarted,
     this.onCameraMove,
     this.onCameraIdle,
@@ -51,6 +60,33 @@ class MFMapView extends StatefulWidget {
   /// The initial position of the map's camera.
   final MFCameraPosition? initialCameraPosition;
 
+  /// Preferred bounds for the camera zoom level.
+  final MFMinMaxZoom minMaxZoomPreference;
+
+  /// True if the map view should respond to rotate gestures.
+  final bool rotateGesturesEnabled;
+
+  /// True if the map view should respond to scroll gestures.
+  final bool scrollGesturesEnabled;
+
+  /// True if the map view should respond to zoom gestures.
+  final bool zoomGesturesEnabled;
+
+  /// True if the map view should respond to tilt gestures.
+  final bool tiltGesturesEnabled;
+
+  /// Enabling this feature requires adding location permissions to both native platforms of your app.
+  final bool myLocationEnabled;
+
+  /// Enables or disables the my-location button.
+  final bool myLocationButtonEnabled;
+
+  /// Enables or disables showing 3D buildings where available
+  final bool buildingsEnabled;
+
+  /// Enables or disables showing points of interest
+  final bool poisEnabled;
+
   /// Called when the camera starts moving.
   final VoidCallback? onCameraMoveStarted;
 
@@ -64,6 +100,7 @@ class MFMapView extends StatefulWidget {
 class _MFMapViewState extends State<MFMapView> {
 
   final Completer<MFMapViewController> _controller = Completer<MFMapViewController>();
+  late _MFMapViewOptions _mapOptions;
   Map<MFCircleId, MFCircle> _circles = <MFCircleId, MFCircle>{};
 
   @override
@@ -72,6 +109,7 @@ class _MFMapViewState extends State<MFMapView> {
     final String viewType = 'plugin:map4d-map-view-type';
     // Pass parameters to the platform side.
     final Map<String, dynamic> creationParams = <String, dynamic>{
+      'options': _mapOptions.toMap(),
       'initialCameraPosition': widget.initialCameraPosition?.toMap(),
       'circlesToAdd': serializeCircleSet(widget.circles),
     };
@@ -97,12 +135,14 @@ class _MFMapViewState extends State<MFMapView> {
   @override
   void initState() {
     super.initState();
+    _mapOptions = _MFMapViewOptions.fromWidget(widget);
     _circles = keyByCircleId(widget.circles);
   }
 
   @override
   void didUpdateWidget(MFMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _updateOptions();
     _updateCircles();
   }
 
@@ -127,11 +167,76 @@ class _MFMapViewState extends State<MFMapView> {
     }
   }
 
+  void _updateOptions() async {
+    final _MFMapViewOptions newOptions = _MFMapViewOptions.fromWidget(widget);
+    final Map<String, dynamic> updates = _mapOptions.updatesMap(newOptions);
+    if (updates.isEmpty) {
+      return;
+    }
+    final MFMapViewController controller = await _controller.future;
+    // ignore: unawaited_futures
+    controller._updateMapOptions(updates);
+    _mapOptions = newOptions;
+  }
+
   void _updateCircles() async {
     final MFMapViewController controller = await _controller.future;
     // ignore: unawaited_futures
-    controller._updateCircles(
-        CircleUpdates.from(_circles.values.toSet(), widget.circles));
+    controller._updateCircles(CircleUpdates.from(_circles.values.toSet(), widget.circles));
     _circles = keyByCircleId(widget.circles);
+  }
+}
+
+/// MFMapView configuration options.
+class _MFMapViewOptions {
+  _MFMapViewOptions.fromWidget(MFMapView map)
+    :
+      rotateGesturesEnabled = map.rotateGesturesEnabled,
+      scrollGesturesEnabled = map.scrollGesturesEnabled,
+      tiltGesturesEnabled = map.tiltGesturesEnabled,
+      zoomGesturesEnabled = map.zoomGesturesEnabled,
+      myLocationEnabled = map.myLocationEnabled,
+      myLocationButtonEnabled = map.myLocationButtonEnabled,
+      buildingsEnabled = map.buildingsEnabled,
+      poisEnabled = map.poisEnabled,
+      minMaxZoomPreference = map.minMaxZoomPreference,
+      trackCameraPosition = map.onCameraMove != null
+  ;
+
+  // final CameraTargetBounds cameraTargetBounds;
+  final MFMinMaxZoom minMaxZoomPreference;
+  final bool rotateGesturesEnabled;
+  final bool scrollGesturesEnabled;
+  final bool tiltGesturesEnabled;
+  final bool zoomGesturesEnabled;
+  final bool myLocationEnabled;
+  final bool myLocationButtonEnabled;
+  final bool buildingsEnabled;
+  final bool poisEnabled;
+
+  final bool trackCameraPosition;
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      // 'cameraTargetBounds': cameraTargetBounds.toJson(),
+      'minMaxZoomPreference': minMaxZoomPreference.toJson(),
+      'rotateGesturesEnabled': rotateGesturesEnabled,
+      'scrollGesturesEnabled': scrollGesturesEnabled,
+      'tiltGesturesEnabled': tiltGesturesEnabled,
+      'zoomGesturesEnabled': zoomGesturesEnabled,
+      'myLocationEnabled': myLocationEnabled,
+      'myLocationButtonEnabled': myLocationButtonEnabled,
+      'poisEnabled': poisEnabled,
+      'buildingsEnabled': buildingsEnabled,
+      'trackCameraPosition': trackCameraPosition,
+    };
+  }
+
+  Map<String, dynamic> updatesMap(_MFMapViewOptions newOptions) {
+    final Map<String, dynamic> prevOptionsMap = toMap();
+
+    return newOptions.toMap()
+      ..removeWhere(
+          (String key, dynamic value) => prevOptionsMap[key] == value);
   }
 }

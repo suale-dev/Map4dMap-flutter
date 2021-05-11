@@ -14,19 +14,13 @@ NS_ASSUME_NONNULL_BEGIN
 // Defines map UI options writable from Flutter.
 @protocol FMFMapViewOptionsSink
 - (void)setCameraTargetBounds:(nullable MFCoordinateBounds *)bounds;
-//TODO
-//- (void)setCompassEnabled:(BOOL)enabled;
-//- (void)setIndoorEnabled:(BOOL)enabled;
-//- (void)setTrafficEnabled:(BOOL)enabled;
 - (void)setBuildingsEnabled:(BOOL)enabled;
-//TODO
-//- (void)setMapType:(GMSMapViewType)type;
+- (void)setPOIsEnabled:(BOOL)enabled;
 - (void)setMinZoom:(float)minZoom maxZoom:(float)maxZoom;
 //- (void)setPaddingTop:(float)top left:(float)left bottom:(float)bottom right:(float)right;//TODO
 - (void)setRotateGesturesEnabled:(BOOL)enabled;
 - (void)setScrollGesturesEnabled:(BOOL)enabled;
 - (void)setTiltGesturesEnabled:(BOOL)enabled;
-- (void)setTrackCameraPosition:(BOOL)enabled;
 - (void)setZoomGesturesEnabled:(BOOL)enabled;
 - (void)setMyLocationEnabled:(BOOL)enabled;
 - (void)setMyLocationButtonEnabled:(BOOL)enabled;
@@ -34,6 +28,8 @@ NS_ASSUME_NONNULL_BEGIN
 //- (nullable NSString *)setMapStyle:(NSString *)mapStyle;
 - (void)set3DModeEnabled:(BOOL)enabled;
 - (void)setWaterEffectEnabled:(BOOL)enabled;
+// Track
+- (void)setTrackCameraPosition:(BOOL)enabled;
 @end
 
 // Defines map overlay controllable from Flutter.

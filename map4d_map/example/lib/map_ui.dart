@@ -1,13 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:map4d_map/map4d_map_flutter.dart';
-
 import 'page.dart';
-
-final LatLngBounds sydneyBounds = LatLngBounds(
-  southwest: const LatLng(-34.022631, 150.620685),
-  northeast: const LatLng(-33.571835, 151.325952),
-);
 
 class MapUiPage extends Map4dMapExampleAppPage {
   MapUiPage() : super(const Icon(Icons.map), 'User interface');
@@ -28,30 +21,24 @@ class MapUiBody extends StatefulWidget {
 class MapUiBodyState extends State<MapUiBody> {
   MapUiBodyState();
 
-  static final MFCameraPosition _kInitialPosition = const MFCameraPosition(
-    target: LatLng(-33.852, 151.211),
-    zoom: 11.0,
+  static final MFCameraPosition _kInitialPosition = MFCameraPosition(
+    target: LatLng(16.0750, 108.2122),
+    zoom: 15.0,
   );
 
   MFCameraPosition _position = _kInitialPosition;
   bool _isMapCreated = false;
   bool _isMoving = false;
-  bool _compassEnabled = true;
-  bool _mapToolbarEnabled = true;
-  // CameraTargetBounds _cameraTargetBounds = CameraTargetBounds.unbounded;
-  // MinMaxZoomPreference _minMaxZoomPreference = MinMaxZoomPreference.unbounded;
-  // MapType _mapType = MapType.normal;
+  MFMinMaxZoom _minMaxZoomPreference = MFMinMaxZoom.unbounded;
   bool _rotateGesturesEnabled = true;
   bool _scrollGesturesEnabled = true;
   bool _tiltGesturesEnabled = true;
-  bool _zoomControlsEnabled = false;
   bool _zoomGesturesEnabled = true;
-  bool _indoorViewEnabled = true;
-  bool _myLocationEnabled = true;
-  bool _myTrafficEnabled = false;
-  bool _myLocationButtonEnabled = true;
+  bool _poisEnabled = true;
+  bool _buildingsEnabled = true;
+  bool _myLocationEnabled = false;
+  bool _myLocationButtonEnabled = false;
   late MFMapViewController _controller;
-  bool _nightMode = false;
 
   @override
   void initState() {
@@ -63,41 +50,13 @@ class MapUiBodyState extends State<MapUiBody> {
     super.dispose();
   }
 
-  Widget _compassToggler() {
+  Widget _fitBoundsToggler() {
     return TextButton(
-      child: Text('${_compassEnabled ? 'disable' : 'enable'} compass'),
-      onPressed: () {
-        setState(() {
-          _compassEnabled = !_compassEnabled;
-        });
-      },
-    );
-  }
-
-  Widget _mapToolbarToggler() {
-    return TextButton(
-      child: Text('${_mapToolbarEnabled ? 'disable' : 'enable'} map toolbar'),
-      onPressed: () {
-        setState(() {
-          _mapToolbarEnabled = !_mapToolbarEnabled;
-        });
-      },
-    );
-  }
-
-  Widget _latLngBoundsToggler() {
-    return TextButton(
-      child: Text('_cameraTargetBounds'
-        // _cameraTargetBounds.bounds == null
-        //     ? 'bound camera target'
-        //     : 'release camera target',
+      child: Text('Fit Bounds'
       ),
       onPressed: () {
         setState(() {
-          print('_latLngBoundsToggler');
-          // _cameraTargetBounds = _cameraTargetBounds.bounds == null
-          //     ? CameraTargetBounds(sydneyBounds)
-          //     : CameraTargetBounds.unbounded;
+          print('_fitBoundsToggler');
         });
       },
     );
@@ -105,30 +64,34 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _zoomBoundsToggler() {
     return TextButton(
-      child: Text('_minMaxZoomPreference.minZoom == null'
-          // ? 'bound zoom'
-          // : 'release zoom'
-          ),
+      child: Text(_minMaxZoomPreference.minZoom == null
+          ? 'Bound Zoom'
+          : 'Release Zoom'),
       onPressed: () {
         setState(() {
-          print('_zoomBoundsToggler');
-          // _minMaxZoomPreference = _minMaxZoomPreference.minZoom == null
-          //     ? const MinMaxZoomPreference(12.0, 16.0)
-          //     : MinMaxZoomPreference.unbounded;
+          _minMaxZoomPreference = _minMaxZoomPreference.minZoom == null ? const MFMinMaxZoom(12.0, 16.0) : MFMinMaxZoom.unbounded;
         });
       },
     );
   }
 
-  Widget _mapTypeCycler() {
-    // final MapType nextType =
-    //     MapType.values[(_mapType.index + 1) % MapType.values.length];
+  Widget _poisEnabledToggler() {
     return TextButton(
-      child: Text('change map type to nextType'),
+      child: Text('${_poisEnabled ? 'Disable' : 'Enable'} POIs'),
       onPressed: () {
         setState(() {
-          print('_mapType = nextType;');
-          // _mapType = nextType;
+          _poisEnabled = !_poisEnabled;
+        });
+      },
+    );
+  }
+
+  Widget _buildingsEnabledToggler() {
+    return TextButton(
+      child: Text('${_buildingsEnabled ? 'Disable' : 'Enable'} Buildings'),
+      onPressed: () {
+        setState(() {
+          _buildingsEnabled = !_buildingsEnabled;
         });
       },
     );
@@ -136,7 +99,7 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _rotateToggler() {
     return TextButton(
-      child: Text('${_rotateGesturesEnabled ? 'disable' : 'enable'} rotate'),
+      child: Text('${_rotateGesturesEnabled ? 'Disable' : 'Enable'} rotate'),
       onPressed: () {
         setState(() {
           _rotateGesturesEnabled = !_rotateGesturesEnabled;
@@ -147,7 +110,7 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _scrollToggler() {
     return TextButton(
-      child: Text('${_scrollGesturesEnabled ? 'disable' : 'enable'} scroll'),
+      child: Text('${_scrollGesturesEnabled ? 'Disable' : 'Enable'} scroll'),
       onPressed: () {
         setState(() {
           _scrollGesturesEnabled = !_scrollGesturesEnabled;
@@ -158,7 +121,7 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _tiltToggler() {
     return TextButton(
-      child: Text('${_tiltGesturesEnabled ? 'disable' : 'enable'} tilt'),
+      child: Text('${_tiltGesturesEnabled ? 'Disable' : 'Enable'} tilt'),
       onPressed: () {
         setState(() {
           _tiltGesturesEnabled = !_tiltGesturesEnabled;
@@ -169,7 +132,7 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _zoomToggler() {
     return TextButton(
-      child: Text('${_zoomGesturesEnabled ? 'disable' : 'enable'} zoom'),
+      child: Text('${_zoomGesturesEnabled ? 'Disable' : 'Enable'} zoom'),
       onPressed: () {
         setState(() {
           _zoomGesturesEnabled = !_zoomGesturesEnabled;
@@ -178,33 +141,10 @@ class MapUiBodyState extends State<MapUiBody> {
     );
   }
 
-  Widget _zoomControlsToggler() {
-    return TextButton(
-      child:
-          Text('${_zoomControlsEnabled ? 'disable' : 'enable'} zoom controls'),
-      onPressed: () {
-        setState(() {
-          _zoomControlsEnabled = !_zoomControlsEnabled;
-        });
-      },
-    );
-  }
-
-  Widget _indoorViewToggler() {
-    return TextButton(
-      child: Text('${_indoorViewEnabled ? 'disable' : 'enable'} indoor'),
-      onPressed: () {
-        setState(() {
-          _indoorViewEnabled = !_indoorViewEnabled;
-        });
-      },
-    );
-  }
-
   Widget _myLocationToggler() {
     return TextButton(
       child: Text(
-          '${_myLocationEnabled ? 'disable' : 'enable'} my location marker'),
+          '${_myLocationEnabled ? 'Disable' : 'Enable'} my location marker'),
       onPressed: () {
         setState(() {
           _myLocationEnabled = !_myLocationEnabled;
@@ -216,7 +156,7 @@ class MapUiBodyState extends State<MapUiBody> {
   Widget _myLocationButtonToggler() {
     return TextButton(
       child: Text(
-          '${_myLocationButtonEnabled ? 'disable' : 'enable'} my location button'),
+          '${_myLocationButtonEnabled ? 'Disable' : 'Enable'} my location button'),
       onPressed: () {
         setState(() {
           _myLocationButtonEnabled = !_myLocationButtonEnabled;
@@ -225,67 +165,20 @@ class MapUiBodyState extends State<MapUiBody> {
     );
   }
 
-  Widget _myTrafficToggler() {
-    return TextButton(
-      child: Text('${_myTrafficEnabled ? 'disable' : 'enable'} my traffic'),
-      onPressed: () {
-        setState(() {
-          _myTrafficEnabled = !_myTrafficEnabled;
-        });
-      },
-    );
-  }
-
-  Future<String> _getFileData(String path) async {
-    return await rootBundle.loadString(path);
-  }
-
-  void _setMapStyle(String mapStyle) {
-    setState(() {
-      _nightMode = true;
-      print('_controller.setMapStyle(mapStyle);');
-      // _controller.setMapStyle(mapStyle);
-    });
-  }
-
-  // Should only be called if _isMapCreated is true.
-  Widget _nightModeToggler() {
-    assert(_isMapCreated);
-    return TextButton(
-      child: Text('${_nightMode ? 'disable' : 'enable'} night mode'),
-      onPressed: () {
-        if (_nightMode) {
-          setState(() {
-            _nightMode = false;
-            print('_controller.setMapStyle(null);');
-            // _controller.setMapStyle(null);
-          });
-        } else {
-          _getFileData('assets/night_mode.json').then(_setMapStyle);
-        }
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final MFMapView mapView = MFMapView(
       onMapCreated: onMapCreated,
-      // initialCameraPosition: _kInitialPosition,
-      // compassEnabled: _compassEnabled,
-      // mapToolbarEnabled: _mapToolbarEnabled,
-      // cameraTargetBounds: _cameraTargetBounds,
-      // minMaxZoomPreference: _minMaxZoomPreference,
-      // mapType: _mapType,
-      // rotateGesturesEnabled: _rotateGesturesEnabled,
-      // scrollGesturesEnabled: _scrollGesturesEnabled,
-      // tiltGesturesEnabled: _tiltGesturesEnabled,
-      // zoomGesturesEnabled: _zoomGesturesEnabled,
-      // zoomControlsEnabled: _zoomControlsEnabled,
-      // indoorViewEnabled: _indoorViewEnabled,
-      // myLocationEnabled: _myLocationEnabled,
-      // myLocationButtonEnabled: _myLocationButtonEnabled,
-      // trafficEnabled: _myTrafficEnabled,
+      initialCameraPosition: _kInitialPosition,
+      minMaxZoomPreference: _minMaxZoomPreference,
+      poisEnabled: _poisEnabled,
+      buildingsEnabled: _buildingsEnabled,
+      rotateGesturesEnabled: _rotateGesturesEnabled,
+      scrollGesturesEnabled: _scrollGesturesEnabled,
+      tiltGesturesEnabled: _tiltGesturesEnabled,
+      zoomGesturesEnabled: _zoomGesturesEnabled,
+      myLocationEnabled: _myLocationEnabled,
+      myLocationButtonEnabled: _myLocationButtonEnabled,
       onCameraMove: _updateCameraPosition,
     );
 
@@ -314,21 +207,15 @@ class MapUiBodyState extends State<MapUiBody> {
               Text('camera zoom: ${_position.zoom}'),
               Text('camera tilt: ${_position.tilt}'),
               Text(_isMoving ? '(Camera moving)' : '(Camera idle)'),
-              _compassToggler(),
-              _mapToolbarToggler(),
-              _latLngBoundsToggler(),
-              _mapTypeCycler(),
+              _poisEnabledToggler(),
+              _buildingsEnabledToggler(),
               _zoomBoundsToggler(),
               _rotateToggler(),
               _scrollToggler(),
               _tiltToggler(),
               _zoomToggler(),
-              _zoomControlsToggler(),
-              _indoorViewToggler(),
               _myLocationToggler(),
               _myLocationButtonToggler(),
-              _myTrafficToggler(),
-              _nightModeToggler(),
             ],
           ),
         ),

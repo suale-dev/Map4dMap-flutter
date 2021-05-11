@@ -10,12 +10,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'src/ui.dart';
 import 'src/location.dart';
 import 'src/camera.dart';
 import 'src/callbacks.dart';
-
 import 'src/annotations/annotations.dart';
 
+export 'src/ui.dart' show MFMinMaxZoom;
 export 'src/location.dart'
   show
     LatLng,

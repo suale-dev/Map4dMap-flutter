@@ -7,12 +7,13 @@
 
 #import "FMFMapView.h"
 #import "FMFConvert.h"
+#import "FMFInterpretation.h"
 #import "FMFMethod.h"
 #import "FMFCircle.h"
 #import <Map4dMap/Map4dMap.h>
 #import <UIKit/UIKit.h>
 
-// MARK: - FMFMapViewFactory
+#pragma mark - FMFMapViewFactory
 
 @implementation FMFMapViewFactory {
   NSObject<FlutterPluginRegistrar>* _registrar;
@@ -40,14 +41,30 @@
 }
 @end
 
+#pragma mark - Event tracking configurations
 
-// MARK: - FMFMapView
+@interface FMFEventTracking : NSObject
+@property (nonatomic) BOOL cameraPosition;
+@end
+@implementation FMFEventTracking
+- (instancetype)init {
+  self = [super init];
+  if (self) {
+    _cameraPosition = NO;
+  }
+  return self;
+}
+@end
+
+
+#pragma mark - FMFMapView
 
 @implementation FMFMapView {
   MFMapView* _mapView;
   int64_t _viewId;
   FlutterMethodChannel* _channel;
   NSObject<FlutterPluginRegistrar>* _registrar;
+  FMFEventTracking* _track;
   
   FMFCirclesController* _circlesController;
 }
@@ -58,8 +75,21 @@
                     registrar:(NSObject<FlutterPluginRegistrar>*)registrar {
   if (self = [super init]) {
     _viewId = viewId;
+    _registrar = registrar;
+    _track = [[FMFEventTracking alloc] init];
     _mapView = [[MFMapView alloc] initWithFrame:frame];
     _mapView.delegate = self;
+    
+    // initial map options
+    [FMFInterpretation interpretMapOptions:args[@"options"] sink:self];
+    
+    // initial camera position
+    MFCameraPosition* camera = [FMFConvert toCameraPosition:args[@"initialCameraPosition"]];
+    if (camera != nil) {
+      _mapView.camera = camera;
+    }
+    
+    // flutter channel
     NSString* channelName = [NSString stringWithFormat:@"plugin:map4d-map-view-type_%lld", viewId];
     _channel = [FlutterMethodChannel methodChannelWithName:channelName
                                            binaryMessenger:registrar.messenger];
@@ -69,17 +99,13 @@
         [weakSelf onMethodCall:call result:result];
       }
     }];
-    _registrar = registrar;
     
-    MFCameraPosition* camera = [FMFConvert toCameraPosition:args[@"initialCameraPosition"]];
-    if (camera != nil) {
-      _mapView.camera = camera;
-    }
-    
+    // annotations controller
     _circlesController = [[FMFCirclesController alloc] init:_channel
                                                     mapView:_mapView
                                                   registrar:registrar];
     
+    // initial annotations
     id circlesToAdd = args[@"circlesToAdd"];
     if ([circlesToAdd isKindOfClass:[NSArray class]]) {
       [_circlesController addCircles:circlesToAdd];
@@ -96,6 +122,10 @@
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
   FMFMethodID methodID = [FMFMethod getMethodIdByName:call.method];
   switch (methodID) {
+    case FMFMethodMapUpdate:
+      [FMFInterpretation interpretMapOptions:call.arguments[@"options"] sink:self];
+      result(nil);
+      break;
     case FMFMethodGetZoomLevel:
       result(@(_mapView.camera.zoom));
       break;
@@ -145,9 +175,12 @@
 }
 
 - (void)setBuildingsEnabled:(BOOL)enabled {
-  _mapView.buildingsEnabled = enabled;
+  [_mapView setBuildingsEnabled:enabled];
 }
 
+- (void)setPOIsEnabled:(BOOL)enabled {
+  [_mapView setPOIsEnabled:enabled];
+}
 
 - (void)setMinZoom:(float)minZoom maxZoom:(float)maxZoom {
   [_mapView setMinZoom:minZoom maxZoom:maxZoom];
@@ -165,17 +198,12 @@
   _mapView.settings.tiltGestures = enabled;
 }
 
-- (void)setTrackCameraPosition:(BOOL)enabled {
-  //TODO
-  //  _trackCameraPosition = enabled;
-}
-
 - (void)setZoomGesturesEnabled:(BOOL)enabled {
   _mapView.settings.zoomGestures = enabled;
 }
 
 - (void)setMyLocationEnabled:(BOOL)enabled {
-  _mapView.myLocationEnabled = enabled;
+  [_mapView setMyLocationEnabled:enabled];
 }
 
 - (void)setMyLocationButtonEnabled:(BOOL)enabled {
@@ -188,6 +216,10 @@
 
 - (void)setWaterEffectEnabled:(BOOL)enabled {
   [_mapView enableWaterEffect:enabled];
+}
+
+- (void)setTrackCameraPosition:(BOOL)enabled {
+  _track.cameraPosition = enabled;
 }
 
 #pragma mark - MFMapViewDelegate
@@ -210,8 +242,10 @@
 }
 
 - (void)mapView: (MFMapView*)  mapView movingCameraPosition: (MFCameraPosition*) position {
-  NSDictionary* response = [FMFConvert positionToJson:position];
-  [_channel invokeMethod:@"camera#onMove" arguments:@{@"position" : response}];
+  if (_track.cameraPosition) {
+    NSDictionary* response = [FMFConvert positionToJson:position];
+    [_channel invokeMethod:@"camera#onMove" arguments:@{@"position" : response}];
+  }
 }
 
 //- (void)mapView: (MFMapView*)  mapView didChangeCameraPosition:(MFCameraPosition*) position {}

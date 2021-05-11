@@ -25,10 +25,12 @@
   if (buildingsEnabled) {
     [sink setBuildingsEnabled:[FMFConvert toBool:buildingsEnabled]];
   }
-//  id mapType = data[@"mapType"];
-//  if (mapType) {
-//    [sink setMapType:ToMapViewType(mapType)];
-//  }
+  
+  id poisEnabled = data[@"poisEnabled"];
+  if (poisEnabled) {
+    [sink setPOIsEnabled:[FMFConvert toBool:poisEnabled]];
+  }
+
   NSArray* zoomData = data[@"minMaxZoomPreference"];
   if (zoomData) {
     float minZoom = (zoomData[0] == [NSNull null]) ? kMFMinZoomLevel : [FMFConvert toFloat:zoomData[0]];

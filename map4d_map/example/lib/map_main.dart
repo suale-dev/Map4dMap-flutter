@@ -41,6 +41,8 @@ class _MyAppState extends State<MyApp> {
       onCameraMoveStarted: onCameraMoveStarted,
       onCameraMove: onCameraMove,
       onCameraIdle: onCameraIdle,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: true,
     );
 
     return MaterialApp(

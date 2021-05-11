@@ -11,6 +11,10 @@
 
 +(FMFMethodID)getMethodIdByName:(NSString*)name {
   
+  if ([name isEqualToString:@"map#update"]) {
+    return FMFMethodMapUpdate;
+  }
+  
   if ([name isEqualToString:@"map#getZoomLevel"]) {
     return FMFMethodGetZoomLevel;
   }
