@@ -29,6 +29,10 @@ public class Convert {
     return ((Number) o).doubleValue();
   }
 
+  private static Map<?, ?> toMap(Object o) {
+    return (Map<?, ?>) o;
+  }
+
   static MFLocationCoordinate toCoordinate(Object o) {
     final List<?> data = toList(o);
     return new MFLocationCoordinate(toDouble(data.get(0)), toDouble(data.get(1)));
@@ -54,5 +58,15 @@ public class Convert {
     data.put("tilt", position.getTilt());
     data.put("zoom", position.getZoom());
     return data;
+  }
+
+  static MFCameraPosition toCameraPosition(Object o) {
+    final Map<?, ?> data = toMap(o);
+    final MFCameraPosition.Builder builder = new MFCameraPosition.Builder();
+    builder.bearing(toDouble(data.get("bearing")));
+    builder.target(toCoordinate(data.get("target")));
+    builder.tilt(toDouble(data.get("tilt")));
+    builder.zoom(toDouble(data.get("zoom")));
+    return builder.build();
   }
 }
