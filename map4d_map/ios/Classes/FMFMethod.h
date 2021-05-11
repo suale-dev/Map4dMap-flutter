@@ -28,7 +28,10 @@ typedef enum : NSUInteger {
   FMFMethodAnimateCamera,
   
   // circles#update
-  FMFMethodCirclesUpdate
+  FMFMethodCirclesUpdate,
+
+  //map#enable3DMode
+  FMFMethodEnable3DMode
 
 } FMFMethodID;
 

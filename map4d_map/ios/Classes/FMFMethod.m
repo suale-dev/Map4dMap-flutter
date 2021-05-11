@@ -32,6 +32,10 @@
     return FMFMethodCirclesUpdate;
   }
   
+  if ([name isEqualToString:@"map#enable3DMode"]) {
+    return FMFMethodEnable3DMode;
+  }
+  
   return FMFMethodUnknow;
 }
 

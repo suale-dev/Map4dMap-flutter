@@ -42,6 +42,16 @@ class MFMapViewController {
       case 'circle#onTap':
         _mapState.onCircleTap(MFCircleId(call.arguments['circleId']));
         break;
+      case 'map#didTapAtCoordinate':
+        if (_mapState.widget.onTap != null) {
+          final coordinate = LatLng.fromJson(call.arguments['coordinate']);
+          _mapState.widget.onTap!(coordinate!);
+        }
+        break;
+      case 'map#onModeChange':
+        final is3DMode = call.arguments['is3DMode'];
+        _mapState.widget.onModeChange!(is3DMode);
+        break;
       default:
         print('Unknow callback method: ${call.method}');
     }
@@ -53,11 +63,18 @@ class MFMapViewController {
   }
 
   Future<void> moveCamera(MFCameraUpdate cameraUpdate) {
-    return _channel.invokeMethod<void>('camera#move', <String, dynamic>{'cameraUpdate': cameraUpdate.toJson()});
+    return _channel.invokeMethod<void>('camera#move',
+        <String, dynamic>{'cameraUpdate': cameraUpdate.toJson()});
   }
 
   Future<void> animateCamera(MFCameraUpdate cameraUpdate) {
-    return _channel.invokeMethod<void>('camera#animate', <String, Object>{'cameraUpdate': cameraUpdate.toJson()});
+    return _channel.invokeMethod<void>('camera#animate',
+        <String, Object>{'cameraUpdate': cameraUpdate.toJson()});
+  }
+
+  Future<void> enable3DMode(bool isEnable) {
+    return _channel.invokeMethod<bool>(
+        'map#enable3DMode', <String, Object>{'enable3DMode': isEnable});
   }
 
   /// Updates configuration options of the map user interface.
@@ -80,6 +97,7 @@ class MFMapViewController {
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updateCircles(CircleUpdates circleUpdates) {
     assert(circleUpdates != null);
-    return _channel.invokeMethod<void>('circles#update', circleUpdates.toJson());
+    return _channel.invokeMethod<void>(
+        'circles#update', circleUpdates.toJson());
   }
 }
