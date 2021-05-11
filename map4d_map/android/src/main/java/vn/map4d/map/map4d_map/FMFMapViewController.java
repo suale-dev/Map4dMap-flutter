@@ -22,7 +22,9 @@ import vn.map4d.map.annotations.MFCircle;
 import vn.map4d.map.annotations.MFMarker;
 import vn.map4d.map.annotations.MFPolygon;
 import vn.map4d.map.annotations.MFPolyline;
+import vn.map4d.map.camera.MFCameraPosition;
 import vn.map4d.map.camera.MFCameraUpdate;
+import vn.map4d.map.camera.MFCameraUpdateFactory;
 import vn.map4d.map.core.MFMapView;
 import vn.map4d.map.core.Map4D;
 import vn.map4d.map.core.OnMapReadyCallback;
@@ -45,6 +47,8 @@ public class FMFMapViewController implements
   private boolean disposed = false;
   private final float density;
 
+  private MFCameraPosition initialCameraPosition;
+
   FMFMapViewController(@NonNull Context context, int id, BinaryMessenger binaryMessenger, @Nullable Map<String, Object> creationParams) {
     this.mapView = new MFMapView(context, null);
     this.id = id;
@@ -53,6 +57,9 @@ public class FMFMapViewController implements
     this.density = context.getResources().getDisplayMetrics().density;
     this.methodChannel = new MethodChannel(binaryMessenger, "plugin:map4d-map-view-type_" + id);
     methodChannel.setMethodCallHandler(this);
+    if (creationParams.containsKey("initialCameraPosition")) {
+      initialCameraPosition = Convert.toCameraPosition(creationParams.get("initialCameraPosition"));
+    }
   }
 
   @Override
@@ -74,8 +81,15 @@ public class FMFMapViewController implements
   @Override
   public void onMapReady(Map4D map4D) {
     this.map4D = map4D;
+    initialMap();
     setMap4dListener(this);
     updateMyLocationSettings();
+  }
+
+  private void initialMap() {
+    if (initialCameraPosition != null) {
+      map4D.moveCamera(MFCameraUpdateFactory.newCameraPosition(initialCameraPosition));
+    }
   }
 
   private void setMap4dListener(@Nullable FMFMapViewListener listener) {
