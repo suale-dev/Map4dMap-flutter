@@ -79,6 +79,11 @@
     _circlesController = [[FMFCirclesController alloc] init:_channel
                                                     mapView:_mapView
                                                   registrar:registrar];
+    
+    id circlesToAdd = args[@"circlesToAdd"];
+    if ([circlesToAdd isKindOfClass:[NSArray class]]) {
+      [_circlesController addCircles:circlesToAdd];
+    }
   }
   return self;
 }

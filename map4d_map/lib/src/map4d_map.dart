@@ -73,6 +73,7 @@ class _MFMapViewState extends State<MFMapView> {
     // Pass parameters to the platform side.
     final Map<String, dynamic> creationParams = <String, dynamic>{
       'initialCameraPosition': widget.initialCameraPosition?.toMap(),
+      'circlesToAdd': serializeCircleSet(widget.circles),
     };
 
     if (defaultTargetPlatform == TargetPlatform.android) {
