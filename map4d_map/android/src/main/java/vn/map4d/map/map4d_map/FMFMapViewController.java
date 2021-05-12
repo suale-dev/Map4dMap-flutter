@@ -9,8 +9,10 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -33,6 +35,7 @@ import vn.map4d.types.MFLocationCoordinate;
 public class FMFMapViewController implements
   PlatformView,
   OnMapReadyCallback,
+  FMFMapViewOptionsSink,
   MethodChannel.MethodCallHandler,
   FMFMapViewListener {
   private static final String TAG = "FMFMapViewController";
@@ -49,17 +52,22 @@ public class FMFMapViewController implements
 
   private MFCameraPosition initialCameraPosition;
 
-  FMFMapViewController(@NonNull Context context, int id, BinaryMessenger binaryMessenger, @Nullable Map<String, Object> creationParams) {
+  private final CirclesController circlesController;
+  private List<Object> initialCircles;
+
+  FMFMapViewController(@NonNull Context context, int id, BinaryMessenger binaryMessenger, @Nullable MFCameraPosition initialCameraPosition) {
     this.mapView = new MFMapView(context, null);
     this.id = id;
-    this.mapView.getMapAsync(this);
     this.context = context;
     this.density = context.getResources().getDisplayMetrics().density;
     this.methodChannel = new MethodChannel(binaryMessenger, "plugin:map4d-map-view-type_" + id);
     methodChannel.setMethodCallHandler(this);
-    if (creationParams.containsKey("initialCameraPosition")) {
-      initialCameraPosition = Convert.toCameraPosition(creationParams.get("initialCameraPosition"));
-    }
+    this.initialCameraPosition = initialCameraPosition;
+    this.circlesController = new CirclesController(methodChannel, density);
+  }
+
+  void init() {
+    this.mapView.getMapAsync(this);
   }
 
   @Override
@@ -84,6 +92,7 @@ public class FMFMapViewController implements
     initialMap();
     setMap4dListener(this);
     updateMyLocationSettings();
+    circlesController.setMap(map4D);
   }
 
   private void initialMap() {
@@ -123,6 +132,17 @@ public class FMFMapViewController implements
       }
       case "map#getZoomLevel": {
         result.success(map4D.getCameraPosition().getZoom());
+        break;
+      }
+      case "circles#update":
+      {
+        List<Object> circlesToAdd = call.argument("circlesToAdd");
+        circlesController.addCircles(circlesToAdd);
+        List<Object> circlesToChange = call.argument("circlesToChange");
+        circlesController.changeCircles(circlesToChange);
+        List<Object> circleIdsToRemove = call.argument("circleIdsToRemove");
+        circlesController.removeCircles(circleIdsToRemove);
+        result.success(null);
         break;
       }
     }
@@ -173,6 +193,19 @@ public class FMFMapViewController implements
       permission, android.os.Process.myPid(), android.os.Process.myUid());
   }
 
+  private void updateInitialCircles() {
+    circlesController.addCircles(initialCircles);
+  }
+
+  @Override
+  public void setInitialCircles(Object initialCircles) {
+    ArrayList<?> circles = (ArrayList<?>) initialCircles;
+    this.initialCircles = circles != null ? new ArrayList<>(circles) : null;
+    if (map4D != null) {
+      updateInitialCircles();
+    }
+  }
+
   @Override
   public void onCameraIdle() {
     methodChannel.invokeMethod("camera#onIdle", Collections.singletonMap("map", id));
@@ -195,7 +228,7 @@ public class FMFMapViewController implements
 
   @Override
   public void onCircleClick(MFCircle mfCircle) {
-
+    circlesController.onCircleTap(mfCircle.getId());
   }
 
   @Override
