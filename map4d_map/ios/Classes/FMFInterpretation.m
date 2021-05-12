@@ -76,6 +76,44 @@
   }
 }
 
+#pragma mark - Interpret Polyline Options
++ (void)interpretPolylineOptions:(NSDictionary*) data sink:(id<FMFPolylineOptionsSink>)sink {
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [sink setConsumeTapEvents:[FMFConvert toBool:consumeTapEvents]];
+  }
+
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [sink setVisible:[FMFConvert toBool:visible]];
+  }
+
+  NSNumber* zIndex = data[@"zIndex"];
+  if (zIndex != nil) {
+    [sink setZIndex:[FMFConvert toInt:zIndex]];
+  }
+
+  NSArray* points = data[@"points"];
+  if (points) {
+    [sink setPoints:[FMFConvert toPoints:points]];
+  }
+
+  NSNumber* strokeColor = data[@"color"];
+  if (strokeColor != nil) {
+    [sink setColor:[FMFConvert toColor:strokeColor]];
+  }
+
+  NSNumber* strokeWidth = data[@"width"];
+  if (strokeWidth != nil) {
+    [sink setStrokeWidth:[FMFConvert toInt:strokeWidth]];
+  }
+
+  NSNumber* style = data[@"style"];
+  if (style != nil) {
+    [sink setStyle:[FMFConvert toPolylineStyle:style]];
+  }
+}
+
 #pragma mark - Interpret Circle options
 + (void)interpretCircleOptions:(NSDictionary*)data sink:(id<FMFCircleOptionsSink>)sink {
   NSNumber* consumeTapEvents = data[@"consumeTapEvents"];

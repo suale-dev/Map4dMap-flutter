@@ -44,11 +44,15 @@ class MFMapView extends StatefulWidget {
     this.onCameraIdle,
     this.onTap,
     this.onModeChange,
+    this.polylines = const<MFPolyline>{},
     this.circles = const <MFCircle>{},
   }) : super(key: key);
 
   @override
   State createState() => _MFMapViewState();
+
+  /// Polylines to be placed on the map.
+  final Set<MFPolyline> polylines;
 
   /// Circles to be placed on the map.
   final Set<MFCircle> circles;
@@ -105,6 +109,7 @@ class MFMapView extends StatefulWidget {
 class _MFMapViewState extends State<MFMapView> {
   final Completer<MFMapViewController> _controller = Completer<MFMapViewController>();
   late _MFMapViewOptions _mapOptions;
+  Map<MFPolylineId, MFPolyline> _polylines = <MFPolylineId, MFPolyline>{};
   Map<MFCircleId, MFCircle> _circles = <MFCircleId, MFCircle>{};
 
   @override
@@ -115,6 +120,7 @@ class _MFMapViewState extends State<MFMapView> {
     final Map<String, dynamic> creationParams = <String, dynamic>{
       'options': _mapOptions.toMap(),
       'initialCameraPosition': widget.initialCameraPosition?.toMap(),
+      'polylinesToAdd': serializePolylineSet(widget.polylines),
       'circlesToAdd': serializeCircleSet(widget.circles),
     };
 
@@ -141,6 +147,7 @@ class _MFMapViewState extends State<MFMapView> {
   void initState() {
     super.initState();
     _mapOptions = _MFMapViewOptions.fromWidget(widget);
+    _polylines = keyByPolylineId(widget.polylines);
     _circles = keyByCircleId(widget.circles);
   }
 
@@ -148,6 +155,7 @@ class _MFMapViewState extends State<MFMapView> {
   void didUpdateWidget(MFMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateOptions();
+    _updatePolylines();
     _updateCircles();
   }
 
@@ -157,6 +165,18 @@ class _MFMapViewState extends State<MFMapView> {
     final MapCreatedCallback? onMapCreated = widget.onMapCreated;
     if (onMapCreated != null) {
       onMapCreated(controller);
+    }
+  }
+
+  void onPolylineTap(MFPolylineId polylineId) {
+    assert(polylineId != null);
+    final MFPolyline? polyline = _polylines[polylineId];
+    if (polyline == null) {
+      throw UnknownMapObjectIdError('polyline', polylineId, 'onTap');
+    }
+    final VoidCallback? onTap = polyline.onTap;
+    if (onTap != null) {
+      onTap();
     }
   }
 
@@ -182,6 +202,14 @@ class _MFMapViewState extends State<MFMapView> {
     // ignore: unawaited_futures
     controller._updateMapOptions(updates);
     _mapOptions = newOptions;
+  }
+
+  void _updatePolylines() async {
+    final MFMapViewController controller = await _controller.future;
+    // ignore: unawaited_futures
+    controller._updatePolylines(
+        PolylineUpdates.from(_polylines.values.toSet(), widget.polylines));
+    _polylines = keyByPolylineId(widget.polylines);
   }
 
   void _updateCircles() async {

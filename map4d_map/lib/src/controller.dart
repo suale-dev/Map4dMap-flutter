@@ -39,6 +39,9 @@ class MFMapViewController {
           _mapState.widget.onCameraIdle!();
         }
         break;
+      case 'polyline#onTap':
+        _mapState.onPolylineTap(MFPolylineId(call.arguments['polylineId']));
+      break;
       case 'circle#onTap':
         _mapState.onCircleTap(MFCircleId(call.arguments['circleId']));
         break;
@@ -98,6 +101,18 @@ class MFMapViewController {
     assert(optionsUpdate != null);
     return _channel.invokeMethod<void>('map#update', <String, dynamic>{'options': optionsUpdate},
     );
+  }
+
+  /// Updates polyline configuration.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> _updatePolylines(PolylineUpdates polylineUpdates) {
+    assert(polylineUpdates != null);
+    return _channel.invokeMethod<void>(
+        'polylines#update', polylineUpdates.toJson());
   }
 
   /// Updates circle configuration.

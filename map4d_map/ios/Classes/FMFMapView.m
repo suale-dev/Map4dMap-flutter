@@ -66,6 +66,7 @@
   NSObject<FlutterPluginRegistrar>* _registrar;
   FMFEventTracking* _track;
   
+  FMFPolylinesController* _polylinesController;
   FMFCirclesController* _circlesController;
 }
 
@@ -101,11 +102,20 @@
     }];
     
     // annotations controller
+    _polylinesController = [[FMFPolylinesController alloc] init:_channel
+                                                        mapView:_mapView
+                                                      registrar:registrar];
+
     _circlesController = [[FMFCirclesController alloc] init:_channel
                                                     mapView:_mapView
                                                   registrar:registrar];
     
     // initial annotations
+    id polylinesToAdd = args[@"polylinesToAdd"];
+    if ([polylinesToAdd isKindOfClass:[NSArray class]]) {
+      [_polylinesController addPolylines:polylinesToAdd];
+    }
+
     id circlesToAdd = args[@"circlesToAdd"];
     if ([circlesToAdd isKindOfClass:[NSArray class]]) {
       [_circlesController addCircles:circlesToAdd];
@@ -154,6 +164,22 @@
     case FMFMethodAnimateCamera: {
       MFCameraUpdate* cameraUpdate = [FMFConvert toCameraUpdate:call.arguments[@"cameraUpdate"]];
       [_mapView animateCamera:cameraUpdate];
+      result(nil);
+      break;
+    }
+    case FMFMethodPolylineUpdate: {
+      id polylinesToAdd = call.arguments[@"polylinesToAdd"];
+      if ([polylinesToAdd isKindOfClass:[NSArray class]]) {
+        [_polylinesController addPolylines:polylinesToAdd];
+      }
+      id polylinesToChange = call.arguments[@"polylinesToChange"];
+      if ([polylinesToChange isKindOfClass:[NSArray class]]) {
+        [_polylinesController changePolylines:polylinesToChange];
+      }
+      id polylineIdsToRemove = call.arguments[@"polylineIdsToRemove"];
+      if ([polylineIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_polylinesController removePolylineIds:polylineIdsToRemove];
+      }
       result(nil);
       break;
     }
@@ -250,7 +276,13 @@
 //- (void)mapview: (MFMapView*)  mapView didEndDraggingMarker: (MFMarker*) marker;
 //- (void)mapview: (MFMapView*)  mapView didDragMarker: (MFMarker*) marker;
 //- (void)mapview: (MFMapView*)  mapView didTapInfoWindowOfMarker: (MFMarker*) marker;
-//- (void)mapview: (MFMapView*)  mapView didTapPolyline: (MFPolyline*) polyline;
+
+- (void)mapview: (MFMapView*)  mapView didTapPolyline: (MFPolyline*) polyline {
+  NSArray* userData = (NSArray*) polyline.userData;
+  NSString* polylineId = userData[0];
+  [_polylinesController onPolylineTap:polylineId];
+}
+
 //- (void)mapview: (MFMapView*)  mapView didTapPolygon: (MFPolygon*) polygon;
 
 - (void)mapview: (MFMapView*)  mapView didTapCircle: (MFCircle*) circle {

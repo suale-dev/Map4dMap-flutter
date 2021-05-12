@@ -36,6 +36,10 @@
   }
   
   // Annotation
+  if ([name isEqualToString:@"polylines#update"]) {
+    return FMFMethodPolylineUpdate;
+  }
+  
   if ([name isEqualToString:@"circles#update"]) {
     return FMFMethodCirclesUpdate;
   }

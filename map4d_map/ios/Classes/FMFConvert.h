@@ -26,6 +26,7 @@
 + (MFCoordinateBounds*) toCoordinateBounds:(NSArray*)data;
 + (MFCameraPosition*)toCameraPosition:(NSDictionary*)data;
 + (MFCameraUpdate*)toCameraUpdate:(NSArray*)data;
++ (MFPolylineStyle)toPolylineStyle:(NSNumber*)data;
 
 // Response
 + (NSArray*) locationToJson:(CLLocationCoordinate2D)location;

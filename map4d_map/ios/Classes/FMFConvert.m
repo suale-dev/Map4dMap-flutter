@@ -34,6 +34,17 @@
   return CGPointMake([FMFConvert toDouble:data[0]], [FMFConvert toDouble:data[1]]);
 }
 
++ (MFPolylineStyle)toPolylineStyle:(NSNumber*)data {
+  switch (data.intValue) {
+    case 1:
+      return MFPolylineStyleDotted;
+      break;
+    default:
+      return MFPolylineStyleSolid;
+      break;
+  }
+}
+
 + (UIColor*)toColor:(NSNumber*)numberColor {
   unsigned long value = [numberColor unsignedLongValue];
   return [UIColor colorWithRed:((float)((value & 0xFF0000) >> 16)) / 255.0
