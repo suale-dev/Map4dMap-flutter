@@ -29,6 +29,18 @@ public class Convert {
     return ((Number) o).doubleValue();
   }
 
+  private static int toInt(Object o) {
+    return ((Number) o).intValue();
+  }
+
+  private static float toFloat(Object o) {
+    return ((Number) o).floatValue();
+  }
+
+  private static boolean toBoolean(Object o) {
+    return (Boolean) o;
+  }
+
   private static Map<?, ?> toMap(Object o) {
     return (Map<?, ?>) o;
   }
@@ -68,5 +80,56 @@ public class Convert {
     builder.tilt(toDouble(data.get("tilt")));
     builder.zoom(toDouble(data.get("zoom")));
     return builder.build();
+  }
+
+  static Object circleIdToJson(String circleId) {
+    if (circleId == null) {
+      return null;
+    }
+    final Map<String, Object> data = new HashMap<>(1);
+    data.put("circleId", circleId);
+    return data;
+  }
+
+  static String interpretCircleOptions(Object o, CircleOptionsSink sink) {
+    final Map<?, ?> data = toMap(o);
+    final Object consumeTapEvents = data.get("consumeTapEvents");
+    if (consumeTapEvents != null) {
+      sink.setConsumeTapEvents(toBoolean(consumeTapEvents));
+    }
+    final Object fillColor = data.get("fillColor");
+    if (fillColor != null) {
+      sink.setFillColor(toInt(fillColor));
+    }
+    final Object strokeColor = data.get("strokeColor");
+    if (strokeColor != null) {
+      sink.setStrokeColor(toInt(strokeColor));
+    }
+    final Object visible = data.get("visible");
+    if (visible != null) {
+      sink.setVisible(toBoolean(visible));
+    }
+    final Object strokeWidth = data.get("strokeWidth");
+    if (strokeWidth != null) {
+      sink.setStrokeWidth(toInt(strokeWidth));
+    }
+    final Object zIndex = data.get("zIndex");
+    if (zIndex != null) {
+      sink.setZIndex(toFloat(zIndex));
+    }
+    final Object center = data.get("center");
+    if (center != null) {
+      sink.setCenter(toCoordinate(center));
+    }
+    final Object radius = data.get("radius");
+    if (radius != null) {
+      sink.setRadius(toDouble(radius));
+    }
+    final String circleId = String.valueOf(data.get("circleId"));
+    if (circleId == null) {
+      throw new IllegalArgumentException("circleId was null");
+    } else {
+      return circleId;
+    }
   }
 }
