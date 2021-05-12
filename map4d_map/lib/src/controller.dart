@@ -72,6 +72,17 @@ class MFMapViewController {
         <String, Object>{'cameraUpdate': cameraUpdate.toJson()});
   }
 
+  Future<MFCameraPosition> cameraForBounds(LatLngBounds bounds, { double padding = 0 }) async {
+    final Map<String, dynamic> cameraPosition = (await _channel.invokeMapMethod<String, dynamic>('map#cameraForBounds',
+        <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding}))!;
+    return MFCameraPosition.fromMap(cameraPosition)!;
+  }
+
+  Future<void> fitBounds(LatLngBounds bounds, { double padding = 0 }) async {
+    return _channel.invokeMethod<void>('map#fitBounds',
+        <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding});
+  }
+
   Future<void> enable3DMode(bool isEnable) {
     return _channel.invokeMethod<bool>(
         'map#enable3DMode', <String, Object>{'enable3DMode': isEnable});

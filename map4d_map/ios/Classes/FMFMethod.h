@@ -21,6 +21,12 @@ typedef enum : NSUInteger {
   // map#getZoomLevel
   FMFMethodGetZoomLevel,
   
+  // map#fitBounds
+  FMFMethodFitBounds,
+  
+  // map#cameraForBounds
+  FMFMethodCameraForBounds,
+  
   // camera#move
   FMFMethodMoveCamera,
   

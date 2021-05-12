@@ -19,6 +19,14 @@
     return FMFMethodGetZoomLevel;
   }
   
+  if ([name isEqualToString:@"map#fitBounds"]) {
+    return FMFMethodFitBounds;
+  }
+   
+  if ([name isEqualToString:@"map#cameraForBounds"]) {
+    return FMFMethodCameraForBounds;
+  }
+  
   if ([name isEqualToString:@"camera#move"]) {
     return FMFMethodMoveCamera;
   }

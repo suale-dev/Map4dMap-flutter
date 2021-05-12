@@ -129,6 +129,22 @@
     case FMFMethodGetZoomLevel:
       result(@(_mapView.camera.zoom));
       break;
+    case FMFMethodCameraForBounds: {
+      MFCoordinateBounds* bounds = [FMFConvert toCoordinateBounds:call.arguments[@"bounds"]];
+      double padding = [FMFConvert toDouble:call.arguments[@"padding"]];
+      UIEdgeInsets insets = UIEdgeInsetsMake(padding, padding, padding, padding);
+      MFCameraPosition* camera = [_mapView cameraForBounds:bounds insets:insets];
+      result([FMFConvert positionToJson:camera]);
+      break;
+    }
+    case FMFMethodFitBounds: {
+      MFCoordinateBounds* bounds = [FMFConvert toCoordinateBounds:call.arguments[@"bounds"]];
+      double padding = [FMFConvert toDouble:call.arguments[@"padding"]];
+      UIEdgeInsets insets = UIEdgeInsetsMake(padding, padding, padding, padding);
+      [_mapView moveCamera:[MFCameraUpdate fitBounds:bounds withEdgeInsets:insets]];
+      result(nil);
+      break;
+    }
     case FMFMethodMoveCamera: {
       MFCameraUpdate* cameraUpdate = [FMFConvert toCameraUpdate:call.arguments[@"cameraUpdate"]];
       [_mapView moveCamera:cameraUpdate];
