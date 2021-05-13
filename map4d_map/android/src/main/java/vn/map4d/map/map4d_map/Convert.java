@@ -8,6 +8,7 @@ import java.util.Map;
 import vn.map4d.map.camera.MFCameraPosition;
 import vn.map4d.map.camera.MFCameraUpdate;
 import vn.map4d.map.camera.MFCameraUpdateFactory;
+import vn.map4d.map.core.MFCoordinateBounds;
 import vn.map4d.types.MFLocationCoordinate;
 
 /** Conversions between JSON-like values and Map4D data types. **/
@@ -37,6 +38,10 @@ public class Convert {
     return ((Number) o).floatValue();
   }
 
+  private static Float toFloatWrapper(Object o) {
+    return (o == null) ? null : toFloat(o);
+  }
+
   private static boolean toBoolean(Object o) {
     return (Boolean) o;
   }
@@ -48,6 +53,53 @@ public class Convert {
   static MFLocationCoordinate toCoordinate(Object o) {
     final List<?> data = toList(o);
     return new MFLocationCoordinate(toDouble(data.get(0)), toDouble(data.get(1)));
+  }
+
+  static void interpretMap4dOptions(Object o, FMFMapViewOptionsSink sink) {
+    final Map<?, ?> data = toMap(o);
+    final Object minMaxZoomPreference = data.get("minMaxZoomPreference");
+    if (minMaxZoomPreference != null) {
+      final List<?> zoomPreferenceData = toList(minMaxZoomPreference);
+      sink.setMinMaxZoomPreference( //
+        toFloatWrapper(zoomPreferenceData.get(0)), //
+        toFloatWrapper(zoomPreferenceData.get(1)));
+    }
+    final Object rotateGesturesEnabled = data.get("rotateGesturesEnabled");
+    if (rotateGesturesEnabled != null) {
+      sink.setRotateGesturesEnabled(toBoolean(rotateGesturesEnabled));
+    }
+    final Object scrollGesturesEnabled = data.get("scrollGesturesEnabled");
+    if (scrollGesturesEnabled != null) {
+      sink.setScrollGesturesEnabled(toBoolean(scrollGesturesEnabled));
+    }
+    final Object tiltGesturesEnabled = data.get("tiltGesturesEnabled");
+    if (tiltGesturesEnabled != null) {
+      sink.setTiltGesturesEnabled(toBoolean(tiltGesturesEnabled));
+    }
+    final Object zoomGesturesEnabled = data.get("zoomGesturesEnabled");
+    if (zoomGesturesEnabled != null) {
+      sink.setZoomGesturesEnabled(toBoolean(zoomGesturesEnabled));
+    }
+    final Object trackCameraPosition = data.get("trackCameraPosition");
+    if (trackCameraPosition != null) {
+      sink.setTrackCameraPosition(toBoolean(trackCameraPosition));
+    }
+    final Object myLocationEnabled = data.get("myLocationEnabled");
+    if (myLocationEnabled != null) {
+      sink.setMyLocationEnabled(toBoolean(myLocationEnabled));
+    }
+    final Object myLocationButtonEnabled = data.get("myLocationButtonEnabled");
+    if (myLocationButtonEnabled != null) {
+      sink.setMyLocationButtonEnabled(toBoolean(myLocationButtonEnabled));
+    }
+    final Object buildingsEnabled = data.get("buildingsEnabled");
+    if (buildingsEnabled != null) {
+      sink.setBuildingsEnabled(toBoolean(buildingsEnabled));
+    }
+    final Object poisEnabled = data.get("poisEnabled");
+    if (poisEnabled != null) {
+      sink.setPOIsEnabled(toBoolean(poisEnabled));
+    }
   }
 
   static MFCameraUpdate toCameraUpdate(Object o, float density) {
@@ -80,6 +132,14 @@ public class Convert {
     builder.tilt(toDouble(data.get("tilt")));
     builder.zoom(toDouble(data.get("zoom")));
     return builder.build();
+  }
+
+  static MFCoordinateBounds toCoordinateBounds(Object o) {
+    if (o == null) {
+      return null;
+    }
+    final List<?> data = toList(o);
+    return new MFCoordinateBounds(toCoordinate(data.get(0)), toCoordinate(data.get(1)));
   }
 
   static Object circleIdToJson(String circleId) {
