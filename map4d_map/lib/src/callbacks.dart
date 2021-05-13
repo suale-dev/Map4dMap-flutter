@@ -5,4 +5,4 @@ import 'location.dart';
 /// This is used in [MFMapView.onCameraMove].
 typedef void CameraPositionCallback(MFCameraPosition position);
 typedef void CoordinateCallback(LatLng coordinate);
-typedef void ModeChangeCallback(bool is3Dmode);
+typedef void ModeChangeCallback(bool is3DMode);
