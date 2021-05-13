@@ -66,6 +66,7 @@
   NSObject<FlutterPluginRegistrar>* _registrar;
   FMFEventTracking* _track;
   
+  FMFPOIsController* _poisController;
   FMFPolylinesController* _polylinesController;
   FMFCirclesController* _circlesController;
 }
@@ -102,6 +103,10 @@
     }];
     
     // annotations controller
+    _poisController = [[FMFPOIsController alloc] init:_channel
+                                              mapView:_mapView
+                                            registrar:registrar];
+
     _polylinesController = [[FMFPolylinesController alloc] init:_channel
                                                         mapView:_mapView
                                                       registrar:registrar];
@@ -111,6 +116,11 @@
                                                   registrar:registrar];
     
     // initial annotations
+    id poisToAdd = args[@"poisToAdd"];
+    if ([poisToAdd isKindOfClass:[NSArray class]]) {
+      [_poisController addPOIs:poisToAdd];
+    }
+    
     id polylinesToAdd = args[@"polylinesToAdd"];
     if ([polylinesToAdd isKindOfClass:[NSArray class]]) {
       [_polylinesController addPolylines:polylinesToAdd];
@@ -164,6 +174,22 @@
     case FMFMethodAnimateCamera: {
       MFCameraUpdate* cameraUpdate = [FMFConvert toCameraUpdate:call.arguments[@"cameraUpdate"]];
       [_mapView animateCamera:cameraUpdate];
+      result(nil);
+      break;
+    }
+    case FMFMethodPOIUpdate: {
+      id poisToAdd = call.arguments[@"poisToAdd"];
+      if ([poisToAdd isKindOfClass:[NSArray class]]) {
+        [_poisController addPOIs:poisToAdd];
+      }
+      id poisToChange = call.arguments[@"poisToChange"];
+      if ([poisToChange isKindOfClass:[NSArray class]]) {
+        [_poisController changePOIs:poisToChange];
+      }
+      id poiIdsToRemove = call.arguments[@"poiIdsToRemove"];
+      if ([poiIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_poisController removePOIIds:poiIdsToRemove];
+      }
       result(nil);
       break;
     }
@@ -321,8 +347,13 @@
 //- (void)mapView: (MFMapView*)  mapView didTapBuilding: (MFBuilding*) building;
 ///* Called after a base map building has been tapped */
 //- (void)mapView: (MFMapView*)  mapView didTapBuildingWithBuildingID: (NSString*) buildingID name: (NSString*) name location: (CLLocationCoordinate2D) location;
-///* Called after a POI annotation has been tapped */
-//- (void)mapView: (MFMapView*)  mapView didTapPOI: (MFPOI*) poi;
+
+- (void)mapView: (MFMapView*)  mapView didTapPOI: (MFPOI*) poi {
+  NSArray* userData = (NSArray*) poi.userData;
+  NSString* poiId = userData[0];
+  [_poisController onPOITap:poiId];
+}
+
 ///* Called after a base map POI has been tapped */
 //- (void)mapView: (MFMapView*)  mapView didTapPOIWithPlaceID: (NSString*) placeID name: (NSString*) name location: (CLLocationCoordinate2D) location;
 //- (void)mapView: (MFMapView*)  mapView didTapMyLocation: (CLLocationCoordinate2D) location;

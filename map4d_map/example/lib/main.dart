@@ -8,6 +8,7 @@ import 'map_ui.dart';
 // import 'move_camera.dart';
 // import 'padding.dart';
 import 'page.dart';
+import 'place_poi.dart';
 import 'place_circle.dart';
 // import 'place_marker.dart';
 // import 'place_polygon.dart';
@@ -26,6 +27,7 @@ final List<Map4dMapExampleAppPage> _allPages = <Map4dMapExampleAppPage>[
   // PlaceMarkerPage(),
   // MarkerIconsPage(),
   // ScrollingMapPage(),
+  PlacePOIPage(),
   PlacePolylinePage(),
   // PlacePolygonPage(),
   PlaceCirclePage(),

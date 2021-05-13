@@ -36,6 +36,10 @@
   }
   
   // Annotation
+  if ([name isEqualToString:@"poi#update"]) {
+    return FMFMethodPOIUpdate;
+  }
+
   if ([name isEqualToString:@"polylines#update"]) {
     return FMFMethodPolylineUpdate;
   }

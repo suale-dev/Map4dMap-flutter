@@ -44,12 +44,16 @@ class MFMapView extends StatefulWidget {
     this.onCameraIdle,
     this.onTap,
     this.onModeChange,
+    this.pois = const<MFPOI>{},
     this.polylines = const<MFPolyline>{},
     this.circles = const <MFCircle>{},
   }) : super(key: key);
 
   @override
   State createState() => _MFMapViewState();
+
+  /// POIs to be placed on the map.
+  final Set<MFPOI> pois;
 
   /// Polylines to be placed on the map.
   final Set<MFPolyline> polylines;
@@ -109,6 +113,7 @@ class MFMapView extends StatefulWidget {
 class _MFMapViewState extends State<MFMapView> {
   final Completer<MFMapViewController> _controller = Completer<MFMapViewController>();
   late _MFMapViewOptions _mapOptions;
+  Map<MFPOIId, MFPOI> _pois = <MFPOIId, MFPOI>{};
   Map<MFPolylineId, MFPolyline> _polylines = <MFPolylineId, MFPolyline>{};
   Map<MFCircleId, MFCircle> _circles = <MFCircleId, MFCircle>{};
 
@@ -147,6 +152,7 @@ class _MFMapViewState extends State<MFMapView> {
   void initState() {
     super.initState();
     _mapOptions = _MFMapViewOptions.fromWidget(widget);
+    _pois = keyByPOIId(widget.pois);
     _polylines = keyByPolylineId(widget.polylines);
     _circles = keyByCircleId(widget.circles);
   }
@@ -155,6 +161,7 @@ class _MFMapViewState extends State<MFMapView> {
   void didUpdateWidget(MFMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateOptions();
+    _updatePOIs();
     _updatePolylines();
     _updateCircles();
   }
@@ -165,6 +172,18 @@ class _MFMapViewState extends State<MFMapView> {
     final MapCreatedCallback? onMapCreated = widget.onMapCreated;
     if (onMapCreated != null) {
       onMapCreated(controller);
+    }
+  }
+
+  void onPOITap(MFPOIId poiId) {
+    assert(poiId != null);
+    final MFPOI? poi = _pois[poiId];
+    if (poi == null) {
+      throw UnknownMapObjectIdError('poi', poiId, 'onTap');
+    }
+    final VoidCallback? onTap = poi.onTap;
+    if (onTap != null) {
+      onTap();
     }
   }
 
@@ -202,6 +221,13 @@ class _MFMapViewState extends State<MFMapView> {
     // ignore: unawaited_futures
     controller._updateMapOptions(updates);
     _mapOptions = newOptions;
+  }
+
+  void _updatePOIs() async {
+    final MFMapViewController controller = await _controller.future;
+    // ignore: unawaited_futures
+    controller._updatePOIs(POIUpdates.from(_pois.values.toSet(), widget.pois));
+    _pois = keyByPOIId(widget.pois);
   }
 
   void _updatePolylines() async {

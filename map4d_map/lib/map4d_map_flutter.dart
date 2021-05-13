@@ -36,6 +36,8 @@ export 'src/callbacks.dart'
 
 export 'src/annotations/annotations.dart'
   show
+    MFPOI,
+    MFPOIId,
     MFPolyline,
     MFPolylineId,
     MFPolylineStyle,

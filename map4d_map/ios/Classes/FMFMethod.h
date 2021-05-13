@@ -33,6 +33,9 @@ typedef enum : NSUInteger {
   // camera#animate
   FMFMethodAnimateCamera,
   
+  // poi#update
+  FMFMethodPOIUpdate,
+  
   // polylines#update
   FMFMethodPolylineUpdate,
   

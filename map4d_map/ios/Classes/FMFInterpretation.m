@@ -76,6 +76,55 @@
   }
 }
 
+#pragma mark - Interpret POI Options
++ (void)interpretPOIOptions:(NSDictionary*) data sink:(id<FMFPOIOptionsSink>)sink {//registrar:(NSObject<FlutterPluginRegistrar>*) registrar {
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [sink setConsumeTapEvents:[FMFConvert toBool:consumeTapEvents]];
+  }
+  
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [sink setVisible:[FMFConvert toBool:visible]];
+  }
+  
+  NSNumber* zIndex = data[@"zIndex"];
+  if (zIndex != nil) {
+    [sink setZIndex:[FMFConvert toInt:zIndex]];
+  }
+  
+  NSArray* position = data[@"position"];
+  if (position) {
+    [sink setPosition:[FMFConvert toLocation:position]];
+  }
+  
+  NSString* title = data[@"title"];
+  if (title != nil) {
+    [sink setTitle:title];
+  }
+  
+  NSNumber* titleColor = data[@"titleColor"];
+  if (titleColor != nil) {
+    [sink setTitleColor:[FMFConvert toColor:titleColor]];
+  }
+  
+  NSString* subtitle = data[@"subtitle"];
+  if (subtitle != nil) {
+    [sink setSubtitle:subtitle];
+  }
+  
+  NSString* type = data[@"type"];
+  if (type != nil) {
+    [sink setType:type];
+  }
+  
+//  NSArray* icon = data[@"icon"];
+//  if (icon) {
+//    UIImage* image = ExtractIcon(registrar, icon);
+//    [sink setIcon:image];
+//  }
+}
+
 #pragma mark - Interpret Polyline Options
 + (void)interpretPolylineOptions:(NSDictionary*) data sink:(id<FMFPolylineOptionsSink>)sink {
   NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
