@@ -125,6 +125,69 @@
 //  }
 }
 
+#pragma mark - Interpret Building Options
++ (void)interpretBuildingOptions:(NSDictionary*) data sink:(id<FMFBuildingOptionsSink>)sink {
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [sink setConsumeTapEvents:[FMFConvert toBool:consumeTapEvents]];
+  }
+  
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [sink setVisible:[FMFConvert toBool:visible]];
+  }
+  
+  NSNumber* selected = data[@"selected"];
+  if (selected != nil) {
+    [sink setSelected:[FMFConvert toBool:selected]];
+  }
+  
+  NSArray* position = data[@"position"];
+  if (position) {
+    [sink setPosition:[FMFConvert toLocation:position]];
+  }
+  
+  NSString* name = data[@"name"];
+  if (name != nil) {
+    [sink setName:name];
+  }
+  
+  NSArray* coordinates = data[@"coordinates"];
+  if (coordinates) {
+    [sink setCoordinates:[FMFConvert toPoints:coordinates]];
+  }
+  
+  NSString* modelUrl = data[@"modelUrl"];
+  if (modelUrl != nil) {
+    [sink setModel:modelUrl];
+  }
+  
+  NSString* textureUrl = data[@"textureUrl"];
+  if (textureUrl != nil) {
+    [sink setTexture:textureUrl];
+  }
+  
+  NSNumber* height = data[@"height"];
+  if (height != nil) {
+    [sink setHeight:[FMFConvert toDouble:height]];
+  }
+  
+  NSNumber* scale = data[@"scale"];
+  if (scale != nil) {
+    [sink setScale:[FMFConvert toDouble:scale]];
+  }
+  
+  NSNumber* bearing = data[@"bearing"];
+  if (bearing != nil) {
+    [sink setBearing:[FMFConvert toFloat:bearing]];
+  }
+  
+  NSNumber* elevation = data[@"elevation"];
+  if (elevation != nil) {
+    [sink setElevation:[FMFConvert toDouble:elevation]];
+  }
+}
+
 #pragma mark - Interpret Polyline Options
 + (void)interpretPolylineOptions:(NSDictionary*) data sink:(id<FMFPolylineOptionsSink>)sink {
   NSNumber* consumeTapEvents = data[@"consumeTapEvents"];

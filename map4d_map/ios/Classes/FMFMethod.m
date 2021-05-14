@@ -39,6 +39,10 @@
   if ([name isEqualToString:@"poi#update"]) {
     return FMFMethodPOIUpdate;
   }
+  
+  if ([name isEqualToString:@"building#update"]) {
+    return FMFMethodBuildingUpdate;
+  }
 
   if ([name isEqualToString:@"polylines#update"]) {
     return FMFMethodPolylineUpdate;

@@ -7,6 +7,10 @@ export 'poi_updates.dart';
 export 'poi.dart';
 export 'utils/poi.dart';
 
+export 'building_updates.dart';
+export 'building.dart';
+export 'utils/building.dart';
+
 export 'polyline_updates.dart';
 export 'polyline.dart';
 export 'utils/polyline.dart';

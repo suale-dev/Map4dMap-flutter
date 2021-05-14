@@ -38,6 +38,8 @@ export 'src/annotations/annotations.dart'
   show
     MFPOI,
     MFPOIId,
+    MFBuilding,
+    MFBuildingId,
     MFPolyline,
     MFPolylineId,
     MFPolylineStyle,

@@ -11,6 +11,7 @@
 #import <Foundation/Foundation.h>
 #import "FMFMapView.h"
 #import "FMFPOI.h"
+#import "FMFBuilding.h"
 #import "FMFPolyline.h"
 #import "FMFCircle.h"
 
@@ -18,6 +19,7 @@
 
 + (void)interpretMapOptions:(NSDictionary*)data sink:(id<FMFMapViewOptionsSink>)sink;
 + (void)interpretPOIOptions:(NSDictionary*) data sink:(id<FMFPOIOptionsSink>)sink;// registrar:(NSObject<FlutterPluginRegistrar>*) registrar;
++ (void)interpretBuildingOptions:(NSDictionary*) data sink:(id<FMFBuildingOptionsSink>)sink;
 + (void)interpretPolylineOptions:(NSDictionary*) data sink:(id<FMFPolylineOptionsSink>)sink;
 + (void)interpretCircleOptions:(NSDictionary*)data sink:(id<FMFCircleOptionsSink>)sink;
 

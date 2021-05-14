@@ -42,6 +42,9 @@ class MFMapViewController {
       case 'poi#onTap':
         _mapState.onPOITap(MFPOIId(call.arguments['poiId']));
         break;
+      case 'building#onTap':
+        _mapState.onBuildingTap(MFBuildingId(call.arguments['buildingId']));
+        break;
       case 'polyline#onTap':
         _mapState.onPolylineTap(MFPolylineId(call.arguments['polylineId']));
         break;
@@ -116,6 +119,18 @@ class MFMapViewController {
     assert(poiUpdates != null);
     return _channel.invokeMethod<void>(
         'poi#update', poiUpdates.toJson());
+  }
+
+  /// Updates Building configuration.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> _updateBuildings(BuildingUpdates buildingUpdates) {
+    assert(buildingUpdates != null);
+    return _channel.invokeMethod<void>(
+        'building#update', buildingUpdates.toJson());
   }
 
   /// Updates polyline configuration.

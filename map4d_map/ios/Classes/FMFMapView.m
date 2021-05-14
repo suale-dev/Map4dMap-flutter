@@ -67,6 +67,7 @@
   FMFEventTracking* _track;
   
   FMFPOIsController* _poisController;
+  FMFBuildingsController* _buildingsController;
   FMFPolylinesController* _polylinesController;
   FMFCirclesController* _circlesController;
 }
@@ -106,6 +107,10 @@
     _poisController = [[FMFPOIsController alloc] init:_channel
                                               mapView:_mapView
                                             registrar:registrar];
+    
+    _buildingsController = [[FMFBuildingsController alloc] init:_channel
+                                                        mapView:_mapView
+                                                      registrar:registrar];
 
     _polylinesController = [[FMFPolylinesController alloc] init:_channel
                                                         mapView:_mapView
@@ -119,6 +124,11 @@
     id poisToAdd = args[@"poisToAdd"];
     if ([poisToAdd isKindOfClass:[NSArray class]]) {
       [_poisController addPOIs:poisToAdd];
+    }
+    
+    id buildingsToAdd = args[@"buildingsToAdd"];
+    if ([buildingsToAdd isKindOfClass:[NSArray class]]) {
+      [_buildingsController addBuildings:buildingsToAdd];
     }
     
     id polylinesToAdd = args[@"polylinesToAdd"];
@@ -189,6 +199,22 @@
       id poiIdsToRemove = call.arguments[@"poiIdsToRemove"];
       if ([poiIdsToRemove isKindOfClass:[NSArray class]]) {
         [_poisController removePOIIds:poiIdsToRemove];
+      }
+      result(nil);
+      break;
+    }
+    case FMFMethodBuildingUpdate: {
+      id buildingsToAdd = call.arguments[@"buildingsToAdd"];
+      if ([buildingsToAdd isKindOfClass:[NSArray class]]) {
+        [_buildingsController addBuildings:buildingsToAdd];
+      }
+      id buildingsToChange = call.arguments[@"buildingsToChange"];
+      if ([buildingsToChange isKindOfClass:[NSArray class]]) {
+        [_buildingsController changeBuildings:buildingsToChange];
+      }
+      id buildingIdsToRemove = call.arguments[@"buildingIdsToRemove"];
+      if ([buildingIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_buildingsController removeBuildingIds:buildingIdsToRemove];
       }
       result(nil);
       break;
@@ -344,7 +370,12 @@
 }
 
 ///* Called after a building annotation has been tapped */
-//- (void)mapView: (MFMapView*)  mapView didTapBuilding: (MFBuilding*) building;
+- (void)mapView: (MFMapView*)  mapView didTapBuilding: (MFBuilding*) building {
+  NSArray* userData = (NSArray*) building.userData;
+  NSString* buildingId = userData[0];
+  [_buildingsController onBuildingTap:buildingId];
+}
+
 ///* Called after a base map building has been tapped */
 //- (void)mapView: (MFMapView*)  mapView didTapBuildingWithBuildingID: (NSString*) buildingID name: (NSString*) name location: (CLLocationCoordinate2D) location;
 

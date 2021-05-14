@@ -45,6 +45,7 @@ class MFMapView extends StatefulWidget {
     this.onTap,
     this.onModeChange,
     this.pois = const<MFPOI>{},
+    this.buildings = const<MFBuilding>{},
     this.polylines = const<MFPolyline>{},
     this.circles = const <MFCircle>{},
   }) : super(key: key);
@@ -54,6 +55,9 @@ class MFMapView extends StatefulWidget {
 
   /// POIs to be placed on the map.
   final Set<MFPOI> pois;
+
+  /// Buildings to be placed on the map.
+  final Set<MFBuilding> buildings;
 
   /// Polylines to be placed on the map.
   final Set<MFPolyline> polylines;
@@ -114,6 +118,7 @@ class _MFMapViewState extends State<MFMapView> {
   final Completer<MFMapViewController> _controller = Completer<MFMapViewController>();
   late _MFMapViewOptions _mapOptions;
   Map<MFPOIId, MFPOI> _pois = <MFPOIId, MFPOI>{};
+  Map<MFBuildingId, MFBuilding> _buildings = <MFBuildingId, MFBuilding>{};
   Map<MFPolylineId, MFPolyline> _polylines = <MFPolylineId, MFPolyline>{};
   Map<MFCircleId, MFCircle> _circles = <MFCircleId, MFCircle>{};
 
@@ -125,6 +130,8 @@ class _MFMapViewState extends State<MFMapView> {
     final Map<String, dynamic> creationParams = <String, dynamic>{
       'options': _mapOptions.toMap(),
       'initialCameraPosition': widget.initialCameraPosition?.toMap(),
+      'poisToAdd': serializePOISet(widget.pois),
+      'buildingsToAdd': serializeBuildingSet(widget.buildings),
       'polylinesToAdd': serializePolylineSet(widget.polylines),
       'circlesToAdd': serializeCircleSet(widget.circles),
     };
@@ -153,6 +160,7 @@ class _MFMapViewState extends State<MFMapView> {
     super.initState();
     _mapOptions = _MFMapViewOptions.fromWidget(widget);
     _pois = keyByPOIId(widget.pois);
+    _buildings = keyByBuildingId(widget.buildings);
     _polylines = keyByPolylineId(widget.polylines);
     _circles = keyByCircleId(widget.circles);
   }
@@ -162,6 +170,7 @@ class _MFMapViewState extends State<MFMapView> {
     super.didUpdateWidget(oldWidget);
     _updateOptions();
     _updatePOIs();
+    _updateBuildings();
     _updatePolylines();
     _updateCircles();
   }
@@ -182,6 +191,18 @@ class _MFMapViewState extends State<MFMapView> {
       throw UnknownMapObjectIdError('poi', poiId, 'onTap');
     }
     final VoidCallback? onTap = poi.onTap;
+    if (onTap != null) {
+      onTap();
+    }
+  }
+
+  void onBuildingTap(MFBuildingId buildingId) {
+    assert(buildingId != null);
+    final MFBuilding? building = _buildings[buildingId];
+    if (building == null) {
+      throw UnknownMapObjectIdError('building', buildingId, 'onTap');
+    }
+    final VoidCallback? onTap = building.onTap;
     if (onTap != null) {
       onTap();
     }
@@ -228,6 +249,13 @@ class _MFMapViewState extends State<MFMapView> {
     // ignore: unawaited_futures
     controller._updatePOIs(POIUpdates.from(_pois.values.toSet(), widget.pois));
     _pois = keyByPOIId(widget.pois);
+  }
+
+  void _updateBuildings() async {
+    final MFMapViewController controller = await _controller.future;
+    // ignore: unawaited_futures
+    controller._updateBuildings(BuildingUpdates.from(_buildings.values.toSet(), widget.buildings));
+    _buildings = keyByBuildingId(widget.buildings);
   }
 
   void _updatePolylines() async {

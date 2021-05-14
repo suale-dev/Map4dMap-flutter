@@ -7,7 +7,7 @@ import 'package:map4d_map/map4d_map_flutter.dart';
 import 'page.dart';
 
 class PlacePOIPage extends Map4dMapExampleAppPage {
-  PlacePOIPage() : super(const Icon(Icons.linear_scale), 'Place POI');
+  PlacePOIPage() : super(const Icon(Icons.room), 'Place POI');
 
   @override
   Widget build(BuildContext context) {
