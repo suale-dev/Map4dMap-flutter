@@ -11,6 +11,7 @@
 #import "FMFMethod.h"
 #import "FMFCircle.h"
 #import "FMFMarker.h"
+#import "FMFPolygon.h"
 #import <Map4dMap/Map4dMap.h>
 #import <UIKit/UIKit.h>
 
@@ -70,6 +71,7 @@
   FMFPOIsController* _poisController;
   FMFBuildingsController* _buildingsController;
   FMFPolylinesController* _polylinesController;
+  FMFPolygonsController* _polygonsController;
   FMFCirclesController* _circlesController;
   FMFMarkersController* _markersController;
 }
@@ -117,6 +119,10 @@
     _polylinesController = [[FMFPolylinesController alloc] init:_channel
                                                         mapView:_mapView
                                                       registrar:registrar];
+    
+    _polygonsController = [[FMFPolygonsController alloc] init:_channel
+                                                        mapView:_mapView
+                                                      registrar:registrar];
 
     _circlesController = [[FMFCirclesController alloc] init:_channel
                                                     mapView:_mapView
@@ -140,6 +146,12 @@
     if ([polylinesToAdd isKindOfClass:[NSArray class]]) {
       [_polylinesController addPolylines:polylinesToAdd];
     }
+    
+    id polygonsToAdd = args[@"polygonsToAdd"];
+    if ([polygonsToAdd isKindOfClass:[NSArray class]]) {
+      [_polygonsController addPolygons:polygonsToAdd];
+    }
+
 
     id circlesToAdd = args[@"circlesToAdd"];
     if ([circlesToAdd isKindOfClass:[NSArray class]]) {
@@ -245,6 +257,24 @@
       result(nil);
       break;
     }
+
+    case FMFMethodPolygonUpdate: {
+      id polygonsToAdd = call.arguments[@"polygonsToAdd"];
+      if ([polygonsToAdd isKindOfClass:[NSArray class]]) {
+        [_polygonsController addPolygons:polygonsToAdd];
+      }
+      id polygonsToChange = call.arguments[@"polygonsToChange"];
+      if ([polygonsToChange isKindOfClass:[NSArray class]]) {
+        [_polygonsController changePolygons:polygonsToChange];
+      }
+      id polygonIdsToRemove = call.arguments[@"polygonIdsToRemove"];
+      if ([polygonIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_polygonsController removePolygonIds:polygonIdsToRemove];
+      }
+      result(nil);
+      break;
+    }
+      
     case FMFMethodCirclesUpdate: {
       id circlesToAdd = call.arguments[@"circlesToAdd"];
       if ([circlesToAdd isKindOfClass:[NSArray class]]) {
@@ -376,7 +406,11 @@
   [_polylinesController onPolylineTap:polylineId];
 }
 
-//- (void)mapview: (MFMapView*)  mapView didTapPolygon: (MFPolygon*) polygon;
+- (void)mapview: (MFMapView*)  mapView didTapPolygon: (MFPolygon*) polygon {
+  NSArray* userData = (NSArray*) polygon.userData;
+  NSString* polygonId = userData[0];
+  [_polygonsController onPolygonTap: polygonId];
+}
 
 - (void)mapview: (MFMapView*)  mapView didTapCircle: (MFCircle*) circle {
   NSArray* userData = (NSArray*) circle.userData;

@@ -20,3 +20,6 @@ export 'utils/circle.dart';
 export 'marker.dart';
 export 'marker_updates.dart';
 export 'utils/marker.dart';
+export 'polygon.dart';
+export 'polygon_update.dart';
+export 'utils/polygon.dart';

@@ -48,6 +48,9 @@ class MFMapViewController {
       case 'polyline#onTap':
         _mapState.onPolylineTap(MFPolylineId(call.arguments['polylineId']));
         break;
+      case 'polygon#onTap':
+        _mapState.onPolygonTap(MFPolygonId(call.arguments['polygonId']));
+        break;
       case 'circle#onTap':
         _mapState.onCircleTap(MFCircleId(call.arguments['circleId']));
         break;
@@ -157,6 +160,18 @@ class MFMapViewController {
     assert(polylineUpdates != null);
     return _channel.invokeMethod<void>(
         'polylines#update', polylineUpdates.toJson());
+  }
+
+  /// Updates polygon configuration.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> _updatePolygons(PolygonUpdates polygonUpdates) {
+    assert(polygonUpdates != null);
+    return _channel.invokeMethod<void>(
+        'polygons#update', polygonUpdates.toJson());
   }
 
   /// Updates circle configuration.

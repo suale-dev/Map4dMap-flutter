@@ -47,6 +47,7 @@ class MFMapView extends StatefulWidget {
     this.pois = const<MFPOI>{},
     this.buildings = const<MFBuilding>{},
     this.polylines = const<MFPolyline>{},
+    this.polygons = const<MFPolygon>{},
     this.circles = const <MFCircle>{},
     this.markers = const <MFMarker>{},
   }) : super(key: key);
@@ -62,6 +63,9 @@ class MFMapView extends StatefulWidget {
 
   /// Polylines to be placed on the map.
   final Set<MFPolyline> polylines;
+
+  /// Polygons to be placed on the map.
+  final Set<MFPolygon> polygons;
 
   /// Circles to be placed on the map.
   final Set<MFCircle> circles;
@@ -123,6 +127,7 @@ class _MFMapViewState extends State<MFMapView> {
   Map<MFPOIId, MFPOI> _pois = <MFPOIId, MFPOI>{};
   Map<MFBuildingId, MFBuilding> _buildings = <MFBuildingId, MFBuilding>{};
   Map<MFPolylineId, MFPolyline> _polylines = <MFPolylineId, MFPolyline>{};
+  Map<MFPolygonId, MFPolygon> _polygons = <MFPolygonId, MFPolygon>{};
   Map<MFCircleId, MFCircle> _circles = <MFCircleId, MFCircle>{};
   Map<MFMarkerId, MFMarker> _markers = <MFMarkerId, MFMarker>{};
 
@@ -137,6 +142,7 @@ class _MFMapViewState extends State<MFMapView> {
       'poisToAdd': serializePOISet(widget.pois),
       'buildingsToAdd': serializeBuildingSet(widget.buildings),
       'polylinesToAdd': serializePolylineSet(widget.polylines),
+      'polygonsToAdd': serializePolygonSet(widget.polygons),
       'circlesToAdd': serializeCircleSet(widget.circles),
       'markersToAdd': serializeMarkerSet(widget.markers),
     };
@@ -167,6 +173,7 @@ class _MFMapViewState extends State<MFMapView> {
     _pois = keyByPOIId(widget.pois);
     _buildings = keyByBuildingId(widget.buildings);
     _polylines = keyByPolylineId(widget.polylines);
+    _polygons = keyByPolygonId(widget.polygons);
     _circles = keyByCircleId(widget.circles);
     _markers = keyByMarkerId(widget.markers);
   }
@@ -178,6 +185,7 @@ class _MFMapViewState extends State<MFMapView> {
     _updatePOIs();
     _updateBuildings();
     _updatePolylines();
+    _updatePolygons();
     _updateCircles();
     _updateMarkers();
   }
@@ -222,6 +230,18 @@ class _MFMapViewState extends State<MFMapView> {
       throw UnknownMapObjectIdError('polyline', polylineId, 'onTap');
     }
     final VoidCallback? onTap = polyline.onTap;
+    if (onTap != null) {
+      onTap();
+    }
+  }
+
+  void onPolygonTap(MFPolygonId polygonId) {
+    assert(polygonId != null);
+    final MFPolygon? polygon = _polygons[polygonId];
+    if (polygon == null) {
+      throw UnknownMapObjectIdError('polygon', polygonId, 'onTap');
+    }
+    final VoidCallback? onTap = polygon.onTap;
     if (onTap != null) {
       onTap();
     }
@@ -304,6 +324,14 @@ class _MFMapViewState extends State<MFMapView> {
     controller._updatePolylines(
         PolylineUpdates.from(_polylines.values.toSet(), widget.polylines));
     _polylines = keyByPolylineId(widget.polylines);
+  }
+
+  void _updatePolygons() async {
+    final MFMapViewController controller = await _controller.future;
+    // ignore: unawaited_futures
+    controller._updatePolygons(
+        PolygonUpdates.from(_polygons.values.toSet(), widget.polygons));
+    _polygons = keyByPolygonId(widget.polygons);
   }
 
   void _updateCircles() async {

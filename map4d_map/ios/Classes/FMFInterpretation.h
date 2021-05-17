@@ -16,6 +16,7 @@
 #import "FMFPolyline.h"
 #import "FMFCircle.h"
 #import "FMFMarker.h"
+#import "FMFPolygon.h"
 
 @interface FMFInterpretation : NSObject
 
@@ -24,6 +25,7 @@
 + (void)interpretBuildingOptions:(NSDictionary*) data sink:(id<FMFBuildingOptionsSink>)sink;
 + (void)interpretPolylineOptions:(NSDictionary*) data sink:(id<FMFPolylineOptionsSink>)sink;
 + (void)interpretCircleOptions:(NSDictionary*)data sink:(id<FMFCircleOptionsSink>)sink;
++ (void)interpretPolygonOptions:(NSDictionary*)data sink:(id<FMFPolygonOptionsSink>)sink;
 + (void)interpretMarkerOptions:(NSDictionary*)data
                           sink:(id<FMFMarkerOptionsSink>)sink
                      registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
