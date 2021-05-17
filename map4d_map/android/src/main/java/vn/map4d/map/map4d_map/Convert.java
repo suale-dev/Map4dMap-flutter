@@ -1,5 +1,6 @@
 package vn.map4d.map.map4d_map;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -9,6 +10,7 @@ import vn.map4d.map.camera.MFCameraPosition;
 import vn.map4d.map.camera.MFCameraUpdate;
 import vn.map4d.map.camera.MFCameraUpdateFactory;
 import vn.map4d.map.core.MFCoordinateBounds;
+import vn.map4d.map.core.MFPolylineStyle;
 import vn.map4d.types.MFLocationCoordinate;
 
 /** Conversions between JSON-like values and Map4D data types. **/
@@ -50,9 +52,30 @@ public class Convert {
     return (Map<?, ?>) o;
   }
 
+  private static List<MFLocationCoordinate> toPoints(Object o) {
+    final List<?> data = toList(o);
+    final List<MFLocationCoordinate> points = new ArrayList<>(data.size());
+
+    for (Object rawPoint : data) {
+      final List<?> point = toList(rawPoint);
+      points.add(new MFLocationCoordinate(toFloat(point.get(0)), toFloat(point.get(1))));
+    }
+    return points;
+  }
+
   static MFLocationCoordinate toCoordinate(Object o) {
     final List<?> data = toList(o);
     return new MFLocationCoordinate(toDouble(data.get(0)), toDouble(data.get(1)));
+  }
+
+  static MFPolylineStyle toPolylineStyle(Object o) {
+    final int style = toInt(o);
+    switch (style) {
+      case 1:
+        return MFPolylineStyle.Dotted;
+      default:
+        return MFPolylineStyle.Solid;
+    }
   }
 
   static void interpretMap4dOptions(Object o, FMFMapViewOptionsSink sink) {
@@ -142,6 +165,15 @@ public class Convert {
     return new MFCoordinateBounds(toCoordinate(data.get(0)), toCoordinate(data.get(1)));
   }
 
+  static Object polylineIdToJson(String polylineId) {
+    if (polylineId == null) {
+      return null;
+    }
+    final Map<String, Object> data = new HashMap<>(1);
+    data.put("polylineId", polylineId);
+    return data;
+  }
+
   static Object circleIdToJson(String circleId) {
     if (circleId == null) {
       return null;
@@ -151,7 +183,45 @@ public class Convert {
     return data;
   }
 
-  static String interpretCircleOptions(Object o, CircleOptionsSink sink) {
+  static String interpretPolylineOptions(Object o, FMFPolylineOptionsSink sink) {
+    final Map<?, ?> data = toMap(o);
+    final Object consumeTapEvents = data.get("consumeTapEvents");
+    if (consumeTapEvents != null) {
+      sink.setConsumeTapEvents(toBoolean(consumeTapEvents));
+    }
+    final Object color = data.get("color");
+    if (color != null) {
+      sink.setColor(toInt(color));
+    }
+    final Object visible = data.get("visible");
+    if (visible != null) {
+      sink.setVisible(toBoolean(visible));
+    }
+    final Object style = data.get("style");
+    if (style != null) {
+      sink.setStyle(toPolylineStyle(style));
+    }
+    final Object width = data.get("width");
+    if (width != null) {
+      sink.setWidth(toInt(width));
+    }
+    final Object zIndex = data.get("zIndex");
+    if (zIndex != null) {
+      sink.setZIndex(toFloat(zIndex));
+    }
+    final Object points = data.get("points");
+    if (points != null) {
+      sink.setPoints(toPoints(points));
+    }
+    final String polylineId = (String) data.get("polylineId");
+    if (polylineId == null) {
+      throw new IllegalArgumentException("polylineId was null");
+    } else {
+      return polylineId;
+    }
+  }
+
+  static String interpretCircleOptions(Object o, FMFCircleOptionsSink sink) {
     final Map<?, ?> data = toMap(o);
     final Object consumeTapEvents = data.get("consumeTapEvents");
     if (consumeTapEvents != null) {

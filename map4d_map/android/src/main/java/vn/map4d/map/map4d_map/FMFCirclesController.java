@@ -9,15 +9,15 @@ import vn.map4d.map.annotations.MFCircle;
 import vn.map4d.map.annotations.MFCircleOptions;
 import vn.map4d.map.core.Map4D;
 
-public class CirclesController {
+public class FMFCirclesController {
 
-  private final Map<String, CircleController> circleIdToController;
+  private final Map<String, FMFCircleController> circleIdToController;
   private final Map<Long, String> mfCircleIdToDartCircleId;
   private final MethodChannel methodChannel;
   private final float density;
   private Map4D map4D;
 
-  CirclesController(MethodChannel methodChannel, float density) {
+  FMFCirclesController(MethodChannel methodChannel, float density) {
     this.circleIdToController = new HashMap<>();
     this.mfCircleIdToDartCircleId = new HashMap<>();
     this.methodChannel = methodChannel;
@@ -53,7 +53,7 @@ public class CirclesController {
         continue;
       }
       String circleId = (String) rawCircleId;
-      final CircleController circleController = circleIdToController.remove(circleId);
+      final FMFCircleController circleController = circleIdToController.remove(circleId);
       if (circleController != null) {
         circleController.remove();
         mfCircleIdToDartCircleId.remove(circleController.getMFCircleId());
@@ -67,7 +67,7 @@ public class CirclesController {
       return false;
     }
     methodChannel.invokeMethod("circle#onTap", Convert.circleIdToJson(circleId));
-    CircleController circleController = circleIdToController.get(circleId);
+    FMFCircleController circleController = circleIdToController.get(circleId);
     if (circleController != null) {
       return circleController.consumeTapEvents();
     }
@@ -78,7 +78,7 @@ public class CirclesController {
     if (circle == null) {
       return;
     }
-    CircleBuilder circleBuilder = new CircleBuilder(density);
+    FMFCircleBuilder circleBuilder = new FMFCircleBuilder(density);
     String circleId = Convert.interpretCircleOptions(circle, circleBuilder);
     MFCircleOptions options = circleBuilder.build();
     addCircle(circleId, options, circleBuilder.consumeTapEvents());
@@ -86,7 +86,7 @@ public class CirclesController {
 
   private void addCircle(String circleId, MFCircleOptions circleOptions, boolean consumeTapEvents) {
     final MFCircle circle = map4D.addCircle(circleOptions);
-    CircleController controller = new CircleController(circle, consumeTapEvents, density);
+    FMFCircleController controller = new FMFCircleController(circle, consumeTapEvents, density);
     circleIdToController.put(circleId, controller);
     mfCircleIdToDartCircleId.put(circle.getId(), circleId);
   }
@@ -96,7 +96,7 @@ public class CirclesController {
       return;
     }
     String circleId = getCircleId(circle);
-    CircleController circleController = circleIdToController.get(circleId);
+    FMFCircleController circleController = circleIdToController.get(circleId);
     if (circleController != null) {
       Convert.interpretCircleOptions(circle, circleController);
     }
