@@ -24,4 +24,6 @@ interface FMFMapViewOptionsSink {
   void setPOIsEnabled(boolean poisEnabled);
 
   void setInitialCircles(Object initialCircles);
+
+  void setInitialPolylines(Object initialPolylines);
 }

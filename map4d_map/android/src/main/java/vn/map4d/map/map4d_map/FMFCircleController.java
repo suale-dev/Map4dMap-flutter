@@ -1,21 +1,29 @@
 package vn.map4d.map.map4d_map;
 
-import vn.map4d.map.annotations.MFCircleOptions;
+import vn.map4d.map.annotations.MFCircle;
 import vn.map4d.types.MFLocationCoordinate;
 
-public class CircleBuilder implements CircleOptionsSink {
+/** Controller of a single Circle on the map. */
+public class FMFCircleController implements FMFCircleOptionsSink {
 
-  private final MFCircleOptions circleOptions;
+  private final MFCircle circle;
+  private final long mfCircleId;
   private final float density;
   private boolean consumeTapEvents;
 
-  CircleBuilder(float density) {
-    this.circleOptions = new MFCircleOptions();
+  FMFCircleController(MFCircle circle, boolean consumeTapEvents, float density) {
+    this.circle = circle;
+    this.consumeTapEvents = consumeTapEvents;
     this.density = density;
+    this.mfCircleId = circle.getId();
   }
 
-  MFCircleOptions build() {
-    return circleOptions;
+  void remove() {
+    circle.remove();
+  }
+
+  long getMFCircleId() {
+    return mfCircleId;
   }
 
   boolean consumeTapEvents() {
@@ -25,40 +33,41 @@ public class CircleBuilder implements CircleOptionsSink {
   @Override
   public void setConsumeTapEvents(boolean consumeTapEvents) {
     this.consumeTapEvents = consumeTapEvents;
+    circle.setTouchable(consumeTapEvents);
   }
 
   @Override
   public void setStrokeColor(int strokeColor) {
-    circleOptions.strokeColor(strokeColor);
+    circle.setStrokeColor(strokeColor);
   }
 
   @Override
   public void setFillColor(int fillColor) {
-    circleOptions.fillColor(fillColor);
+    circle.setFillColor(fillColor);
   }
 
   @Override
   public void setCenter(MFLocationCoordinate center) {
-    circleOptions.center(center);
+    circle.setCenter(center);
   }
 
   @Override
   public void setRadius(double radius) {
-    circleOptions.radius(radius);
+    circle.setRadius(radius);
   }
 
   @Override
   public void setVisible(boolean visible) {
-    circleOptions.visible(visible);
+    circle.setVisible(visible);
   }
 
   @Override
   public void setStrokeWidth(float strokeWidth) {
-    circleOptions.strokeWidth(strokeWidth);
+    circle.setStrokeWidth(strokeWidth);
   }
 
   @Override
   public void setZIndex(float zIndex) {
-    circleOptions.zIndex(zIndex);
+    circle.setZIndex(zIndex);
   }
 }

@@ -63,8 +63,11 @@ public class FMFMapViewController implements
 
   private MFCameraPosition initialCameraPosition;
 
-  private final CirclesController circlesController;
+  private final FMFCirclesController circlesController;
+  private final FMFPolylinesController polylinesController;
+
   private List<Object> initialCircles;
+  private List<Object> initialPolylines;
 
   FMFMapViewController(@NonNull Context context, int id, BinaryMessenger binaryMessenger, @Nullable MFCameraPosition initialCameraPosition) {
     this.mapView = new MFMapView(context, null);
@@ -74,7 +77,8 @@ public class FMFMapViewController implements
     this.methodChannel = new MethodChannel(binaryMessenger, "plugin:map4d-map-view-type_" + id);
     methodChannel.setMethodCallHandler(this);
     this.initialCameraPosition = initialCameraPosition;
-    this.circlesController = new CirclesController(methodChannel, density);
+    this.circlesController = new FMFCirclesController(methodChannel, density);
+    this.polylinesController = new FMFPolylinesController(methodChannel, density);
   }
 
   void init() {
@@ -103,7 +107,9 @@ public class FMFMapViewController implements
     initialMapSettings();
     setMap4dListener(this);
     circlesController.setMap(map4D);
+    polylinesController.setMap(map4D);
     updateInitialCircles();
+    updateInitialPolylines();
 
     this.map4D.setOnMapModeChange(new Map4D.OnMapModeChangeListener() {
       @Override
@@ -252,6 +258,17 @@ public class FMFMapViewController implements
         circlesController.changeCircles(circlesToChange);
         List<Object> circleIdsToRemove = call.argument("circleIdsToRemove");
         circlesController.removeCircles(circleIdsToRemove);
+        result.success(null);
+        break;
+      }
+      case "polylines#update":
+      {
+        List<Object> polylinesToAdd = call.argument("polylinesToAdd");
+        polylinesController.addPolylines(polylinesToAdd);
+        List<Object> polylinesToChange = call.argument("polylinesToChange");
+        polylinesController.changePolylines(polylinesToChange);
+        List<Object> polylineIdsToRemove = call.argument("polylineIdsToRemove");
+        polylinesController.removePolylines(polylineIdsToRemove);
         result.success(null);
         break;
       }
@@ -420,6 +437,19 @@ public class FMFMapViewController implements
   }
 
   @Override
+  public void setInitialPolylines(Object initialPolylines) {
+    ArrayList<?> polylines = (ArrayList<?>) initialPolylines;
+    this.initialPolylines = polylines != null ? new ArrayList<>(polylines) : null;
+    if (map4D != null) {
+      updateInitialPolylines();
+    }
+  }
+
+  private void updateInitialPolylines() {
+    polylinesController.addPolylines(initialPolylines);
+  }
+
+  @Override
   public void onCameraIdle() {
     methodChannel.invokeMethod("camera#onIdle", Collections.singletonMap("map", id));
   }
@@ -486,6 +516,6 @@ public class FMFMapViewController implements
 
   @Override
   public void onPolylineClick(MFPolyline mfPolyline) {
-
+    polylinesController.onPolylineTap(mfPolyline.getId());
   }
 }

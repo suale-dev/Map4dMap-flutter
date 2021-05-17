@@ -2,7 +2,7 @@ package vn.map4d.map.map4d_map;
 
 import vn.map4d.types.MFLocationCoordinate;
 
-interface CircleOptionsSink {
+interface FMFCircleOptionsSink {
   void setConsumeTapEvents(boolean consumeTapEvents);
 
   void setStrokeColor(int strokeColor);
