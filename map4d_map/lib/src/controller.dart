@@ -51,6 +51,20 @@ class MFMapViewController {
       case 'circle#onTap':
         _mapState.onCircleTap(MFCircleId(call.arguments['circleId']));
         break;
+      case 'marker#onTap':
+        _mapState.onMarkerTap(MFMarkerId(call.arguments['markerId']));
+        break;
+      case 'infoWindow#onTap':
+        _mapState.onInfoWindowTap(MFMarkerId(call.arguments['markerId']));
+        break;
+      case 'marker#onDragEnd':
+        final markerId = MFMarkerId(call.arguments['markerId']);
+        final position = LatLng.fromJson(call.arguments['position']);
+        if (position == null) {
+          return;
+        }
+        _mapState.onMarkerDragEnd(markerId, position);
+        break;
       case 'map#didTapAtCoordinate':
         if (_mapState.widget.onTap != null) {
           final coordinate = LatLng.fromJson(call.arguments['coordinate']);
@@ -155,5 +169,16 @@ class MFMapViewController {
     assert(circleUpdates != null);
     return _channel.invokeMethod<void>(
         'circles#update', circleUpdates.toJson());
+  }
+
+  /// Updates marker configuration.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> _updateMarkers(MarkerUpdates markerUpdates) {
+    assert(markerUpdates != null);
+    return _channel.invokeMethod<void>('markers#update', markerUpdates.toJson());
   }
 }

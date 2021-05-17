@@ -12,6 +12,8 @@
 #define kMFMinZoomLevel 2
 #define kMFMaxZoomLevel 22
 
+static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray* icon);
+
 @implementation FMFInterpretation
 
 #pragma mark - Interpret Map options
@@ -266,6 +268,69 @@
   NSNumber* fillColor = data[@"fillColor"];
   if (fillColor != nil) {
     [sink setFillColor:[FMFConvert toColor:fillColor]];
+  }
+}
+
+
+#pragma mark - Interpret Marker options
++ (void)interpretMarkerOptions:(NSDictionary*)data
+                          sink:(id<FMFMarkerOptionsSink>)sink
+                     registrar:(NSObject<FlutterPluginRegistrar>*)registrar{
+  
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [sink setConsumeTapEvents:[FMFConvert toBool:consumeTapEvents]];
+  }
+  
+  NSArray* position = data[@"position"];
+  if (position) {
+    [sink setPosition:[FMFConvert toLocation:position]];
+  }
+  
+  NSNumber* elevation = data[@"elevation"];
+  if (elevation != nil) {
+    [sink setElevation:[FMFConvert toDouble:elevation]];
+  }
+  
+  NSNumber* rotation = data[@"rotation"];
+  if (rotation != nil) {
+    [sink setRotation:[FMFConvert toDouble:rotation]];
+  }
+  
+  NSNumber* draggable = data[@"draggable"];
+  if (draggable != nil) {
+    [sink setDraggable:[FMFConvert toBool:draggable]];
+  }
+  
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [sink setVisible:[FMFConvert toBool:visible]];
+  }
+  
+  NSNumber* zIndex = data[@"zIndex"];
+  if (zIndex != nil) {
+    [sink setZIndex:[FMFConvert toFloat:zIndex]];
+  }
+  
+  NSArray* anchor = data[@"anchor"];
+  if (anchor) {
+    [sink setAnchor:[FMFConvert toPoint:anchor]];
+  }
+  
+  NSDictionary* infoWindow = data[@"infoWindow"];
+  if (infoWindow) {
+    NSString* title = infoWindow[@"title"];
+    NSString* snippet = infoWindow[@"snippet"];
+    if (title) {
+      [sink setTitle:title];
+    }
+    if (snippet) {
+      [sink setSnippet:snippet];
+    }
+    NSArray* anchor = infoWindow[@"anchor"];
+    if (anchor) {
+      [sink setInfoWindowAnchor:[FMFConvert toPoint:anchor]];
+    }
   }
 }
 

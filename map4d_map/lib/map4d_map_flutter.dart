@@ -44,7 +44,10 @@ export 'src/annotations/annotations.dart'
     MFPolylineId,
     MFPolylineStyle,
     MFCircle,
-    MFCircleId
+    MFCircleId,
+    MFMarker,
+    MFMarkerId,
+    InfoWindow
   ;
 
 part 'src/map4d_map.dart';

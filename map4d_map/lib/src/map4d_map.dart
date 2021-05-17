@@ -48,6 +48,7 @@ class MFMapView extends StatefulWidget {
     this.buildings = const<MFBuilding>{},
     this.polylines = const<MFPolyline>{},
     this.circles = const <MFCircle>{},
+    this.markers = const <MFMarker>{},
   }) : super(key: key);
 
   @override
@@ -64,6 +65,8 @@ class MFMapView extends StatefulWidget {
 
   /// Circles to be placed on the map.
   final Set<MFCircle> circles;
+
+  final Set<MFMarker> markers;
 
   /// Callback method for when the map is ready to be used.
   /// Used to receive a [MFMapViewController] for this [Map4dMap].
@@ -121,6 +124,7 @@ class _MFMapViewState extends State<MFMapView> {
   Map<MFBuildingId, MFBuilding> _buildings = <MFBuildingId, MFBuilding>{};
   Map<MFPolylineId, MFPolyline> _polylines = <MFPolylineId, MFPolyline>{};
   Map<MFCircleId, MFCircle> _circles = <MFCircleId, MFCircle>{};
+  Map<MFMarkerId, MFMarker> _markers = <MFMarkerId, MFMarker>{};
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +138,7 @@ class _MFMapViewState extends State<MFMapView> {
       'buildingsToAdd': serializeBuildingSet(widget.buildings),
       'polylinesToAdd': serializePolylineSet(widget.polylines),
       'circlesToAdd': serializeCircleSet(widget.circles),
+      'markersToAdd': serializeMarkerSet(widget.markers),
     };
 
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -163,6 +168,7 @@ class _MFMapViewState extends State<MFMapView> {
     _buildings = keyByBuildingId(widget.buildings);
     _polylines = keyByPolylineId(widget.polylines);
     _circles = keyByCircleId(widget.circles);
+    _markers = keyByMarkerId(widget.markers);
   }
 
   @override
@@ -173,6 +179,7 @@ class _MFMapViewState extends State<MFMapView> {
     _updateBuildings();
     _updatePolylines();
     _updateCircles();
+    _updateMarkers();
   }
 
   Future<void> onPlatformViewCreated(int id) async {
@@ -232,6 +239,39 @@ class _MFMapViewState extends State<MFMapView> {
     }
   }
 
+  void onMarkerTap(MFMarkerId markerId) {
+    final MFMarker? marker = _markers[markerId];
+    if (marker == null) {
+      throw UnknownMapObjectIdError('marker', markerId, 'onTap');
+    }
+    final VoidCallback? onTap = marker.onTap;
+    if (onTap != null) {
+      onTap();
+    }
+  }
+
+  void onInfoWindowTap(MFMarkerId markerId) {
+    final MFMarker? marker = _markers[markerId];
+    if (marker == null) {
+      throw UnknownMapObjectIdError('marker', markerId, 'onTap');
+    }
+    final VoidCallback? onTap = marker.infoWindow.onTap;
+    if (onTap != null) {
+      onTap();
+    }
+  }
+  
+  void onMarkerDragEnd(MFMarkerId markerId, LatLng position) {
+    final MFMarker? marker = _markers[markerId];
+    if (marker == null) {
+      throw UnknownMapObjectIdError('marker', markerId, 'onMarkerDragEnd');
+    }
+    final ValueChanged<LatLng>? onDragEnd = marker.onDragEnd;
+    if (onDragEnd != null) {
+      onDragEnd(position);
+    }
+  }
+
   void _updateOptions() async {
     final _MFMapViewOptions newOptions = _MFMapViewOptions.fromWidget(widget);
     final Map<String, dynamic> updates = _mapOptions.updatesMap(newOptions);
@@ -271,6 +311,14 @@ class _MFMapViewState extends State<MFMapView> {
     // ignore: unawaited_futures
     controller._updateCircles(CircleUpdates.from(_circles.values.toSet(), widget.circles));
     _circles = keyByCircleId(widget.circles);
+  }
+
+  void _updateMarkers() async {
+    final MFMapViewController controller = await _controller.future;
+    // ignore: unawaited_futures
+    controller._updateMarkers(
+        MarkerUpdates.from(_markers.values.toSet(), widget.markers));
+    _markers = keyByMarkerId(widget.markers);
   }
 }
 

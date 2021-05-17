@@ -52,6 +52,10 @@
     return FMFMethodCirclesUpdate;
   }
   
+  if ([name isEqualToString:@"markers#update"]) {
+    return FMFMethodMarkersUpdate;
+  }
+  
   if ([name isEqualToString:@"map#enable3DMode"]) {
     return FMFMethodEnable3DMode;
   }

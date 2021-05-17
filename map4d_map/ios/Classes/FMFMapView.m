@@ -10,6 +10,7 @@
 #import "FMFInterpretation.h"
 #import "FMFMethod.h"
 #import "FMFCircle.h"
+#import "FMFMarker.h"
 #import <Map4dMap/Map4dMap.h>
 #import <UIKit/UIKit.h>
 
@@ -70,6 +71,7 @@
   FMFBuildingsController* _buildingsController;
   FMFPolylinesController* _polylinesController;
   FMFCirclesController* _circlesController;
+  FMFMarkersController* _markersController;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -120,6 +122,9 @@
                                                     mapView:_mapView
                                                   registrar:registrar];
     
+    _markersController = [[FMFMarkersController alloc] init: _channel
+                                                    mapView:_mapView
+                                                  registrar:registrar];
     // initial annotations
     id poisToAdd = args[@"poisToAdd"];
     if ([poisToAdd isKindOfClass:[NSArray class]]) {
@@ -139,6 +144,11 @@
     id circlesToAdd = args[@"circlesToAdd"];
     if ([circlesToAdd isKindOfClass:[NSArray class]]) {
       [_circlesController addCircles:circlesToAdd];
+    }
+    
+    id markersToAdd = args[@"markersToAdd"];
+    if ([markersToAdd isKindOfClass:[NSArray class]]) {
+      [_markersController addMarkers:markersToAdd];
     }
   }
   return self;
@@ -250,6 +260,23 @@
       }
       break;
     }
+    
+    case FMFMethodMarkersUpdate: {
+      id markersToAdd = call.arguments[@"markersToAdd"];
+      if ([markersToAdd isKindOfClass: [NSArray class]]) {
+        [_markersController addMarkers: markersToAdd];
+      }
+      id markerToChange = call.arguments[@"markersToChange"];
+      if ([markerToChange isKindOfClass:[NSArray class]]) {
+        [_markersController changeMarkers:markerToChange];
+      }
+      id markerIdsToRemove = call.arguments[@"markerIdsToRemove"];
+      if ([markerIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_markersController removeMarkerIds:markerIdsToRemove];
+      }
+      break;
+    }
+      
     case FMFMethodEnable3DMode: {
       BOOL isEnable = [FMFConvert toBool:call.arguments[@"enable3DMode"]];
       [_mapView enable3DMode: isEnable];
@@ -323,11 +350,25 @@
 }
 
 #pragma mark - MFMapViewDelegate
-//- (BOOL)mapview: (MFMapView*)  mapView didTapMarker: (MFMarker*) marker {
-//- (void)mapview: (MFMapView*)  mapView didBeginDraggingMarker: (MFMarker*) marker;
-//- (void)mapview: (MFMapView*)  mapView didEndDraggingMarker: (MFMarker*) marker;
-//- (void)mapview: (MFMapView*)  mapView didDragMarker: (MFMarker*) marker;
-//- (void)mapview: (MFMapView*)  mapView didTapInfoWindowOfMarker: (MFMarker*) marker;
+
+- (BOOL)mapview: (MFMapView*) mapView didTapMarker: (MFMarker*) marker {
+  NSArray* userData = (NSArray*) marker.userData;
+  NSString* markerId = userData[0];
+  [_markersController onMarkerTap:markerId];
+  return false;
+}
+
+- (void)mapview: (MFMapView*) mapView didEndDraggingMarker: (MFMarker*) marker {
+  NSArray* userData = (NSArray*) marker.userData;
+  NSString* markerId = userData[0];
+  [_markersController onDragEndMarker: markerId position: marker.position];
+}
+
+- (void)mapview: (MFMapView*) mapView didTapInfoWindowOfMarker: (MFMarker*) marker{
+  NSArray* userData = (NSArray*) marker.userData;
+  NSString* markerId = userData[0];
+  [_markersController onInfoWindowTap:markerId];
+}
 
 - (void)mapview: (MFMapView*)  mapView didTapPolyline: (MFPolyline*) polyline {
   NSArray* userData = (NSArray*) polyline.userData;
