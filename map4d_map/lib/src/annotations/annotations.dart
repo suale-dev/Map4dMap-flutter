@@ -14,7 +14,9 @@ export 'utils/building.dart';
 export 'polyline_updates.dart';
 export 'polyline.dart';
 export 'utils/polyline.dart';
-
 export 'circle_updates.dart';
 export 'circle.dart';
 export 'utils/circle.dart';
+export 'marker.dart';
+export 'marker_updates.dart';
+export 'utils/marker.dart';

@@ -9,11 +9,13 @@
 #define FMFInterpretation_h
 
 #import <Foundation/Foundation.h>
+#import <Flutter/Flutter.h>
 #import "FMFMapView.h"
 #import "FMFPOI.h"
 #import "FMFBuilding.h"
 #import "FMFPolyline.h"
 #import "FMFCircle.h"
+#import "FMFMarker.h"
 
 @interface FMFInterpretation : NSObject
 
@@ -22,6 +24,9 @@
 + (void)interpretBuildingOptions:(NSDictionary*) data sink:(id<FMFBuildingOptionsSink>)sink;
 + (void)interpretPolylineOptions:(NSDictionary*) data sink:(id<FMFPolylineOptionsSink>)sink;
 + (void)interpretCircleOptions:(NSDictionary*)data sink:(id<FMFCircleOptionsSink>)sink;
++ (void)interpretMarkerOptions:(NSDictionary*)data
+                          sink:(id<FMFMarkerOptionsSink>)sink
+                     registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
 
 @end
 

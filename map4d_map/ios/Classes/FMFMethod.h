@@ -44,6 +44,9 @@ typedef enum : NSUInteger {
   
   // circles#update
   FMFMethodCirclesUpdate,
+  
+  // markesr#update
+  FMFMethodMarkersUpdate,
 
   //map#enable3DMode
   FMFMethodEnable3DMode
