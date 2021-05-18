@@ -47,6 +47,8 @@ export 'src/annotations/annotations.dart'
     MFCircleId,
     MFMarker,
     MFMarkerId,
+    MFPolygon,
+    MFPolygonId,
     InfoWindow
   ;
 

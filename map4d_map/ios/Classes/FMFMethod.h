@@ -42,6 +42,9 @@ typedef enum : NSUInteger {
   // polylines#update
   FMFMethodPolylineUpdate,
   
+  // polygons#update
+  FMFMethodPolygonUpdate,
+  
   // circles#update
   FMFMethodCirclesUpdate,
   

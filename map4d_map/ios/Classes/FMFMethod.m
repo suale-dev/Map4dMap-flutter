@@ -48,6 +48,10 @@
     return FMFMethodPolylineUpdate;
   }
   
+  if ([name isEqualToString:@"polygons#update"]) {
+    return FMFMethodPolygonUpdate;
+  }
+  
   if ([name isEqualToString:@"circles#update"]) {
     return FMFMethodCirclesUpdate;
   }

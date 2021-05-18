@@ -334,4 +334,48 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
   }
 }
 
+#pragma mark - Interpret Polygon Options
+
++ (void)interpretPolygonOptions:(NSDictionary*)data sink:(id<FMFPolygonOptionsSink>)sink {
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [sink setConsumeTapEvents:[FMFConvert toBool:consumeTapEvents]];
+  }
+  
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [sink setVisible:[FMFConvert toBool:visible]];
+  }
+
+  NSNumber* zIndex = data[@"zIndex"];
+  if (zIndex != nil) {
+    [sink setZIndex:[FMFConvert toInt:zIndex]];
+  }
+
+  NSArray* points = data[@"points"];
+  if (points) {
+    [sink setPoints:[FMFConvert toPoints:points]];
+  }
+  
+  NSArray* holes = data[@"holes"];
+  if (holes) {
+    [sink setHoles:[FMFConvert toHoles:holes]];
+  }
+
+  NSNumber* strokeColor = data[@"strokeColor"];
+  if (strokeColor != nil) {
+    [sink setStrokeColor:[FMFConvert toColor:strokeColor]];
+  }
+  
+  NSNumber* fillColor = data[@"fillColor"];
+  if (fillColor != nil) {
+    [sink setFillColor:[FMFConvert toColor:fillColor]];
+  }
+
+  NSNumber* strokeWidth = data[@"strokeWidth"];
+  if (strokeWidth != nil) {
+    [sink setStrokeWidth:[FMFConvert toInt:strokeWidth]];
+  }
+}
+
 @end
