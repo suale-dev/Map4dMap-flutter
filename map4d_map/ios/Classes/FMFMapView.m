@@ -12,6 +12,7 @@
 #import "FMFCircle.h"
 #import "FMFMarker.h"
 #import "FMFPolygon.h"
+#import "Map4dOverlayManager.h"
 #import <Map4dMap/Map4dMap.h>
 #import <UIKit/UIKit.h>
 
@@ -61,6 +62,10 @@
 
 #pragma mark - FMFMapView
 
+@interface FMFMapView()
+@property(nonatomic, strong) Map4dOverlayManager* overlayManager;
+@end
+
 @implementation FMFMapView {
   MFMapView* _mapView;
   int64_t _viewId;
@@ -106,6 +111,16 @@
         [weakSelf onMethodCall:call result:result];
       }
     }];
+    
+    // overlay manager
+    _overlayManager = [[Map4dOverlayManager alloc] init:_channel
+                                               mapView:_mapView
+                                             registrar:registrar];
+    
+    id tileOverlaysToAdd = args[@"tileOverlaysToAdd"];
+    if ([tileOverlaysToAdd isKindOfClass:[NSArray class]]) {
+      [_overlayManager addTileOverlays:tileOverlaysToAdd];
+    }
     
     // annotations controller
     _poisController = [[FMFPOIsController alloc] init:_channel
@@ -208,6 +223,26 @@
       [_mapView animateCamera:cameraUpdate];
       result(nil);
       break;
+    }
+    case FMFMethodTileOverlaysUpdate: {
+      id tileOverlaysToAdd = call.arguments[@"tileOverlaysToAdd"];
+      if ([tileOverlaysToAdd isKindOfClass:[NSArray class]]) {
+        [_overlayManager addTileOverlays:tileOverlaysToAdd];
+      }
+      id tileOverlaysToChange = call.arguments[@"tileOverlaysToChange"];
+      if ([tileOverlaysToChange isKindOfClass:[NSArray class]]) {
+        [_overlayManager changeTileOverlays:tileOverlaysToChange];
+      }
+      id tileOverlayIdsToRemove = call.arguments[@"tileOverlayIdsToRemove"];
+      if ([tileOverlayIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_overlayManager removeTileOverlayIds:tileOverlayIdsToRemove];
+      }
+      result(nil);
+    }
+    case FMFMethodTileOverlaysClearTileCache: {
+      id rawTileOverlayId = call.arguments[@"tileOverlayId"];
+      [_overlayManager clearTileOverlayCache:rawTileOverlayId];
+      result(nil);
     }
     case FMFMethodPOIUpdate: {
       id poisToAdd = call.arguments[@"poisToAdd"];

@@ -35,6 +35,15 @@
     return FMFMethodAnimateCamera;
   }
   
+  // Overlay
+  if ([name isEqualToString:@"tileOverlays#update"]) {
+    return FMFMethodTileOverlaysUpdate;
+  }
+  
+  if ([name isEqualToString:@"tileOverlays#clearTileCache"]) {
+    return FMFMethodTileOverlaysClearTileCache;
+  }
+  
   // Annotation
   if ([name isEqualToString:@"poi#update"]) {
     return FMFMethodPOIUpdate;

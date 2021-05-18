@@ -114,6 +114,19 @@ class MFMapViewController {
         'map#enable3DMode', <String, Object>{'enable3DMode': isEnable});
   }
 
+    /// Clears the tile cache so that all tiles will be requested again from the
+  /// [TileProvider].
+  ///
+  /// The current tiles from this tile overlay will also be
+  /// cleared from the map after calling this method. The API maintains a small
+  /// in-memory cache of tiles. If you want to cache tiles for longer, you
+  /// should implement an on-disk cache.
+  Future<void> clearTileCache(MFTileOverlayId tileOverlayId) async {
+    assert(tileOverlayId != null);
+    return _channel.invokeMethod<void>(
+      'tileOverlays#clearTileCache', <String, Object>{'tileOverlayId': tileOverlayId.value});
+  }
+
   /// Updates configuration options of the map user interface.
   ///
   /// Change listeners are notified once the update has been made on the
@@ -124,6 +137,19 @@ class MFMapViewController {
     assert(optionsUpdate != null);
     return _channel.invokeMethod<void>('map#update', <String, dynamic>{'options': optionsUpdate},
     );
+  }
+
+  /// Updates tile overlays configuration.
+  ///
+  /// Change listeners are notified once the update has been made on the
+  /// platform side.
+  ///
+  /// The returned [Future] completes after listeners have been notified.
+  Future<void> _updateTileOverlays(TileOverlayUpdates tileOverlayUpdates) {
+    assert(tileOverlayUpdates != null);
+    return _channel.invokeMethod<void>(
+      'tileOverlays#update',
+      tileOverlayUpdates.toJson());
   }
 
   /// Updates POI configuration.

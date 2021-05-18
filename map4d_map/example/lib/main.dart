@@ -16,7 +16,7 @@ import 'place_polygon.dart';
 import 'place_polyline.dart';
 // import 'scrolling_map.dart';
 // import 'snapshot.dart';
-// import 'tile_overlay.dart';
+import 'tile_overlay.dart';
 
 final List<Map4dMapExampleAppPage> _allPages = <Map4dMapExampleAppPage>[
   Map4dApp(),
@@ -36,7 +36,7 @@ final List<Map4dMapExampleAppPage> _allPages = <Map4dMapExampleAppPage>[
   // PaddingPage(),
   // SnapshotPage(),
   // LiteModePage(),
-  // TileOverlayPage(),
+  TileOverlayPage(),
 ];
 
 class MapsDemo extends StatelessWidget {
