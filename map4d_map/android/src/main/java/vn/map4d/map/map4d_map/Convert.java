@@ -183,6 +183,24 @@ public class Convert {
     return data;
   }
 
+  static Object poiIdToJson(String poiId) {
+    if (poiId == null) {
+      return null;
+    }
+    final Map<String, Object> data = new HashMap<>(1);
+    data.put("poiId", poiId);
+    return data;
+  }
+
+  static Object buildingIdToJson(String buildingId) {
+    if (buildingId == null) {
+      return null;
+    }
+    final Map<String, Object> data = new HashMap<>(1);
+    data.put("buildingId", buildingId);
+    return data;
+  }
+
   static String interpretPolylineOptions(Object o, FMFPolylineOptionsSink sink) {
     final Map<?, ?> data = toMap(o);
     final Object consumeTapEvents = data.get("consumeTapEvents");
@@ -260,6 +278,105 @@ public class Convert {
       throw new IllegalArgumentException("circleId was null");
     } else {
       return circleId;
+    }
+  }
+
+  static String interpretPOIOptions(Object o, FMFPOIOptionsSink sink) {
+    final Map<?, ?> data = toMap(o);
+    final Object consumeTapEvents = data.get("consumeTapEvents");
+    if (consumeTapEvents != null) {
+      sink.setConsumeTapEvents(toBoolean(consumeTapEvents));
+    }
+    final Object visible = data.get("visible");
+    if (visible != null) {
+      sink.setVisible(toBoolean(visible));
+    }
+    final Object zIndex = data.get("zIndex");
+    if (zIndex != null) {
+      sink.setZIndex(toFloat(zIndex));
+    }
+    final Object type = data.get("type");
+    if (type != null) {
+      sink.setType(toString(type));
+    }
+    final Object title = data.get("title");
+    if (title != null) {
+      sink.setTitle(toString(title));
+    }
+    final Object titleColor = data.get("titleColor");
+    if (titleColor != null) {
+      sink.setTitleColor(toInt(titleColor));
+    }
+    final Object position = data.get("position");
+    if (position != null) {
+      sink.setPosition(toCoordinate(position));
+    }
+    final String poiId = (String) data.get("poiId");
+    if (poiId == null) {
+      throw new IllegalArgumentException("poiId was null");
+    } else {
+      return poiId;
+    }
+  }
+
+  static String interpretBuildingOptions(Object o, FMFBuildingOptionsSink sink) {
+    final Map<?, ?> data = toMap(o);
+    final Object consumeTapEvents = data.get("consumeTapEvents");
+    if (consumeTapEvents != null) {
+      sink.setConsumeTapEvents(toBoolean(consumeTapEvents));
+    }
+    final Object location = data.get("position");
+    if (location != null) {
+      sink.setLocation(toCoordinate(location));
+    }
+    final Object coordinates = data.get("coordinates");
+    if (coordinates != null) {
+      List<MFLocationCoordinate> points = toPoints(coordinates);
+      if (points.size() > 0) {
+        sink.setModel(toPoints(coordinates));
+      }
+    }
+    final Object name = data.get("name");
+    if (name != null) {
+      sink.setName(toString(name));
+    }
+    final Object modelUrl = data.get("modelUrl");
+    if (modelUrl != null) {
+      sink.setModel(toString(modelUrl));
+    }
+    final Object textureUrl = data.get("textureUrl");
+    if (textureUrl != null) {
+      sink.setTexture(toString(textureUrl));
+    }
+    final Object height = data.get("height");
+    if (height != null) {
+      sink.setHeight(toDouble(height));
+    }
+    final Object scale = data.get("scale");
+    if (scale != null) {
+      sink.setScale(toDouble(scale));
+    }
+    final Object bearing = data.get("bearing");
+    if (bearing != null) {
+      sink.setBearing(toDouble(bearing));
+    }
+    final Object elevation = data.get("elevation");
+    if (elevation != null) {
+      sink.setElevation(toFloat(elevation));
+    }
+    final Object visible = data.get("visible");
+    if (visible != null) {
+      sink.setVisible(toBoolean(visible));
+    }
+    final Object selected = data.get("selected");
+    if (selected != null) {
+      sink.setSelected(toBoolean(selected));
+    }
+    final String buildingId = (String) data.get("buildingId");
+    if (buildingId == null) {
+      throw new IllegalArgumentException("buildingId was null");
+    } else {
+      return buildingId;
     }
   }
 }
