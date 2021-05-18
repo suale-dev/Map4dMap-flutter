@@ -20,8 +20,10 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
+import vn.map4d.map.annotations.MFBuilding;
 import vn.map4d.map.annotations.MFCircle;
 import vn.map4d.map.annotations.MFMarker;
+import vn.map4d.map.annotations.MFPOI;
 import vn.map4d.map.annotations.MFPolygon;
 import vn.map4d.map.annotations.MFPolyline;
 import vn.map4d.map.camera.MFCameraPosition;
@@ -60,14 +62,19 @@ public class FMFMapViewController implements
 
   private Float minZoomPreference = null;
   private Float maxZoomPreference = null;
+  private boolean enable3DMode;
 
   private MFCameraPosition initialCameraPosition;
 
   private final FMFCirclesController circlesController;
   private final FMFPolylinesController polylinesController;
+  private final FMFPOIsController poisController;
+  private final FMFBuildingsController buildingsController;
 
   private List<Object> initialCircles;
   private List<Object> initialPolylines;
+  private List<Object> initialPOIs;
+  private List<Object> initialBuildings;
 
   FMFMapViewController(@NonNull Context context, int id, BinaryMessenger binaryMessenger, @Nullable MFCameraPosition initialCameraPosition) {
     this.mapView = new MFMapView(context, null);
@@ -79,6 +86,8 @@ public class FMFMapViewController implements
     this.initialCameraPosition = initialCameraPosition;
     this.circlesController = new FMFCirclesController(methodChannel, density);
     this.polylinesController = new FMFPolylinesController(methodChannel, density);
+    this.poisController = new FMFPOIsController(methodChannel, density);
+    this.buildingsController = new FMFBuildingsController(methodChannel, density);
   }
 
   void init() {
@@ -108,8 +117,12 @@ public class FMFMapViewController implements
     setMap4dListener(this);
     circlesController.setMap(map4D);
     polylinesController.setMap(map4D);
+    poisController.setMap(map4D);
+    buildingsController.setMap(map4D);
     updateInitialCircles();
     updateInitialPolylines();
+    updateInitialPOIs();
+    updateInitialBuildings();
 
     this.map4D.setOnMapModeChange(new Map4D.OnMapModeChangeListener() {
       @Override
@@ -131,6 +144,7 @@ public class FMFMapViewController implements
     if (maxZoomPreference != null) {
       map4D.setMaxZoomPreference(maxZoomPreference);
     }
+    map4D.enable3DMode(enable3DMode);
     map4D.setBuildingsEnabled(this.buildingsEnabled);
     map4D.setPOIsEnabled(this.poisEnabled);
     map4D.getUiSettings().setZoomGesturesEnabled(zoomGesturesEnabled);
@@ -149,6 +163,8 @@ public class FMFMapViewController implements
     map4D.setOnPolygonClickListener(listener);
     map4D.setOnPolylineClickListener(listener);
     map4D.setOnCircleClickListener(listener);
+    map4D.setOnUserPOIClickListener(listener);
+    map4D.setOnUserBuildingClickListener(listener);
     map4D.setOnMapClickListener(listener);
   }
 
@@ -170,8 +186,10 @@ public class FMFMapViewController implements
         break;
       }
       case "map#enable3DMode": {
-        final boolean isEnable = call.argument("enable3DMode");
-        map4D.enable3DMode(isEnable);
+        enable3DMode = call.argument("enable3DMode");
+        if (map4D != null) {
+          map4D.enable3DMode(enable3DMode);
+        }
         result.success(null);
         break;
       }
@@ -205,44 +223,36 @@ public class FMFMapViewController implements
         }
         break;
       }
-      case "map#update":
-      {
+      case "map#update": {
         Convert.interpretMap4dOptions(call.argument("options"), this);
         result.success(Convert.cameraPositionToJson(getCameraPosition()));
         break;
       }
-      case "map#isZoomGesturesEnabled":
-      {
+      case "map#isZoomGesturesEnabled": {
         result.success(map4D.getUiSettings().isZoomGesturesEnabled());
         break;
       }
-      case "map#isScrollGesturesEnabled":
-      {
+      case "map#isScrollGesturesEnabled": {
         result.success(map4D.getUiSettings().isScrollGesturesEnabled());
         break;
       }
-      case "map#isTiltGesturesEnabled":
-      {
+      case "map#isTiltGesturesEnabled": {
         result.success(map4D.getUiSettings().isTiltGesturesEnabled());
         break;
       }
-      case "map#isRotateGesturesEnabled":
-      {
+      case "map#isRotateGesturesEnabled": {
         result.success(map4D.getUiSettings().isRotateGesturesEnabled());
         break;
       }
-      case "map#isMyLocationButtonEnabled":
-      {
+      case "map#isMyLocationButtonEnabled": {
         result.success(map4D.getUiSettings().isMyLocationButtonEnabled());
         break;
       }
-      case "map#isBuildingsEnabled":
-      {
+      case "map#isBuildingsEnabled": {
         result.success(map4D.isBuildingsEnabled());
         break;
       }
-      case "map#isPOIsEnabled":
-      {
+      case "map#isPOIsEnabled": {
         result.success(map4D.isPOIsEnabled());
         break;
       }
@@ -250,8 +260,7 @@ public class FMFMapViewController implements
         result.success(map4D.getCameraPosition().getZoom());
         break;
       }
-      case "circles#update":
-      {
+      case "circles#update": {
         List<Object> circlesToAdd = call.argument("circlesToAdd");
         circlesController.addCircles(circlesToAdd);
         List<Object> circlesToChange = call.argument("circlesToChange");
@@ -261,14 +270,33 @@ public class FMFMapViewController implements
         result.success(null);
         break;
       }
-      case "polylines#update":
-      {
+      case "polylines#update": {
         List<Object> polylinesToAdd = call.argument("polylinesToAdd");
         polylinesController.addPolylines(polylinesToAdd);
         List<Object> polylinesToChange = call.argument("polylinesToChange");
         polylinesController.changePolylines(polylinesToChange);
         List<Object> polylineIdsToRemove = call.argument("polylineIdsToRemove");
         polylinesController.removePolylines(polylineIdsToRemove);
+        result.success(null);
+        break;
+      }
+      case "poi#update": {
+        List<Object> poisToAdd = call.argument("poisToAdd");
+        poisController.addPOIs(poisToAdd);
+        List<Object> poisToChange = call.argument("poisToChange");
+        poisController.changePOIs(poisToChange);
+        List<Object> poiIdsToRemove = call.argument("poiIdsToRemove");
+        poisController.removePOIs(poiIdsToRemove);
+        result.success(null);
+        break;
+      }
+      case "building#update": {
+        List<Object> buildingsToAdd = call.argument("buildingsToAdd");
+        buildingsController.addBuildings(buildingsToAdd);
+        List<Object> buildingsToChange = call.argument("buildingsToChange");
+        buildingsController.changeBuildings(buildingsToChange);
+        List<Object> buildingIdsToRemove = call.argument("buildingIdsToRemove");
+        buildingsController.removeBuildings(buildingIdsToRemove);
         result.success(null);
         break;
       }
@@ -450,6 +478,32 @@ public class FMFMapViewController implements
   }
 
   @Override
+  public void setInitialPOIs(Object initialPOIs) {
+    ArrayList<?> pois = (ArrayList<?>) initialPOIs;
+    this.initialPOIs = pois != null ? new ArrayList<>(pois) : null;
+    if (map4D != null) {
+      updateInitialPOIs();
+    }
+  }
+
+  private void updateInitialPOIs() {
+    poisController.addPOIs(initialPOIs);
+  }
+
+  @Override
+  public void setInitialBuildings(Object initialBuildings) {
+    ArrayList<?> buildings = (ArrayList<?>) initialBuildings;
+    this.initialBuildings = buildings != null ? new ArrayList<>(buildings) : null;
+    if (map4D != null) {
+      updateInitialBuildings();
+    }
+  }
+
+  private void updateInitialBuildings() {
+    buildingsController.addBuildings(initialBuildings);
+  }
+
+  @Override
   public void onCameraIdle() {
     methodChannel.invokeMethod("camera#onIdle", Collections.singletonMap("map", id));
   }
@@ -517,5 +571,15 @@ public class FMFMapViewController implements
   @Override
   public void onPolylineClick(MFPolyline mfPolyline) {
     polylinesController.onPolylineTap(mfPolyline.getId());
+  }
+
+  @Override
+  public void onUserBuildingClick(MFBuilding mfBuilding) {
+    buildingsController.onBuildingTap(mfBuilding.getId());
+  }
+
+  @Override
+  public void onUserPOIClick(MFPOI mfpoi) {
+    poisController.onPOITap(mfpoi.getId());
   }
 }

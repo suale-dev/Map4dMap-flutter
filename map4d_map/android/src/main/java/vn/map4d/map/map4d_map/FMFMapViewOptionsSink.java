@@ -26,4 +26,8 @@ interface FMFMapViewOptionsSink {
   void setInitialCircles(Object initialCircles);
 
   void setInitialPolylines(Object initialPolylines);
+
+  void setInitialPOIs(Object initialPOIs);
+
+  void setInitialBuildings(Object initialBuildings);
 }

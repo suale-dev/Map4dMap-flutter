@@ -24,12 +24,22 @@ public class FMFMapViewFactory extends PlatformViewFactory {
     final Map<String, Object> creationParams = (Map<String, Object>) args;
     final FMFMapViewBuilder builder = new FMFMapViewBuilder();
     Convert.interpretMap4dOptions(creationParams.get("options"), builder);
-    if (creationParams.containsKey("initialCameraPosition")) {
+    if (creationParams.containsKey("initialCameraPosition")
+      && creationParams.get("initialCameraPosition") != null) {
       MFCameraPosition initialCameraPosition = Convert.toCameraPosition(creationParams.get("initialCameraPosition"));
       builder.setInitialCameraPosition(initialCameraPosition);
     }
     if (creationParams.containsKey("circlesToAdd")) {
       builder.setInitialCircles(creationParams.get("circlesToAdd"));
+    }
+    if (creationParams.containsKey("polylinesToAdd")) {
+      builder.setInitialPolylines(creationParams.get("polylinesToAdd"));
+    }
+    if (creationParams.containsKey("poisToAdd")) {
+      builder.setInitialPOIs(creationParams.get("poisToAdd"));
+    }
+    if (creationParams.containsKey("buildingsToAdd")) {
+      builder.setInitialBuildings(creationParams.get("buildingsToAdd"));
     }
 
     return builder.build(viewId, context, binaryMessenger);

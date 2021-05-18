@@ -8,7 +8,7 @@ import vn.map4d.types.MFLocationCoordinate;
 /** Receiver of Polyline configuration options. */
 interface FMFPolylineOptionsSink {
 
-  void setConsumeTapEvents(boolean consumetapEvents);
+  void setConsumeTapEvents(boolean consumeTapEvents);
 
   void setColor(int color);
 

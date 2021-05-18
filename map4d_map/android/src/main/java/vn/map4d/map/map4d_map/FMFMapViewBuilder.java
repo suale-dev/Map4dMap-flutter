@@ -20,6 +20,8 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   MFCameraPosition initialCameraPosition;
   private Object initialCircles;
   private Object initialPolylines;
+  private Object initialPOIs;
+  private Object initialBuildings;
 
   FMFMapViewController build(
     int id,
@@ -38,6 +40,8 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
     controller.setPOIsEnabled(poisEnabled);
     controller.setInitialCircles(initialCircles);
     controller.setInitialPolylines(initialPolylines);
+    controller.setInitialPOIs(initialPOIs);
+    controller.setInitialBuildings(initialBuildings);
     controller.setTrackCameraPosition(trackCameraPosition);
     return controller;
   }
@@ -105,5 +109,15 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   @Override
   public void setInitialPolylines(Object initialPolylines) {
     this.initialPolylines = initialPolylines;
+  }
+
+  @Override
+  public void setInitialPOIs(Object initialPOIs) {
+    this.initialPOIs = initialPOIs;
+  }
+
+  @Override
+  public void setInitialBuildings(Object initialBuildings) {
+    this.initialBuildings = initialBuildings;
   }
 }

@@ -30,9 +30,9 @@ public class FMFPolylineController implements FMFPolylineOptionsSink {
   }
 
   @Override
-  public void setConsumeTapEvents(boolean consumetapEvents) {
-    this.consumeTapEvents = consumetapEvents;
-    polyline.setTouchable(consumetapEvents);
+  public void setConsumeTapEvents(boolean consumeTapEvents) {
+    this.consumeTapEvents = consumeTapEvents;
+    polyline.setTouchable(consumeTapEvents);
   }
 
   @Override
