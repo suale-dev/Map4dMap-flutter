@@ -68,11 +68,13 @@ public class FMFMapViewController implements
 
   private final FMFCirclesController circlesController;
   private final FMFPolylinesController polylinesController;
+  private final FMFPolygonsController polygonsController;
   private final FMFPOIsController poisController;
   private final FMFBuildingsController buildingsController;
 
   private List<Object> initialCircles;
   private List<Object> initialPolylines;
+  private List<Object> initialPolygons;
   private List<Object> initialPOIs;
   private List<Object> initialBuildings;
 
@@ -86,6 +88,7 @@ public class FMFMapViewController implements
     this.initialCameraPosition = initialCameraPosition;
     this.circlesController = new FMFCirclesController(methodChannel, density);
     this.polylinesController = new FMFPolylinesController(methodChannel, density);
+    this.polygonsController = new FMFPolygonsController(methodChannel, density);
     this.poisController = new FMFPOIsController(methodChannel, density);
     this.buildingsController = new FMFBuildingsController(methodChannel, density);
   }
@@ -117,10 +120,12 @@ public class FMFMapViewController implements
     setMap4dListener(this);
     circlesController.setMap(map4D);
     polylinesController.setMap(map4D);
+    polygonsController.setMap(map4D);
     poisController.setMap(map4D);
     buildingsController.setMap(map4D);
     updateInitialCircles();
     updateInitialPolylines();
+    updateInitialPolygons();
     updateInitialPOIs();
     updateInitialBuildings();
 
@@ -277,6 +282,16 @@ public class FMFMapViewController implements
         polylinesController.changePolylines(polylinesToChange);
         List<Object> polylineIdsToRemove = call.argument("polylineIdsToRemove");
         polylinesController.removePolylines(polylineIdsToRemove);
+        result.success(null);
+        break;
+      }
+      case "polygons#update": {
+        List<Object> polygonsToAdd = call.argument("polygonsToAdd");
+        polygonsController.addPolygons(polygonsToAdd);
+        List<Object> polygonsToChange = call.argument("polygonsToChange");
+        polygonsController.changePolygons(polygonsToChange);
+        List<Object> polygonIdsToRemove = call.argument("polygonIdsToRemove");
+        polygonsController.removePolygons(polygonIdsToRemove);
         result.success(null);
         break;
       }
@@ -478,6 +493,20 @@ public class FMFMapViewController implements
   }
 
   @Override
+  public void setInitialPolygons(Object initialPolygons) {
+    ArrayList<?> polygons = (ArrayList<?>) initialPolygons;
+    this.initialPolygons = polygons != null ? new ArrayList<>(polygons) : null;
+    if (map4D != null) {
+      updateInitialPolygons();
+    }
+  }
+
+  private void updateInitialPolygons() {
+    polygonsController.addPolygons(initialPolygons);
+  }
+
+
+  @Override
   public void setInitialPOIs(Object initialPOIs) {
     ArrayList<?> pois = (ArrayList<?>) initialPOIs;
     this.initialPOIs = pois != null ? new ArrayList<>(pois) : null;
@@ -565,7 +594,7 @@ public class FMFMapViewController implements
 
   @Override
   public void onPolygonClick(MFPolygon mfPolygon) {
-
+    polygonsController.onPolygonTap(mfPolygon.getId());
   }
 
   @Override

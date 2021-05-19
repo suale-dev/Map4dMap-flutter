@@ -35,6 +35,9 @@ public class FMFMapViewFactory extends PlatformViewFactory {
     if (creationParams.containsKey("polylinesToAdd")) {
       builder.setInitialPolylines(creationParams.get("polylinesToAdd"));
     }
+    if (creationParams.containsKey("polygonsToAdd")) {
+      builder.setInitialPolygons(creationParams.get("polygonsToAdd"));
+    }
     if (creationParams.containsKey("poisToAdd")) {
       builder.setInitialPOIs(creationParams.get("poisToAdd"));
     }

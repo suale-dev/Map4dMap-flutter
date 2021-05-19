@@ -63,6 +63,16 @@ public class Convert {
     return points;
   }
 
+  private static List<List<MFLocationCoordinate>> toHoles(Object o) {
+    final List<?> data = toList(o);
+    final List<List<MFLocationCoordinate>> holes = new ArrayList<>(data.size());
+
+    for (Object rawHole : data) {
+      holes.add(toPoints(rawHole));
+    }
+    return holes;
+  }
+
   static MFLocationCoordinate toCoordinate(Object o) {
     final List<?> data = toList(o);
     return new MFLocationCoordinate(toDouble(data.get(0)), toDouble(data.get(1)));
@@ -174,6 +184,15 @@ public class Convert {
     return data;
   }
 
+  static Object polygonIdToJson(String polygonId) {
+    if (polygonId == null) {
+      return null;
+    }
+    final Map<String, Object> data = new HashMap<>(1);
+    data.put("polygonId", polygonId);
+    return data;
+  }
+
   static Object circleIdToJson(String circleId) {
     if (circleId == null) {
       return null;
@@ -236,6 +255,48 @@ public class Convert {
       throw new IllegalArgumentException("polylineId was null");
     } else {
       return polylineId;
+    }
+  }
+
+  static String interpretPolygonOptions(Object o, FMFPolygonOptionsSink sink) {
+    final Map<?, ?> data = toMap(o);
+    final Object consumeTapEvents = data.get("consumeTapEvents");
+    if (consumeTapEvents != null) {
+      sink.setConsumeTapEvents(toBoolean(consumeTapEvents));
+    }
+    final Object visible = data.get("visible");
+    if (visible != null) {
+      sink.setVisible(toBoolean(visible));
+    }
+    final Object zIndex = data.get("zIndex");
+    if (zIndex != null) {
+      sink.setZIndex(toFloat(zIndex));
+    }
+    final Object fillColor = data.get("fillColor");
+    if (fillColor != null) {
+      sink.setFillColor(toInt(fillColor));
+    }
+    final Object strokeColor = data.get("strokeColor");
+    if (strokeColor != null) {
+      sink.setStrokeColor(toInt(strokeColor));
+    }
+    final Object strokeWidth = data.get("strokeWidth");
+    if (strokeWidth != null) {
+      sink.setStrokeWidth(toFloat(strokeWidth));
+    }
+    final Object points = data.get("points");
+    if (points != null) {
+      sink.setPoints(toPoints(points));
+    }
+    final Object holes = data.get("holes");
+    if (holes != null) {
+      sink.setHoles(toHoles(holes));
+    }
+    final String polygonId = (String) data.get("polygonId");
+    if (polygonId == null) {
+      throw new IllegalArgumentException("polygonId was null");
+    } else {
+      return polygonId;
     }
   }
 
