@@ -31,6 +31,10 @@
 // Response
 + (NSArray*) locationToJson:(CLLocationCoordinate2D)location;
 + (NSDictionary*) positionToJson:(MFCameraPosition*)position;
+
+// Utility
++ (UIImage*)scaleImage:(UIImage*)image scale:(NSNumber*)scaleParam;
++ (UIImage*)extractIcon:(NSArray*)iconData registrar:(NSObject<FlutterPluginRegistrar>*)registrar;//move to marker
 @end
 
 #endif /* FMFConvert_h */

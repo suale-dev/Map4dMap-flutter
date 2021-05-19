@@ -33,7 +33,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
         markerId: markerId,
         position: LatLng(16.0324816, 108.132791),
         anchor: Offset(0.5, 1.0),
-        infoWindow: InfoWindow(
+        infoWindow: MFInfoWindow(
             snippet: "Snippet",
             title: "Map4D",
             anchor: const Offset(0.5, 0.0),
@@ -51,6 +51,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
   }
 
   MFMapViewController? controller;
+  MFBitmap? _markerIcon;
   Map<MFMarkerId, MFMarker> markers = <MFMarkerId, MFMarker>{};
   int _markerIdCounter = 1;
   int _indexPosition = 0;
@@ -164,7 +165,8 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
       consumeTapEvents: true,
       markerId: markerId,
       position: _createCenter(),
-      infoWindow: InfoWindow(
+      icon: _markerIcon!,
+      infoWindow: MFInfoWindow(
           snippet: "Snippet",
           title: "Map4D",
           anchor: const Offset(0.5, 0.0),
@@ -259,6 +261,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
 
   @override
   Widget build(BuildContext context) {
+    _createMarkerImageFromAsset(context);
     final MFMarkerId? selectedId = selectedMarker;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -362,5 +365,12 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
 
   LatLng _createLatLng(double lat, double lng) {
     return LatLng(lat, lng);
+  }
+
+  Future<void> _createMarkerImageFromAsset(BuildContext context) async {
+    if (_markerIcon == null) {
+      final ImageConfiguration imageConfiguration = createLocalImageConfiguration(context, size: Size.square(48));
+      _markerIcon = await MFBitmap.fromAssetImage(imageConfiguration, 'assets/ic_marker_tracking.png');
+    }
   }
 }

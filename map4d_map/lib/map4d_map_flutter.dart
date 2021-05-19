@@ -37,20 +37,21 @@ export 'src/callbacks.dart'
 
 export 'src/annotations/annotations.dart'
   show
-    MFPOI,
-    MFPOIId,
-    MFBuilding,
-    MFBuildingId,
+    MFBitmap,
+    MFMarker,
+    MFMarkerId,
+    MFInfoWindow,
+    MFCircle,
+    MFCircleId,
     MFPolyline,
     MFPolylineId,
     MFPolylineStyle,
-    MFCircle,
-    MFCircleId,
-    MFMarker,
-    MFMarkerId,
     MFPolygon,
     MFPolygonId,
-    InfoWindow
+    MFPOI,
+    MFPOIId,
+    MFBuilding,
+    MFBuildingId
   ;
 
 export 'src/overlays/overlays.dart'

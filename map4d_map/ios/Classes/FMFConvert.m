@@ -147,4 +147,56 @@
   };
 }
 
++ (UIImage*)scaleImage:(UIImage*)image scale:(NSNumber*)scaleParam {
+  double scale = 1.0;
+  if ([scaleParam isKindOfClass:[NSNumber class]]) {
+    scale = scaleParam.doubleValue;
+  }
+
+  if (fabs(scale - 1) > 1e-3) {
+    return [UIImage imageWithCGImage:[image CGImage]
+                               scale:(image.scale * scale)
+                         orientation:(image.imageOrientation)];
+  }
+  return image;
+}
+
++ (UIImage*)extractIcon:(NSArray*)iconData registrar:(NSObject<FlutterPluginRegistrar>*)registrar {
+  UIImage* image = nil;
+  
+  if ([iconData.firstObject isEqualToString:@"defaultMarker"]) {
+    image = nil;
+  } else if ([iconData.firstObject isEqualToString:@"fromAsset"]) {
+    if (iconData.count == 2) {
+      image = [UIImage imageNamed:[registrar lookupKeyForAsset:iconData[1]]];
+    } else {
+      image = [UIImage imageNamed:[registrar lookupKeyForAsset:iconData[1] fromPackage:iconData[2]]];
+    }
+  } else if ([iconData.firstObject isEqualToString:@"fromAssetImage"]) {
+    if (iconData.count == 3) {
+      image = [UIImage imageNamed:[registrar lookupKeyForAsset:iconData[1]]];
+      NSNumber* scaleParam = iconData[2];
+      image = [FMFConvert scaleImage:image scale:scaleParam];
+    } else {
+      NSLog(@"InvalidBitmapDescriptor | 'fromAssetImage' should have exactly 3 arguments. Got: %lu",
+            (unsigned long)iconData.count);
+    }
+  } else if ([iconData[0] isEqualToString:@"fromBytes"]) {
+    if (iconData.count == 2) {
+      @try {
+        FlutterStandardTypedData* byteData = iconData[1];
+        CGFloat screenScale = [[UIScreen mainScreen] scale];
+        image = [UIImage imageWithData:[byteData data] scale:screenScale];
+      } @catch (NSException* exception) {
+        NSLog(@"InvalidBitmapDescriptor | Unable to interpret bytes as a valid image.");
+      }
+    } else {
+      NSLog(@"InvalidByteDescriptor | 'fromBytes' should have exactly 2 arguments, the bytes. Got: %lu",
+            (unsigned long)iconData.count);
+    }
+  }
+  
+  return image;
+}
+
 @end

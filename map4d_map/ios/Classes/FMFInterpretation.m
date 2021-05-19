@@ -12,8 +12,6 @@
 #define kMFMinZoomLevel 2
 #define kMFMaxZoomLevel 22
 
-static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray* icon);
-
 @implementation FMFInterpretation
 
 #pragma mark - Interpret Map options
@@ -315,6 +313,12 @@ static UIImage* ExtractIcon(NSObject<FlutterPluginRegistrar>* registrar, NSArray
   NSArray* anchor = data[@"anchor"];
   if (anchor) {
     [sink setAnchor:[FMFConvert toPoint:anchor]];
+  }
+  
+  NSArray* icon = data[@"icon"];
+  if (icon) {
+    UIImage* image = [FMFConvert extractIcon:icon registrar:registrar];
+    [sink setIcon:image];
   }
   
   NSDictionary* infoWindow = data[@"infoWindow"];

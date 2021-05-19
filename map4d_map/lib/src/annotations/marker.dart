@@ -9,9 +9,9 @@ Object _offsetToJson(Offset offset) {
 }
 
 /// Text labels for a [Marker] info window.
-class InfoWindow {
+class MFInfoWindow {
   /// Creates an immutable representation of a label on for [Marker].
-  const InfoWindow({
+  const MFInfoWindow({
     this.title,
     this.snippet,
     this.anchor = const Offset(0.5, 0.0),
@@ -19,7 +19,7 @@ class InfoWindow {
   });
 
   /// Text labels specifying that no text is to be displayed.
-  static const InfoWindow noText = InfoWindow();
+  static const MFInfoWindow noText = MFInfoWindow();
 
   final String? title;
 
@@ -27,18 +27,18 @@ class InfoWindow {
 
   final Offset anchor;
 
-  /// onTap callback for this [InfoWindow].
+  /// onTap callback for this [MFInfoWindow].
   final VoidCallback? onTap;
 
-  /// Creates a new [InfoWindow] object whose values are the same as this instance,
+  /// Creates a new [MFInfoWindow] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
-  InfoWindow copyWith({
+  MFInfoWindow copyWith({
     String? titleParam,
     String? snippetParam,
     Offset? anchorParam,
     VoidCallback? onTapParam,
   }) {
-    return InfoWindow(
+    return MFInfoWindow(
       title: titleParam ?? title,
       snippet: snippetParam ?? snippet,
       anchor: anchorParam ?? anchor,
@@ -66,7 +66,7 @@ class InfoWindow {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
     if (other.runtimeType != runtimeType) return false;
-    final InfoWindow typedOther = other as InfoWindow;
+    final MFInfoWindow typedOther = other as MFInfoWindow;
     return title == typedOther.title &&
         snippet == typedOther.snippet &&
         anchor == typedOther.anchor;
@@ -108,8 +108,11 @@ class MFMarker implements MapsObject {
 
   final double zIndex;
 
+  /// A description of the bitmap used to draw the marker icon.
+  final MFBitmap icon;
+
   /// The window is displayed when the marker is tapped.
-  final InfoWindow infoWindow;
+  final MFInfoWindow infoWindow;
 
   /// Callbacks to receive tap events for marker placed on this map.
   final VoidCallback? onTap;
@@ -127,7 +130,8 @@ class MFMarker implements MapsObject {
     this.draggable = false,
     this.visible = true,
     this.zIndex = 0.0,
-    this.infoWindow = InfoWindow.noText,
+    this.icon = MFBitmap.defaultMarker,
+    this.infoWindow = MFInfoWindow.noText,
     this.onTap,
     this.onDragEnd,
   });
@@ -143,7 +147,8 @@ class MFMarker implements MapsObject {
     bool? draggableParam,
     bool? visibleParam,
     double? zIndexParam,
-    InfoWindow? infoWindowParam,
+    MFBitmap? iconParam,
+    MFInfoWindow? infoWindowParam,
     VoidCallback? onTapParam,
     ValueChanged<LatLng>? onDragEndParam,
   }) {
@@ -157,6 +162,7 @@ class MFMarker implements MapsObject {
       draggable: draggableParam ?? draggable,
       visible: visibleParam ?? visible,
       zIndex: zIndexParam ?? zIndex,
+      icon: iconParam ?? icon,
       infoWindow: infoWindowParam ?? infoWindow,
       onTap: onTapParam ?? onTap,
       onDragEnd: onDragEndParam ?? onDragEnd,
@@ -182,6 +188,7 @@ class MFMarker implements MapsObject {
     addIfPresent('rotation', rotation);
     addIfPresent('anchor', _offsetToJson(anchor));
     addIfPresent('draggable', draggable);
+    addIfPresent('icon', icon.toJson());
     addIfPresent('visible', visible);
     addIfPresent('zIndex', zIndex);
     addIfPresent('infoWindow', infoWindow._toJson());
