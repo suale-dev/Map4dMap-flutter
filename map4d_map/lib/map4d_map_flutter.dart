@@ -15,6 +15,7 @@ import 'src/location.dart';
 import 'src/camera.dart';
 import 'src/callbacks.dart';
 import 'src/annotations/annotations.dart';
+import 'src/overlays/overlays.dart';
 
 export 'src/ui.dart' show MFMinMaxZoom;
 export 'src/location.dart'
@@ -50,6 +51,12 @@ export 'src/annotations/annotations.dart'
     MFPolygon,
     MFPolygonId,
     InfoWindow
+  ;
+
+export 'src/overlays/overlays.dart'
+  show
+    MFTileOverlay,
+    MFTileOverlayId
   ;
 
 part 'src/map4d_map.dart';

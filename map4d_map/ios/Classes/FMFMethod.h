@@ -33,6 +33,12 @@ typedef enum : NSUInteger {
   // camera#animate
   FMFMethodAnimateCamera,
   
+  // tileOverlays#update
+  FMFMethodTileOverlaysUpdate,
+  
+  // tileOverlays#clearTileCache
+  FMFMethodTileOverlaysClearTileCache,
+  
   // poi#update
   FMFMethodPOIUpdate,
   

@@ -44,6 +44,7 @@ class MFMapView extends StatefulWidget {
     this.onCameraIdle,
     this.onTap,
     this.onModeChange,
+    this.tileOverlays = const <MFTileOverlay>{},
     this.pois = const<MFPOI>{},
     this.buildings = const<MFBuilding>{},
     this.polylines = const<MFPolyline>{},
@@ -54,6 +55,9 @@ class MFMapView extends StatefulWidget {
 
   @override
   State createState() => _MFMapViewState();
+
+  /// Tile overlays to be placed on the map.
+  final Set<MFTileOverlay> tileOverlays;
 
   /// POIs to be placed on the map.
   final Set<MFPOI> pois;
@@ -124,6 +128,7 @@ class MFMapView extends StatefulWidget {
 class _MFMapViewState extends State<MFMapView> {
   final Completer<MFMapViewController> _controller = Completer<MFMapViewController>();
   late _MFMapViewOptions _mapOptions;
+  Map<MFTileOverlayId, MFTileOverlay> _tileOverlays = <MFTileOverlayId, MFTileOverlay>{};
   Map<MFPOIId, MFPOI> _pois = <MFPOIId, MFPOI>{};
   Map<MFBuildingId, MFBuilding> _buildings = <MFBuildingId, MFBuilding>{};
   Map<MFPolylineId, MFPolyline> _polylines = <MFPolylineId, MFPolyline>{};
@@ -139,6 +144,7 @@ class _MFMapViewState extends State<MFMapView> {
     final Map<String, dynamic> creationParams = <String, dynamic>{
       'options': _mapOptions.toMap(),
       'initialCameraPosition': widget.initialCameraPosition?.toMap(),
+      'tileOverlaysToAdd': serializeTileOverlaySet(widget.tileOverlays),
       'poisToAdd': serializePOISet(widget.pois),
       'buildingsToAdd': serializeBuildingSet(widget.buildings),
       'polylinesToAdd': serializePolylineSet(widget.polylines),
@@ -170,6 +176,7 @@ class _MFMapViewState extends State<MFMapView> {
   void initState() {
     super.initState();
     _mapOptions = _MFMapViewOptions.fromWidget(widget);
+    _tileOverlays = keyTileOverlayId(widget.tileOverlays);
     _pois = keyByPOIId(widget.pois);
     _buildings = keyByBuildingId(widget.buildings);
     _polylines = keyByPolylineId(widget.polylines);
@@ -182,6 +189,7 @@ class _MFMapViewState extends State<MFMapView> {
   void didUpdateWidget(MFMapView oldWidget) {
     super.didUpdateWidget(oldWidget);
     _updateOptions();
+    _updateTileOverlays();
     _updatePOIs();
     _updateBuildings();
     _updatePolylines();
@@ -302,6 +310,13 @@ class _MFMapViewState extends State<MFMapView> {
     // ignore: unawaited_futures
     controller._updateMapOptions(updates);
     _mapOptions = newOptions;
+  }
+
+  void _updateTileOverlays() async {
+    final MFMapViewController controller = await _controller.future;
+    // ignore: unawaited_futures
+    controller._updateTileOverlays(TileOverlayUpdates.from(_tileOverlays.values.toSet(), widget.tileOverlays));
+    _tileOverlays = keyTileOverlayId(widget.tileOverlays);
   }
 
   void _updatePOIs() async {
