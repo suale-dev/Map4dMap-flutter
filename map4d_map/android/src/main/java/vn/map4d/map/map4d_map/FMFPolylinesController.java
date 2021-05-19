@@ -61,8 +61,8 @@ public class FMFPolylinesController {
     }
   }
 
-  boolean onPolylineTap(long googlePolylineId) {
-    String polylineId = mfPolylineIdToDartPolylineId.get(googlePolylineId);
+  boolean onPolylineTap(long mfPolylineId) {
+    String polylineId = mfPolylineIdToDartPolylineId.get(mfPolylineId);
     if (polylineId == null) {
       return false;
     }

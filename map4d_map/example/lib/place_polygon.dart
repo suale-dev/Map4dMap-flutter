@@ -235,13 +235,13 @@ class PlacePolygonBodyState extends State<PlacePolygonBody> {
                               : () => _removeHoles(selectedId),
                         ),
                         TextButton(
-                          child: const Text('change stoke color'),
+                          child: const Text('change stroke color'),
                           onPressed: (selectedId == null)
                               ? null
                               : () => _changeStokeColor(selectedId),
                         ),
                         TextButton(
-                          child: const Text('change stoke width'),
+                          child: const Text('change stroke width'),
                           onPressed: (selectedId == null)
                               ? null
                               : () => _changeStokeWidth(selectedId),
