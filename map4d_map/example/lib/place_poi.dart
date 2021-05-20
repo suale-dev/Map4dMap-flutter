@@ -26,6 +26,7 @@ class PlacePOIBodyState extends State<PlacePOIBody> {
   PlacePOIBodyState();
 
   MFMapViewController? controller;
+  MFBitmap? _markerIcon;
   Map<MFPOIId, MFPOI> pois = <MFPOIId, MFPOI>{};
   int _poiIdCounter = 1;
   MFPOIId? selectedPOI;
@@ -67,6 +68,7 @@ class PlacePOIBodyState extends State<PlacePOIBody> {
       title: WordPair.random().asPascalCase,
       titleColor: _randomColor(null),
       // subtitle: WordPair.random().asLowerCase,
+      // icon: _markerIcon!,
       type: _randomType(null),
       onTap: () {
         _onPOITapped(poiId);
@@ -124,8 +126,16 @@ class PlacePOIBodyState extends State<PlacePOIBody> {
     return types[random.nextInt(types.length)];
   }
 
+  Future<void> _createMarkerImageFromAsset(BuildContext context) async {
+    if (_markerIcon == null) {
+      final ImageConfiguration imageConfiguration = createLocalImageConfiguration(context, size: Size.square(48));
+      _markerIcon = await MFBitmap.fromAssetImage(imageConfiguration, 'assets/ic_marker_tracking.png');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    _createMarkerImageFromAsset(context);
     final MFPOIId? selectedId = selectedPOI;
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

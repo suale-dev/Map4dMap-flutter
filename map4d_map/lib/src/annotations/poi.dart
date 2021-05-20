@@ -24,6 +24,7 @@ class MFPOI implements MapsObject<MFPOI> {
     this.title = '',
     this.titleColor = Colors.blue,
     // this.subtitle = '',
+    this.icon = MFBitmap.defaultIcon,
     this.type = 'point',
     this.visible = true,
     this.zIndex = 0,
@@ -57,7 +58,7 @@ class MFPOI implements MapsObject<MFPOI> {
   final String type;
 
   /// A description of the bitmap used to draw the POI icon.
-  // final BitmapDescriptor icon;
+  final MFBitmap icon;
 
   /// True if the POI is visible.
   final bool visible;
@@ -81,7 +82,7 @@ class MFPOI implements MapsObject<MFPOI> {
     Color? titleColorParam,
     // String? subtitleParam,
     String? typeParam,
-    //iconParam
+    MFBitmap? iconParam,
     bool? visibleParam,
     int? zIndexParam,
     VoidCallback? onTapParam,
@@ -93,6 +94,7 @@ class MFPOI implements MapsObject<MFPOI> {
       title: titleParam ?? title,
       // subtitle: subtitleParam ?? subtitle,
       titleColor: titleColorParam ?? titleColor,
+      icon: iconParam ?? icon,
       type: typeParam ?? type,
       visible: visibleParam ?? visible,
       zIndex: zIndexParam ?? zIndex,
@@ -119,6 +121,7 @@ class MFPOI implements MapsObject<MFPOI> {
     addIfPresent('title', title);
     addIfPresent('titleColor', titleColor.value);
     // addIfPresent('subtitle', subtitle);
+    addIfPresent('icon', icon.toJson());
     addIfPresent('type', type);
     addIfPresent('visible', visible);
     addIfPresent('zIndex', zIndex);
@@ -137,6 +140,7 @@ class MFPOI implements MapsObject<MFPOI> {
         title == typedOther.title &&
         titleColor == typedOther.titleColor &&
         // subtitle == typedOther.subtitle &&
+        icon == typedOther.icon &&
         type == typedOther.type &&
         visible == typedOther.visible &&
         zIndex == typedOther.zIndex;

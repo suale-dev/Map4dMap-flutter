@@ -130,7 +130,7 @@ class MFMarker implements MapsObject {
     this.draggable = false,
     this.visible = true,
     this.zIndex = 0.0,
-    this.icon = MFBitmap.defaultMarker,
+    this.icon = MFBitmap.defaultIcon,
     this.infoWindow = MFInfoWindow.noText,
     this.onTap,
     this.onDragEnd,
@@ -208,6 +208,7 @@ class MFMarker implements MapsObject {
         anchor == typedOther.anchor &&
         draggable == typedOther.draggable &&
         visible == typedOther.visible &&
+        icon == typedOther.icon &&
         infoWindow == typedOther.infoWindow &&
         zIndex == typedOther.zIndex;
   }

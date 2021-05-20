@@ -12,13 +12,13 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 class MFBitmap {
   const MFBitmap._(this._json);
 
-  static const String _defaultMarker = 'defaultMarker';
+  static const String _defaultIcon = 'defaultMarker';
   static const String _fromAssetImage = 'fromAssetImage';
   static const String _fromBytes = 'fromBytes';
 
   /// Creates a BitmapDescriptor that refers to the default marker image.
-  static const MFBitmap defaultMarker =
-      MFBitmap._(<Object>[_defaultMarker]);
+  static const MFBitmap defaultIcon =
+      MFBitmap._(<Object>[_defaultIcon]);
 
   /// Creates a [MFBitmap] from an asset image.
   ///

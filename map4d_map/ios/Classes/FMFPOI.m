@@ -50,7 +50,9 @@
 }
 
 - (void)setIcon:(UIImage*)icon {
-  _poi.icon = icon;
+  if (_poi.icon != icon) { // not set when nil & nil
+    _poi.icon = icon;
+  }
 }
 
 - (void)setType:(NSString*)type {
@@ -111,11 +113,11 @@
     [self setType:type];
   }
   
-//  NSArray* icon = data[@"icon"];
-//  if (icon) {
-//    UIImage* image = ExtractIcon(registrar, icon);
-//    [sink setIcon:image];
-//  }
+  NSArray* icon = data[@"icon"];
+  if (icon) {
+    UIImage* image = [Map4dFLTConvert extractIcon:icon registrar:registrar];
+    [self setIcon:image];
+  }
 }
 
 @end
