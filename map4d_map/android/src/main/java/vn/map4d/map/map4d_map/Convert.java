@@ -1,11 +1,21 @@
 package vn.map4d.map.map4d_map;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.flutter.view.FlutterMain;
+import vn.map4d.map.annotations.MFBitmapDescriptor;
+import vn.map4d.map.annotations.MFBitmapDescriptorFactory;
 import vn.map4d.map.camera.MFCameraPosition;
 import vn.map4d.map.camera.MFCameraUpdate;
 import vn.map4d.map.camera.MFCameraUpdateFactory;
@@ -15,6 +25,60 @@ import vn.map4d.types.MFLocationCoordinate;
 
 /** Conversions between JSON-like values and Map4D data types. **/
 public class Convert {
+
+  // TODO : FlutterMain has been deprecated and should be replaced with FlutterLoader
+  //  when it's available in Stable channel: https://github.com/flutter/flutter/issues/70923.
+  @SuppressWarnings("deprecation")
+  private static MFBitmapDescriptor toBitmapDescriptor(Context context, Object o) {
+    final List<?> data = toList(o);
+    switch (toString(data.get(0))) {
+      case "defaultMarker":
+        return MFBitmapDescriptorFactory.defaultMarker();
+      case "fromAssetImage":
+        if (data.size() == 3) {
+          AssetManager assetManager = context.getAssets();
+          String fileName = FlutterMain.getLookupKeyForAsset(toString(data.get(1)));
+          try {
+            InputStream stream = assetManager.open(fileName);
+            return MFBitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeStream(stream));
+          } catch (IOException e) {
+            throw new IllegalArgumentException("Error when read data from asset " + fileName);
+          }
+        } else {
+          throw new IllegalArgumentException(
+            "'fromAssetImage' Expected exactly 3 arguments, got: " + data.size());
+        }
+      case "fromBytes":
+        return getBitmapFromBytes(data);
+      default:
+        throw new IllegalArgumentException("Cannot interpret " + o + " as BitmapDescriptor");
+    }
+  }
+
+  private static MFBitmapDescriptor getBitmapFromBytes(List<?> data) {
+    if (data.size() == 2) {
+      try {
+        Bitmap bitmap = toBitmap(data.get(1));
+        return MFBitmapDescriptorFactory.fromBitmap(bitmap);
+      } catch (Exception e) {
+        throw new IllegalArgumentException("Unable to interpret bytes as a valid image.", e);
+      }
+    } else {
+      throw new IllegalArgumentException(
+        "fromBytes should have exactly one argument, interpretTileOverlayOptions the bytes. Got: "
+          + data.size());
+    }
+  }
+
+  private static Bitmap toBitmap(Object o) {
+    byte[] bmpData = (byte[]) o;
+    Bitmap bitmap = BitmapFactory.decodeByteArray(bmpData, 0, bmpData.length);
+    if (bitmap == null) {
+      throw new IllegalArgumentException("Unable to decode bytes as a valid bitmap.");
+    } else {
+      return bitmap;
+    }
+  }
 
   static Object latLngToJson(MFLocationCoordinate coordinate) {
     return Arrays.asList(coordinate.getLatitude(), coordinate.getLongitude());
@@ -50,6 +114,18 @@ public class Convert {
 
   private static Map<?, ?> toMap(Object o) {
     return (Map<?, ?>) o;
+  }
+
+  private static Map<String, Object> toObjectMap(Object o) {
+    Map<String, Object> hashMap = new HashMap<>();
+    Map<?, ?> map = (Map<?, ?>) o;
+    for (Object key : map.keySet()) {
+      Object object = map.get(key);
+      if (object != null) {
+        hashMap.put((String) key, object);
+      }
+    }
+    return hashMap;
   }
 
   private static List<MFLocationCoordinate> toPoints(Object o) {
@@ -190,6 +266,15 @@ public class Convert {
     }
     final Map<String, Object> data = new HashMap<>(1);
     data.put("polygonId", polygonId);
+    return data;
+  }
+  
+  static Object markerIdToJson(String markerId) {
+    if (markerId == null) {
+      return null;
+    }
+    final Map<String, Object> data = new HashMap<>(1);
+    data.put("markerId", markerId);
     return data;
   }
 
@@ -339,6 +424,79 @@ public class Convert {
       throw new IllegalArgumentException("circleId was null");
     } else {
       return circleId;
+    }
+  }
+
+  static String interpretMarkerOptions(Context context, Object o, FMFMarkerOptionsSink sink) {
+    final Map<?, ?> data = toMap(o);
+    final Object consumeTapEvents = data.get("consumeTapEvents");
+    if (consumeTapEvents != null) {
+      sink.setConsumeTapEvents(toBoolean(consumeTapEvents));
+    }
+    final Object position = data.get("position");
+    if (position != null) {
+      sink.setPosition(toCoordinate(position));
+    }
+    final Object elevation = data.get("elevation");
+    if (elevation != null) {
+      sink.setElevation(toDouble(elevation));
+    }
+    final Object rotation = data.get("rotation");
+    if (rotation != null) {
+      sink.setRotation(toDouble(rotation));
+    }
+    final Object anchor = data.get("anchor");
+    if (anchor != null) {
+      final List<?> anchorData = toList(anchor);
+      sink.setAnchor(toFloat(anchorData.get(0)), toFloat(anchorData.get(1)));
+    }
+    final Object icon = data.get("icon");
+    if (icon != null) {
+      sink.setIcon(toBitmapDescriptor(context, icon));
+    }
+    final Object draggable = data.get("draggable");
+    if (draggable != null) {
+      sink.setDraggable(toBoolean(draggable));
+    }
+    final Object visible = data.get("visible");
+    if (visible != null) {
+      sink.setVisible(toBoolean(visible));
+    }
+    final Object zIndex = data.get("zIndex");
+    if (zIndex != null) {
+      sink.setZIndex(toFloat(zIndex));
+    }
+    final Object infoWindow = data.get("infoWindow");
+    if (infoWindow != null) {
+      interpretInfoWindowOptions(sink, toObjectMap(infoWindow));
+    }
+    final Object showInfoWindow = data.get("showInfoWindowOnTap");
+    if (showInfoWindow != null) {
+      sink.setShowWindowInfoOnTap(toBoolean(showInfoWindow));
+    }
+    final String markerId = (String) data.get("markerId");
+    if (markerId == null) {
+      throw new IllegalArgumentException("markerId was null");
+    } else {
+      return markerId;
+    }
+  }
+
+  private static void interpretInfoWindowOptions(
+    FMFMarkerOptionsSink sink, Map<String, Object> infoWindow) {
+    String title = (String) infoWindow.get("title");
+    String snippet = (String) infoWindow.get("snippet");
+    if (title != null) {
+      sink.setTitle(title);
+    }
+    if (snippet != null) {
+      sink.setSnippet(snippet);
+    }
+
+    Object infoWindowAnchor = infoWindow.get("anchor");
+    if (infoWindowAnchor != null) {
+      final List<?> anchorData = toList(infoWindowAnchor);
+      sink.setWindowAnchor(toFloat(anchorData.get(0)), toFloat(anchorData.get(1)));
     }
   }
 
