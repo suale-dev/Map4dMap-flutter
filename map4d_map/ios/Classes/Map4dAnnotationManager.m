@@ -91,6 +91,14 @@
   return NO;
 }
 
+- (BOOL)isShowMarkerInfoWindow:(NSString*)markerId {
+  FMFMarker* marker = _markers[markerId];
+  if (marker != nil) {
+    return marker.showInfoWindowOnTap;
+  }
+  return NO;
+}
+
 #pragma mark - Circle
 
 - (void)addCircles:(NSArray*)circlesToAdd {

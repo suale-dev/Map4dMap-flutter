@@ -13,6 +13,7 @@
 #import <CoreLocation/CoreLocation.h>
 
 @protocol FMFMarkerOptionsSink
+
 - (void)setConsumeTapEvents:(BOOL)consumes;
 - (void)setPosition:(CLLocationCoordinate2D)position;
 - (void)setAnchor:(CGPoint) anchor;
@@ -26,15 +27,20 @@
 - (void)setSnippet: (NSString*) snippet;
 - (void)setIconView: (UIView*) iconView;
 - (void)setIcon: (UIImage*) icon;
+
 @end
 
 @interface FMFMarker : NSObject<FMFMarkerOptionsSink>
+
 @property(atomic, readonly) NSString* markerId;
+@property(nonatomic) BOOL showInfoWindowOnTap;
+
 - (instancetype)initMarkerWithId:(NSString*)markerId;
 - (void)setMap:(MFMapView*)mapView;
 - (void)removeMarker;
 - (void)interpretMarkerOptions:(NSDictionary*)data
                      registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
+
 @end
 
 #endif /* FMFMarker_h */
