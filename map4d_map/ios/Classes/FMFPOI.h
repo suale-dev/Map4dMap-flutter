@@ -26,19 +26,9 @@
 @interface FMFPOI : NSObject<FMFPOIOptionsSink>
 @property(atomic, readonly) NSString* poiId;
 - (instancetype)initPOIWithId:(NSString*)poiId;
+- (void)setMap:(MFMapView*)mapView;
 - (void)removePOI;
-@end
-
-#pragma mark - FMFPOIsController
-
-@interface FMFPOIsController : NSObject
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
-- (void)addPOIs:(NSArray*)poisToAdd;
-- (void)changePOIs:(NSArray*)poisToChange;
-- (void)removePOIIds:(NSArray*)poiIdsToRemove;
-- (void)onPOITap:(NSString*)poiId;
+- (void)interpretPOIOptions:(NSDictionary*)data registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
 @end
 
 #endif /* FMFPOI_h */

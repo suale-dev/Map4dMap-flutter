@@ -31,22 +31,10 @@
 @interface FMFMarker : NSObject<FMFMarkerOptionsSink>
 @property(atomic, readonly) NSString* markerId;
 - (instancetype)initMarkerWithId:(NSString*)markerId;
+- (void)setMap:(MFMapView*)mapView;
 - (void)removeMarker;
-@end
-
-
-#pragma mark - FMFMarkerController
-
-@interface FMFMarkersController : NSObject
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
-- (void)addMarkers:(NSArray*)markersToAdd;
-- (void)changeMarkers:(NSArray*)markersToChange;
-- (void)removeMarkerIds:(NSArray*)markerIdsToRemove;
-- (void)onMarkerTap:(NSString*)markerId;
-- (void)onDragEndMarker:(NSString*)markerId position:(CLLocationCoordinate2D)position;
-- (void)onInfoWindowTap:(NSString*)markerId;
+- (void)interpretMarkerOptions:(NSDictionary*)data
+                     registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
 @end
 
 #endif /* FMFMarker_h */

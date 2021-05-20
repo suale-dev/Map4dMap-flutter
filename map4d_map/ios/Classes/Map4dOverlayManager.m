@@ -9,11 +9,13 @@
 #import "FMFTileOverlay.h"
 
 @interface Map4dOverlayManager()
+
 @property(nonatomic, weak) MFMapView* mapView;
 @property(nonatomic, weak) FlutterMethodChannel* channel;
 @property(nonatomic, weak) NSObject<FlutterPluginRegistrar>* registrar;
 
 @property(nonatomic, strong) NSMutableDictionary* tileOverlays;
+
 @end
 
 

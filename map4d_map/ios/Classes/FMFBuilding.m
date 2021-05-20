@@ -6,7 +6,7 @@
 //
 
 #import "FMFBuilding.h"
-#import "FMFInterpretation.h"
+#import "Map4dFLTConvert.h"
 
 @implementation FMFBuilding {
   MFBuilding* _building;
@@ -26,7 +26,7 @@
   _building.map = nil;
 }
 
-- (void)addToMap:(MFMapView*)mapView {
+- (void)setMap:(MFMapView*)mapView {
   _building.map = mapView;
 }
 
@@ -90,70 +90,68 @@
   _building.selected = selected;
 }
 
-@end
-
-
-#pragma mark - FMFBuildingsController
-
-@implementation FMFBuildingsController {
-  NSMutableDictionary<NSString*, FMFBuilding*>* _buildings;
-  MFMapView* _mapView;
-  FlutterMethodChannel* _channel;
-  NSObject<FlutterPluginRegistrar>* _registrar;
-}
-
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  self = [super init];
-  if (self) {
-    _channel = methodChannel;
-    _mapView = mapView;
-    _buildings = [NSMutableDictionary dictionaryWithCapacity:1];
-    _registrar = registrar;
+#pragma mark - Interpret Building Options
+- (void)interpretBuildingOptions:(NSDictionary*)data {
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [self setConsumeTapEvents:[Map4dFLTConvert toBool:consumeTapEvents]];
   }
-  return self;
-}
-
-- (void)addBuildings:(NSArray*)buildingsToAdd {
-  for (NSDictionary* building in buildingsToAdd) {
-    NSString* buildingId = building[@"buildingId"];
-    FMFBuilding* fBuilding = [[FMFBuilding alloc] initBuildingWithId:buildingId];
-    [FMFInterpretation interpretBuildingOptions:building sink:fBuilding];
-    [fBuilding addToMap:_mapView];
-    _buildings[buildingId] = fBuilding;
+  
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [self setVisible:[Map4dFLTConvert toBool:visible]];
   }
-}
-
-- (void)changeBuildings:(NSArray*)buildingsToChange {
-  for (NSDictionary* building in buildingsToChange) {
-    NSString* buildingId = building[@"buildingId"];
-    FMFBuilding* fBuilding = _buildings[buildingId];
-    if (fBuilding != nil) {
-      [FMFInterpretation interpretBuildingOptions:building sink:fBuilding];
-    }
+  
+  NSNumber* selected = data[@"selected"];
+  if (selected != nil) {
+    [self setSelected:[Map4dFLTConvert toBool:selected]];
   }
-}
-
-- (void)removeBuildingIds:(NSArray*)buildingIdsToRemove {
-  for (NSString* buildingId in buildingIdsToRemove) {
-    if (!buildingId) {
-      continue;
-    }
-    FMFBuilding* fBuilding = _buildings[buildingId];
-    if (fBuilding != nil) {
-      [fBuilding removeBuilding];
-      [_buildings removeObjectForKey:buildingId];
-    }
+  
+  NSArray* position = data[@"position"];
+  if (position) {
+    [self setPosition:[Map4dFLTConvert toLocation:position]];
   }
-}
-
-- (void)onBuildingTap:(NSString*)buildingId {
-  if (!buildingId) return;
-  FMFBuilding* fBuilding = _buildings[buildingId];
-  if (fBuilding != nil) {
-    [_channel invokeMethod:@"building#onTap" arguments:@{@"buildingId" : buildingId}];
+  
+  NSString* name = data[@"name"];
+  if (name != nil) {
+    [self setName:name];
+  }
+  
+  NSArray* coordinates = data[@"coordinates"];
+  if (coordinates) {
+    [self setCoordinates:[Map4dFLTConvert toPoints:coordinates]];
+  }
+  
+  NSString* modelUrl = data[@"modelUrl"];
+  if (modelUrl != nil) {
+    [self setModel:modelUrl];
+  }
+  
+  NSString* textureUrl = data[@"textureUrl"];
+  if (textureUrl != nil) {
+    [self setTexture:textureUrl];
+  }
+  
+  NSNumber* height = data[@"height"];
+  if (height != nil) {
+    [self setHeight:[Map4dFLTConvert toDouble:height]];
+  }
+  
+  NSNumber* scale = data[@"scale"];
+  if (scale != nil) {
+    [self setScale:[Map4dFLTConvert toDouble:scale]];
+  }
+  
+  NSNumber* bearing = data[@"bearing"];
+  if (bearing != nil) {
+    [self setBearing:[Map4dFLTConvert toFloat:bearing]];
+  }
+  
+  NSNumber* elevation = data[@"elevation"];
+  if (elevation != nil) {
+    [self setElevation:[Map4dFLTConvert toDouble:elevation]];
   }
 }
 
 @end
+

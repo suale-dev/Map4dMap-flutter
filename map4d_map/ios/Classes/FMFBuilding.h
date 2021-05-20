@@ -27,20 +27,14 @@
 @end
 
 @interface FMFBuilding : NSObject<FMFBuildingOptionsSink>
-@property(atomic, readonly) NSString* buildingId;
-- (instancetype)initBuildingWithId:(NSString*)buildingId;
-- (void)removeBuilding;
-@end
 
-#pragma mark - FMFBuildingsController
-@interface FMFBuildingsController : NSObject
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
-- (void)addBuildings:(NSArray*)buildingsToAdd;
-- (void)changeBuildings:(NSArray*)buildingsToChange;
-- (void)removeBuildingIds:(NSArray*)buildingIdsToRemove;
-- (void)onBuildingTap:(NSString*)buildingId;
+@property(atomic, readonly) NSString* buildingId;
+
+- (instancetype)initBuildingWithId:(NSString*)buildingId;
+- (void)setMap:(MFMapView*)mapView;
+- (void)removeBuilding;
+- (void)interpretBuildingOptions:(NSDictionary*)data;
+
 @end
 
 #endif /* FMFBuilding_h */

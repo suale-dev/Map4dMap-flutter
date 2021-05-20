@@ -6,8 +6,7 @@
 //
 
 #import "FMFMarker.h"
-#import "FMFConvert.h"
-#import "FMFInterpretation.h"
+#import "Map4dFLTConvert.h"
 
 @implementation FMFMarker {
   MFMarker* _marker;
@@ -26,13 +25,11 @@
   _marker.map = nil;
 }
 
-- (void)addToMap:(MFMapView*)mapView {
+- (void)setMap:(MFMapView*)mapView {
   _marker.map = mapView;
 }
 
-/*
- FMFmarkerOptionsSink
- */
+// FMFmarkerOptionsSink
 
 - (void)setConsumeTapEvents:(BOOL)consumes {
   _marker.userInteractionEnabled = consumes;
@@ -85,85 +82,72 @@
 - (void)setIcon: (UIImage*) icon {
   _marker.icon = icon;
 }
-@end
 
-#pragma mark - FMFMarkersController
-
-@implementation FMFMarkersController {
-  NSMutableDictionary<NSString*, FMFMarker*>* _markers;
-  MFMapView* _mapView;
-  FlutterMethodChannel* _channel;
-  NSObject<FlutterPluginRegistrar>* _registrar;
-}
-
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  self = [super init];
-  if (self) {
-    _channel = methodChannel;
-    _mapView = mapView;
-    _markers = [NSMutableDictionary dictionaryWithCapacity:1];
-    _registrar = registrar;
+// Interpret marker options
+- (void)interpretMarkerOptions:(NSDictionary*)data
+                     registrar:(NSObject<FlutterPluginRegistrar>*)registrar{
+  
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [self setConsumeTapEvents:[Map4dFLTConvert toBool:consumeTapEvents]];
   }
-  return self;
-}
-
-- (void)addMarkers:(NSArray*)markersToAdd {
-  for (NSDictionary* marker in markersToAdd) {
-    NSString* markerId = marker[@"markerId"];
-    FMFMarker *fMarker = [[FMFMarker alloc] initMarkerWithId:markerId];
-    [FMFInterpretation interpretMarkerOptions:marker sink:fMarker registrar:_registrar];
-    [fMarker addToMap:_mapView];
-    _markers[markerId] = fMarker;
+  
+  NSArray* position = data[@"position"];
+  if (position) {
+    [self setPosition:[Map4dFLTConvert toLocation:position]];
   }
-}
-
-- (void)changeMarkers:(NSArray*)markersToChange {
-  for (NSDictionary* marker in markersToChange) {
-    NSString* markerId = marker[@"markerId"];
-    FMFMarker* fMarker = _markers[markerId];
-    if (fMarker != nil) {
-      [FMFInterpretation interpretMarkerOptions:marker sink:fMarker registrar:_registrar];
+  
+  NSNumber* elevation = data[@"elevation"];
+  if (elevation != nil) {
+    [self setElevation:[Map4dFLTConvert toDouble:elevation]];
+  }
+  
+  NSNumber* rotation = data[@"rotation"];
+  if (rotation != nil) {
+    [self setRotation:[Map4dFLTConvert toDouble:rotation]];
+  }
+  
+  NSNumber* draggable = data[@"draggable"];
+  if (draggable != nil) {
+    [self setDraggable:[Map4dFLTConvert toBool:draggable]];
+  }
+  
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [self setVisible:[Map4dFLTConvert toBool:visible]];
+  }
+  
+  NSNumber* zIndex = data[@"zIndex"];
+  if (zIndex != nil) {
+    [self setZIndex:[Map4dFLTConvert toFloat:zIndex]];
+  }
+  
+  NSArray* anchor = data[@"anchor"];
+  if (anchor) {
+    [self setAnchor:[Map4dFLTConvert toPoint:anchor]];
+  }
+  
+  NSArray* icon = data[@"icon"];
+  if (icon) {
+    UIImage* image = [Map4dFLTConvert extractIcon:icon registrar:registrar];
+    [self setIcon:image];
+  }
+  
+  NSDictionary* infoWindow = data[@"infoWindow"];
+  if (infoWindow) {
+    NSString* title = infoWindow[@"title"];
+    NSString* snippet = infoWindow[@"snippet"];
+    if (title) {
+      [self setTitle:title];
+    }
+    if (snippet) {
+      [self setSnippet:snippet];
+    }
+    NSArray* anchor = infoWindow[@"anchor"];
+    if (anchor) {
+      [self setInfoWindowAnchor:[Map4dFLTConvert toPoint:anchor]];
     }
   }
 }
 
-- (void)removeMarkerIds:(NSArray*)markerIdsToRemove {
-  for (NSString* markerId in markerIdsToRemove) {
-    if (!markerId) {
-      continue;
-    }
-    FMFMarker* fMarker = _markers[markerId];
-    if (fMarker != nil) {
-      [fMarker removeMarker];
-      [_markers removeObjectForKey:markerId];
-    }
-  }
-}
-
-- (void)onMarkerTap:(NSString*)markerId {
-  if (!markerId) return;
-  FMFMarker* fMarker = _markers[markerId];
-  if (fMarker != nil) {
-    [_channel invokeMethod:@"marker#onTap" arguments:@{@"markerId" : markerId}];
-  }
-}
-
-- (void)onDragEndMarker:(NSString*)markerId position:(CLLocationCoordinate2D)position {
-  if (!markerId) return;
-  FMFMarker* fMarker = _markers[markerId];
-  if (fMarker != nil) {
-    [_channel invokeMethod:@"marker#onDragEnd"
-                 arguments:@{@"markerId" : markerId, @"position" : [FMFConvert locationToJson:position]}];
-  }
-}
-
-- (void)onInfoWindowTap:(NSString*)markerId {
-  if (!markerId) return;
-  FMFMarker* fMarker = _markers[markerId];
-  if (fMarker != nil) {
-    [_channel invokeMethod:@"infoWindow#onTap" arguments:@{@"markerId" : markerId}];
-  }
-}
 @end

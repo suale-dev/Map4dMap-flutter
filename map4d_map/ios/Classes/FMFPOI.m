@@ -6,7 +6,7 @@
 //
 
 #import "FMFPOI.h"
-#import "FMFInterpretation.h"
+#import "Map4dFLTConvert.h"
 
 @implementation FMFPOI {
   MFPOI* _poi;
@@ -26,7 +26,7 @@
   _poi.map = nil;
 }
 
-- (void)addToMap:(MFMapView*)mapView {
+- (void)setMap:(MFMapView*)mapView {
   _poi.map = mapView;
 }
 
@@ -69,69 +69,55 @@
   _poi.userInteractionEnabled = consume;
 }
 
+#pragma mark - Interpret POI Options
+- (void)interpretPOIOptions:(NSDictionary*)data registrar:(NSObject<FlutterPluginRegistrar>*) registrar {
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [self setConsumeTapEvents:[Map4dFLTConvert toBool:consumeTapEvents]];
+  }
+  
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [self setVisible:[Map4dFLTConvert toBool:visible]];
+  }
+  
+  NSNumber* zIndex = data[@"zIndex"];
+  if (zIndex != nil) {
+    [self setZIndex:[Map4dFLTConvert toInt:zIndex]];
+  }
+  
+  NSArray* position = data[@"position"];
+  if (position) {
+    [self setPosition:[Map4dFLTConvert toLocation:position]];
+  }
+  
+  NSString* title = data[@"title"];
+  if (title != nil) {
+    [self setTitle:title];
+  }
+  
+  NSNumber* titleColor = data[@"titleColor"];
+  if (titleColor != nil) {
+    [self setTitleColor:[Map4dFLTConvert toColor:titleColor]];
+  }
+  
+  NSString* subtitle = data[@"subtitle"];
+  if (subtitle != nil) {
+    [self setSubtitle:subtitle];
+  }
+  
+  NSString* type = data[@"type"];
+  if (type != nil) {
+    [self setType:type];
+  }
+  
+//  NSArray* icon = data[@"icon"];
+//  if (icon) {
+//    UIImage* image = ExtractIcon(registrar, icon);
+//    [sink setIcon:image];
+//  }
+}
+
 @end
 
 
-#pragma mark - FMFPOIsController
-
-@implementation FMFPOIsController {
-  NSMutableDictionary<NSString*, FMFPOI*>* _pois;
-  MFMapView* _mapView;
-  FlutterMethodChannel* _channel;
-  NSObject<FlutterPluginRegistrar>* _registrar;
-}
-
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  self = [super init];
-  if (self) {
-    _channel = methodChannel;
-    _mapView = mapView;
-    _pois = [NSMutableDictionary dictionaryWithCapacity:1];
-    _registrar = registrar;
-  }
-  return self;
-}
-
-- (void)addPOIs:(NSArray*)poisToAdd {
-  for (NSDictionary* poi in poisToAdd) {
-    NSString* poiId = poi[@"poiId"];
-    FMFPOI* fPOI = [[FMFPOI alloc] initPOIWithId:poiId];
-    [FMFInterpretation interpretPOIOptions:poi sink:fPOI];
-    [fPOI addToMap:_mapView];
-    _pois[poiId] = fPOI;
-  }
-}
-
-- (void)changePOIs:(NSArray*)poisToChange {
-  for (NSDictionary* poi in poisToChange) {
-    NSString* poiId = poi[@"poiId"];
-    FMFPOI* fPOI = _pois[poiId];
-    if (fPOI != nil) {
-      [FMFInterpretation interpretPOIOptions:poi sink:fPOI];
-    }
-  }
-}
-
-- (void)removePOIIds:(NSArray*)poiIdsToRemove {
-  for (NSString* poiId in poiIdsToRemove) {
-    if (!poiId) {
-      continue;
-    }
-    FMFPOI* fPOI = _pois[poiId];
-    if (fPOI != nil) {
-      [fPOI removePOI];
-      [_pois removeObjectForKey:poiId];
-    }
-  }
-}
-- (void)onPOITap:(NSString*)poiId {
-  if (!poiId) return;
-  FMFPOI* fPOI = _pois[poiId];
-  if (fPOI != nil) {
-    [_channel invokeMethod:@"poi#onTap" arguments:@{@"poiId" : poiId}];
-  }
-}
-
-@end

@@ -6,7 +6,7 @@
 //
 
 #import "FMFPolyline.h"
-#import "FMFInterpretation.h"
+#import "Map4dFLTConvert.h"
 
 @implementation FMFPolyline {
   MFPolyline* _polyline;
@@ -26,7 +26,7 @@
   _polyline.map = nil;
 }
 
-- (void)addToMap:(MFMapView*)mapView {
+- (void)setMap:(MFMapView*)mapView {
   _polyline.map = mapView;
 }
 
@@ -63,71 +63,43 @@
   _polyline.style = style;
 }
 
-@end
-
-
-#pragma mark - FMFPolylinesController
-
-@implementation FMFPolylinesController {
-  NSMutableDictionary<NSString*, FMFPolyline*>* _polylines;
-  MFMapView* _mapView;
-  FlutterMethodChannel* _channel;
-  NSObject<FlutterPluginRegistrar>* _registrar;
-}
-
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  self = [super init];
-  if (self) {
-    _channel = methodChannel;
-    _mapView = mapView;
-    _polylines = [NSMutableDictionary dictionaryWithCapacity:1];
-    _registrar = registrar;
+#pragma mark - Interpret Polyline Options
+- (void)interpretPolylineOptions:(NSDictionary*)data {
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [self setConsumeTapEvents:[Map4dFLTConvert toBool:consumeTapEvents]];
   }
-  return self;
-}
 
-- (void)addPolylines:(NSArray*)polylinesToAdd {
-  for (NSDictionary* polyline in polylinesToAdd) {
-//    GMSMutablePath* path = [FLTPolylinesController getPath:polyline];
-    NSString* polylineId = polyline[@"polylineId"];
-    FMFPolyline* fPolyline = [[FMFPolyline alloc] initPolylineWithId:polylineId];
-    [FMFInterpretation interpretPolylineOptions:polyline sink:fPolyline];
-    [fPolyline addToMap:_mapView];
-    _polylines[polylineId] = fPolyline;
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [self setVisible:[Map4dFLTConvert toBool:visible]];
   }
-}
 
-- (void)changePolylines:(NSArray*)polylinesToChange {
-  for (NSDictionary* polyline in polylinesToChange) {
-    NSString* polylineId = polyline[@"polylineId"];
-    FMFPolyline* fPolyline = _polylines[polylineId];
-    if (fPolyline != nil) {
-      [FMFInterpretation interpretPolylineOptions:polyline sink:fPolyline];
-    }
+  NSNumber* zIndex = data[@"zIndex"];
+  if (zIndex != nil) {
+    [self setZIndex:[Map4dFLTConvert toInt:zIndex]];
   }
-}
 
-- (void)removePolylineIds:(NSArray*)polylineIdsToRemove {
-  for (NSString* polylineId in polylineIdsToRemove) {
-    if (!polylineId) {
-      continue;
-    }
-    FMFPolyline* fPolyline = _polylines[polylineId];
-    if (fPolyline != nil) {
-      [fPolyline removePolyline];
-      [_polylines removeObjectForKey:polylineId];
-    }
+  NSArray* points = data[@"points"];
+  if (points) {
+    [self setPoints:[Map4dFLTConvert toPoints:points]];
   }
-}
 
-- (void)onPolylineTap:(NSString*)polylineId {
-  if (!polylineId) return;
-  FMFPolyline* fPolyline = _polylines[polylineId];
-  if (fPolyline != nil) {
-    [_channel invokeMethod:@"polyline#onTap" arguments:@{@"polylineId" : polylineId}];
+  NSNumber* strokeColor = data[@"color"];
+  if (strokeColor != nil) {
+    [self setColor:[Map4dFLTConvert toColor:strokeColor]];
+  }
+
+  NSNumber* strokeWidth = data[@"width"];
+  if (strokeWidth != nil) {
+    [self setStrokeWidth:[Map4dFLTConvert toInt:strokeWidth]];
+  }
+
+  NSNumber* style = data[@"style"];
+  if (style != nil) {
+    [self setStyle:[Map4dFLTConvert toPolylineStyle:style]];
   }
 }
 
 @end
+
