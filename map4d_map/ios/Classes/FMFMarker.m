@@ -81,6 +81,9 @@
 }
 
 - (void)setIcon: (UIImage*) icon {
+  if (_marker.icon == nil && icon == nil) {
+    return;
+  }
   _marker.icon = icon;
 }
 

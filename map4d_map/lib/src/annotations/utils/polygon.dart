@@ -1,5 +1,3 @@
-import 'package:map4d_map/src/annotations/polygon.dart';
-
 import '../annotations.dart';
 
 /// Converts an [Iterable] of Polygons in a Map of PolygonId -> Polygon.

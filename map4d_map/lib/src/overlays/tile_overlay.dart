@@ -1,11 +1,7 @@
-// Copyright 2013 The Flutter Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
 import 'dart:ui' show hashValues;
-
 import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart' show immutable;
+
 import 'overlays.dart';
 
 /// Uniquely identifies a [MFTileOverlay] among [Map4dMap] tile overlays.

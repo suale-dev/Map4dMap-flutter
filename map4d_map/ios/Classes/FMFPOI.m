@@ -50,9 +50,10 @@
 }
 
 - (void)setIcon:(UIImage*)icon {
-  if (_poi.icon != icon) { // not set when nil & nil
-    _poi.icon = icon;
+  if (_poi.icon == nil && icon == nil) {
+    return;
   }
+  _poi.icon = icon;
 }
 
 - (void)setType:(NSString*)type {

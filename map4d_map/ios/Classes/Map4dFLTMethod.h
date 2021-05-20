@@ -1,12 +1,12 @@
 //
-//  FMFMethod.h
+//  Map4dFLTMethod.h
 //  Pods
 //
 //  Created by Huy Dang on 07/05/2021.
 //
 
-#ifndef FMFMethod_h
-#define FMFMethod_h
+#ifndef Map4dFLTMethod_h
+#define Map4dFLTMethod_h
 
 #import <Foundation/Foundation.h>
 
@@ -54,18 +54,22 @@ typedef enum : NSUInteger {
   // circles#update
   FMFMethodCirclesUpdate,
   
-  // markesr#update
+  // markers#update
   FMFMethodMarkersUpdate,
 
-  //map#enable3DMode
-  FMFMethodEnable3DMode
+  // map#enable3DMode
+  FMFMethodEnable3DMode,
+  
+  // count - all method is must add above this
+  FMFMethodMaxItem
 
 } FMFMethodID;
 
-@interface FMFMethod : NSObject
+@interface Map4dFLTMethod : NSObject
 
-+(FMFMethodID)getMethodIdByName:(NSString*)name;
++ (Map4dFLTMethod*)shared;
+- (FMFMethodID)getIdByName:(NSString*)name;
 
 @end
 
-#endif /* FMFMethod_h */
+#endif /* Map4dFLTMethod_h */

@@ -8,11 +8,9 @@
 
 #import "FMFMapView.h"
 #import "Map4dFLTConvert.h"
-#import "FMFMethod.h"
+#import "Map4dFLTMethod.h"
 #import "Map4dAnnotationManager.h"
 #import "Map4dOverlayManager.h"
-#import <Map4dMap/Map4dMap.h>
-#import <UIKit/UIKit.h>
 
 #define kMFMinZoomLevel 2
 #define kMFMaxZoomLevel 22
@@ -174,15 +172,20 @@
 
 // Method call handler
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
-  FMFMethodID methodID = [FMFMethod getMethodIdByName:call.method];
+  FMFMethodID methodID = [[Map4dFLTMethod shared] getIdByName:call.method];
   switch (methodID) {
+    /* map # update **/
     case FMFMethodMapUpdate:
       [self interpretMapOptions:call.arguments[@"options"]];
       result(nil);
       break;
+
+    /* map # get zoom level **/
     case FMFMethodGetZoomLevel:
       result(@(_mapView.camera.zoom));
       break;
+
+    /* map # get camera for bounds **/
     case FMFMethodCameraForBounds: {
       MFCoordinateBounds* bounds = [Map4dFLTConvert toCoordinateBounds:call.arguments[@"bounds"]];
       double padding = [Map4dFLTConvert toDouble:call.arguments[@"padding"]];
@@ -191,6 +194,8 @@
       result([Map4dFLTConvert positionToJson:camera]);
       break;
     }
+
+    /* map # fit bounds **/
     case FMFMethodFitBounds: {
       MFCoordinateBounds* bounds = [Map4dFLTConvert toCoordinateBounds:call.arguments[@"bounds"]];
       double padding = [Map4dFLTConvert toDouble:call.arguments[@"padding"]];
@@ -199,70 +204,66 @@
       result(nil);
       break;
     }
+
+    /* map # set 3D mode **/
+    case FMFMethodEnable3DMode: {
+      BOOL isEnable = [Map4dFLTConvert toBool:call.arguments[@"enable3DMode"]];
+      [_mapView enable3DMode: isEnable];
+      result(nil);
+      break;
+    }
+
+    /* camera # move **/
     case FMFMethodMoveCamera: {
       MFCameraUpdate* cameraUpdate = [Map4dFLTConvert toCameraUpdate:call.arguments[@"cameraUpdate"]];
       [_mapView moveCamera:cameraUpdate];
       result(nil);
       break;
     }
+
+    /* camera # animate **/
     case FMFMethodAnimateCamera: {
       MFCameraUpdate* cameraUpdate = [Map4dFLTConvert toCameraUpdate:call.arguments[@"cameraUpdate"]];
       [_mapView animateCamera:cameraUpdate];
       result(nil);
       break;
     }
-    case FMFMethodTileOverlaysUpdate: {
-      id tileOverlaysToAdd = call.arguments[@"tileOverlaysToAdd"];
-      if ([tileOverlaysToAdd isKindOfClass:[NSArray class]]) {
-        [_overlayManager addTileOverlays:tileOverlaysToAdd];
+
+    /* marker # update **/
+    case FMFMethodMarkersUpdate: {
+      id markersToAdd = call.arguments[@"markersToAdd"];
+      if ([markersToAdd isKindOfClass: [NSArray class]]) {
+        [_annotationManager addMarkers: markersToAdd];
       }
-      id tileOverlaysToChange = call.arguments[@"tileOverlaysToChange"];
-      if ([tileOverlaysToChange isKindOfClass:[NSArray class]]) {
-        [_overlayManager changeTileOverlays:tileOverlaysToChange];
+      id markerToChange = call.arguments[@"markersToChange"];
+      if ([markerToChange isKindOfClass:[NSArray class]]) {
+        [_annotationManager changeMarkers:markerToChange];
       }
-      id tileOverlayIdsToRemove = call.arguments[@"tileOverlayIdsToRemove"];
-      if ([tileOverlayIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_overlayManager removeTileOverlayIds:tileOverlayIdsToRemove];
+      id markerIdsToRemove = call.arguments[@"markerIdsToRemove"];
+      if ([markerIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_annotationManager removeMarkerIds:markerIdsToRemove];
       }
-      result(nil);
-    }
-    case FMFMethodTileOverlaysClearTileCache: {
-      id rawTileOverlayId = call.arguments[@"tileOverlayId"];
-      [_overlayManager clearTileOverlayCache:rawTileOverlayId];
-      result(nil);
-    }
-    case FMFMethodPOIUpdate: {
-      id poisToAdd = call.arguments[@"poisToAdd"];
-      if ([poisToAdd isKindOfClass:[NSArray class]]) {
-        [_annotationManager addPOIs:poisToAdd];
-      }
-      id poisToChange = call.arguments[@"poisToChange"];
-      if ([poisToChange isKindOfClass:[NSArray class]]) {
-        [_annotationManager changePOIs:poisToChange];
-      }
-      id poiIdsToRemove = call.arguments[@"poiIdsToRemove"];
-      if ([poiIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_annotationManager removePOIIds:poiIdsToRemove];
-      }
-      result(nil);
       break;
     }
-    case FMFMethodBuildingUpdate: {
-      id buildingsToAdd = call.arguments[@"buildingsToAdd"];
-      if ([buildingsToAdd isKindOfClass:[NSArray class]]) {
-        [_annotationManager addBuildings:buildingsToAdd];
+
+    /* circle # update **/
+    case FMFMethodCirclesUpdate: {
+      id circlesToAdd = call.arguments[@"circlesToAdd"];
+      if ([circlesToAdd isKindOfClass:[NSArray class]]) {
+        [_annotationManager addCircles:circlesToAdd];
       }
-      id buildingsToChange = call.arguments[@"buildingsToChange"];
-      if ([buildingsToChange isKindOfClass:[NSArray class]]) {
-        [_annotationManager changeBuildings:buildingsToChange];
+      id circlesToChange = call.arguments[@"circlesToChange"];
+      if ([circlesToChange isKindOfClass:[NSArray class]]) {
+        [_annotationManager changeCircles:circlesToChange];
       }
-      id buildingIdsToRemove = call.arguments[@"buildingIdsToRemove"];
-      if ([buildingIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_annotationManager removeBuildingIds:buildingIdsToRemove];
+      id circleIdsToRemove = call.arguments[@"circleIdsToRemove"];
+      if ([circleIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_annotationManager removeCircleIds:circleIdsToRemove];
       }
-      result(nil);
       break;
     }
+
+    /* polyline # update **/
     case FMFMethodPolylineUpdate: {
       id polylinesToAdd = call.arguments[@"polylinesToAdd"];
       if ([polylinesToAdd isKindOfClass:[NSArray class]]) {
@@ -279,7 +280,8 @@
       result(nil);
       break;
     }
-      
+
+    /* polygon # update **/
     case FMFMethodPolygonUpdate: {
       id polygonsToAdd = call.arguments[@"polygonsToAdd"];
       if ([polygonsToAdd isKindOfClass:[NSArray class]]) {
@@ -296,45 +298,70 @@
       result(nil);
       break;
     }
-      
-    case FMFMethodCirclesUpdate: {
-      id circlesToAdd = call.arguments[@"circlesToAdd"];
-      if ([circlesToAdd isKindOfClass:[NSArray class]]) {
-        [_annotationManager addCircles:circlesToAdd];
+
+    /* user poi # update **/
+    case FMFMethodPOIUpdate: {
+      id poisToAdd = call.arguments[@"poisToAdd"];
+      if ([poisToAdd isKindOfClass:[NSArray class]]) {
+        [_annotationManager addPOIs:poisToAdd];
       }
-      id circlesToChange = call.arguments[@"circlesToChange"];
-      if ([circlesToChange isKindOfClass:[NSArray class]]) {
-        [_annotationManager changeCircles:circlesToChange];
+      id poisToChange = call.arguments[@"poisToChange"];
+      if ([poisToChange isKindOfClass:[NSArray class]]) {
+        [_annotationManager changePOIs:poisToChange];
       }
-      id circleIdsToRemove = call.arguments[@"circleIdsToRemove"];
-      if ([circleIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_annotationManager removeCircleIds:circleIdsToRemove];
+      id poiIdsToRemove = call.arguments[@"poiIdsToRemove"];
+      if ([poiIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_annotationManager removePOIIds:poiIdsToRemove];
       }
-      break;
-    }
-      
-    case FMFMethodMarkersUpdate: {
-      id markersToAdd = call.arguments[@"markersToAdd"];
-      if ([markersToAdd isKindOfClass: [NSArray class]]) {
-        [_annotationManager addMarkers: markersToAdd];
-      }
-      id markerToChange = call.arguments[@"markersToChange"];
-      if ([markerToChange isKindOfClass:[NSArray class]]) {
-        [_annotationManager changeMarkers:markerToChange];
-      }
-      id markerIdsToRemove = call.arguments[@"markerIdsToRemove"];
-      if ([markerIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_annotationManager removeMarkerIds:markerIdsToRemove];
-      }
-      break;
-    }
-      
-    case FMFMethodEnable3DMode: {
-      BOOL isEnable = [Map4dFLTConvert toBool:call.arguments[@"enable3DMode"]];
-      [_mapView enable3DMode: isEnable];
       result(nil);
       break;
     }
+
+    /* user building # update **/
+    case FMFMethodBuildingUpdate: {
+      id buildingsToAdd = call.arguments[@"buildingsToAdd"];
+      if ([buildingsToAdd isKindOfClass:[NSArray class]]) {
+        [_annotationManager addBuildings:buildingsToAdd];
+      }
+      id buildingsToChange = call.arguments[@"buildingsToChange"];
+      if ([buildingsToChange isKindOfClass:[NSArray class]]) {
+        [_annotationManager changeBuildings:buildingsToChange];
+      }
+      id buildingIdsToRemove = call.arguments[@"buildingIdsToRemove"];
+      if ([buildingIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_annotationManager removeBuildingIds:buildingIdsToRemove];
+      }
+      result(nil);
+      break;
+    }
+
+    /* tile overlay # update **/
+    case FMFMethodTileOverlaysUpdate: {
+      id tileOverlaysToAdd = call.arguments[@"tileOverlaysToAdd"];
+      if ([tileOverlaysToAdd isKindOfClass:[NSArray class]]) {
+        [_overlayManager addTileOverlays:tileOverlaysToAdd];
+      }
+      id tileOverlaysToChange = call.arguments[@"tileOverlaysToChange"];
+      if ([tileOverlaysToChange isKindOfClass:[NSArray class]]) {
+        [_overlayManager changeTileOverlays:tileOverlaysToChange];
+      }
+      id tileOverlayIdsToRemove = call.arguments[@"tileOverlayIdsToRemove"];
+      if ([tileOverlayIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_overlayManager removeTileOverlayIds:tileOverlayIdsToRemove];
+      }
+      result(nil);
+      break;
+    }
+
+    /* tile overlay # clear cache **/
+    case FMFMethodTileOverlaysClearTileCache: {
+      id rawTileOverlayId = call.arguments[@"tileOverlayId"];
+      [_overlayManager clearTileOverlayCache:rawTileOverlayId];
+      result(nil);
+      break;
+    }
+
+    /* default **/
     default:
       NSLog(@"Unknow call method: %@", call.method);
       result(nil);
