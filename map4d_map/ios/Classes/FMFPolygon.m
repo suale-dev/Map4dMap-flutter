@@ -6,9 +6,9 @@
 //
 
 #import "FMFPolygon.h"
-#import "FMFInterpretation.h"
+#import "Map4dFLTConvert.h"
 
-@implementation FMFPolygon : NSObject  {
+@implementation FMFPolygon {
   MFPolygon* _polygon;
 }
 
@@ -26,7 +26,7 @@
   _polygon.map = nil;
 }
 
-- (void)addToMap:(MFMapView*)mapView {
+- (void)setMap:(MFMapView*)mapView {
   _polygon.map = mapView;
 }
 
@@ -74,70 +74,50 @@
   _polygon.zIndex = zIndex;
 }
 
+#pragma mark - Interpret Polygon Options
+
+- (void)interpretPolygonOptions:(NSDictionary*)data {
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [self setConsumeTapEvents:[Map4dFLTConvert toBool:consumeTapEvents]];
+  }
+  
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [self setVisible:[Map4dFLTConvert toBool:visible]];
+  }
+
+  NSNumber* zIndex = data[@"zIndex"];
+  if (zIndex != nil) {
+    [self setZIndex:[Map4dFLTConvert toInt:zIndex]];
+  }
+
+  NSArray* points = data[@"points"];
+  if (points) {
+    [self setPoints:[Map4dFLTConvert toPoints:points]];
+  }
+  
+  NSArray* holes = data[@"holes"];
+  if (holes) {
+    [self setHoles:[Map4dFLTConvert toHoles:holes]];
+  }
+
+  NSNumber* strokeColor = data[@"strokeColor"];
+  if (strokeColor != nil) {
+    [self setStrokeColor:[Map4dFLTConvert toColor:strokeColor]];
+  }
+  
+  NSNumber* fillColor = data[@"fillColor"];
+  if (fillColor != nil) {
+    [self setFillColor:[Map4dFLTConvert toColor:fillColor]];
+  }
+
+  NSNumber* strokeWidth = data[@"strokeWidth"];
+  if (strokeWidth != nil) {
+    [self setStrokeWidth:[Map4dFLTConvert toInt:strokeWidth]];
+  }
+}
+
+
 @end
 
-
-#pragma mark - FMFPolygonsController
-
-@implementation FMFPolygonsController {
-  NSMutableDictionary<NSString*, FMFPolygon*>* _polygons;
-  MFMapView* _mapView;
-  FlutterMethodChannel* _channel;
-  NSObject<FlutterPluginRegistrar>* _registrar;
-}
-
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  self = [super init];
-  if (self) {
-    _channel = methodChannel;
-    _mapView = mapView;
-    _polygons = [NSMutableDictionary dictionaryWithCapacity:1];
-    _registrar = registrar;
-  }
-  return self;
-}
-
-- (void)addPolygons:(NSArray*)polygonsToAdd {
-  for (NSDictionary* polygon in polygonsToAdd) {
-    NSString* polygonId = polygon[@"polygonId"];
-    FMFPolygon* fPolygon = [[FMFPolygon alloc] initPolygonWithId:polygonId];
-    [FMFInterpretation interpretPolygonOptions:polygon sink:fPolygon];
-    [fPolygon addToMap:_mapView];
-    _polygons[polygonId] = fPolygon;
-  }
-}
-
-- (void)changePolygons:(NSArray*)polygonsToChange {
-  for (NSDictionary* polygon in polygonsToChange) {
-    NSString* polygonId = polygon[@"polygonId"];
-    FMFPolygon* fPolygon = _polygons[polygonId];
-    if (fPolygon != nil) {
-      [FMFInterpretation interpretPolygonOptions:polygon sink:fPolygon];
-    }
-  }
-}
-
-- (void)removePolygonIds:(NSArray*)polygonIdsToRemove {
-  for (NSString* polygonId in polygonIdsToRemove) {
-    if (!polygonId) {
-      continue;
-    }
-    FMFPolygon* fPolygon = _polygons[polygonId];
-    if (fPolygon != nil) {
-      [fPolygon removePolygon];
-      [_polygons removeObjectForKey:polygonId];
-    }
-  }
-}
-
-- (void)onPolygonTap:(NSString*)polygonId {
-  if (!polygonId) return;
-  FMFPolygon* fPolygon = _polygons[polygonId];
-  if (fPolygon != nil) {
-    [_channel invokeMethod:@"polygon#onTap" arguments:@{@"polygonId" : polygonId}];
-  }
-}
-
-@end

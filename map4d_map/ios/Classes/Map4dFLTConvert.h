@@ -1,18 +1,18 @@
 //
-//  FMFConvert.h
+//  Map4dFLTConvert.h
 //  Pods
 //
 //  Created by Huy Dang on 07/05/2021.
 //
 
-#ifndef FMFConvert_h
-#define FMFConvert_h
+#ifndef Map4dFLTConvert_h
+#define Map4dFLTConvert_h
 
 #import <Flutter/Flutter.h>
 #import <CoreLocation/CoreLocation.h>
 #import <Map4dMap/Map4dMap.h>
 
-@interface FMFConvert : NSObject
+@interface Map4dFLTConvert : NSObject
 
 + (bool)toBool:(NSNumber*)data;
 + (int)toInt:(NSNumber*)data;
@@ -37,4 +37,4 @@
 + (UIImage*)extractIcon:(NSArray*)iconData registrar:(NSObject<FlutterPluginRegistrar>*)registrar;//move to marker
 @end
 
-#endif /* FMFConvert_h */
+#endif /* Map4dFLTConvert_h */

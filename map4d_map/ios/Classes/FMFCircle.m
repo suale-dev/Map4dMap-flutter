@@ -6,7 +6,7 @@
 //
 
 #import "FMFCircle.h"
-#import "FMFInterpretation.h"
+#import "Map4dFLTConvert.h"
 
 @implementation FMFCircle {
   MFCircle* _circle;
@@ -26,7 +26,7 @@
   _circle.map = nil;
 }
 
-- (void)addToMap:(MFMapView*)mapView {
+- (void)setMap:(MFMapView*)mapView {
   _circle.map = mapView;
 }
 
@@ -65,68 +65,46 @@
   _circle.fillColor = color;
 }
 
-@end
-
-#pragma mark - FMFCirclesController
-
-@implementation FMFCirclesController {
-  NSMutableDictionary<NSString*, FMFCircle*>* _circles;
-  MFMapView* _mapView;
-  FlutterMethodChannel* _channel;
-  NSObject<FlutterPluginRegistrar>* _registrar;
-}
-
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  self = [super init];
-  if (self) {
-    _channel = methodChannel;
-    _mapView = mapView;
-    _circles = [NSMutableDictionary dictionaryWithCapacity:1];
-    _registrar = registrar;
+#pragma mark - Interpret Circle options
+- (void)interpretCircleOptions:(NSDictionary*)data {
+  NSNumber* consumeTapEvents = data[@"consumeTapEvents"];
+  if (consumeTapEvents != nil) {
+    [self setConsumeTapEvents:[Map4dFLTConvert toBool:consumeTapEvents]];
   }
-  return self;
-}
-
-- (void)addCircles:(NSArray*)circlesToAdd {
-  for (NSDictionary* circle in circlesToAdd) {
-    NSString* circleId = circle[@"circleId"];
-    FMFCircle *fCircle = [[FMFCircle alloc] initCircleWithId:circleId];
-    [FMFInterpretation interpretCircleOptions:circle sink:fCircle];
-    [fCircle addToMap:_mapView];
-    _circles[circleId] = fCircle;
+  
+  NSNumber* visible = data[@"visible"];
+  if (visible != nil) {
+    [self setVisible:[Map4dFLTConvert toBool:visible]];
   }
-}
-
-- (void)changeCircles:(NSArray*)circlesToChange {
-  for (NSDictionary* circle in circlesToChange) {
-    NSString* circleId = circle[@"circleId"];
-    FMFCircle* fCircle = _circles[circleId];
-    if (fCircle != nil) {
-      [FMFInterpretation interpretCircleOptions:circle sink:fCircle];
-    }
+  
+  NSNumber* zIndex = data[@"zIndex"];
+  if (zIndex != nil) {
+    [self setZIndex:[Map4dFLTConvert toInt:zIndex]];
   }
-}
-
-- (void)removeCircleIds:(NSArray*)circleIdsToRemove {
-  for (NSString* circleId in circleIdsToRemove) {
-    if (!circleId) {
-      continue;
-    }
-    FMFCircle* fCircle = _circles[circleId];
-    if (fCircle != nil) {
-      [fCircle removeCircle];
-      [_circles removeObjectForKey:circleId];
-    }
+  
+  NSArray* center = data[@"center"];
+  if (center) {
+    [self setCenter:[Map4dFLTConvert toLocation:center]];
   }
-}
-
-- (void)onCircleTap:(NSString*)circleId {
-  if (!circleId) return;
-  FMFCircle* fCircle = _circles[circleId];
-  if (fCircle != nil) {
-    [_channel invokeMethod:@"circle#onTap" arguments:@{@"circleId" : circleId}];
+  
+  NSNumber* radius = data[@"radius"];
+  if (radius != nil) {
+    [self setRadius:[Map4dFLTConvert toFloat:radius]];
+  }
+  
+  NSNumber* strokeColor = data[@"strokeColor"];
+  if (strokeColor != nil) {
+    [self setStrokeColor:[Map4dFLTConvert toColor:strokeColor]];
+  }
+  
+  NSNumber* strokeWidth = data[@"strokeWidth"];
+  if (strokeWidth != nil) {
+    [self setStrokeWidth:[Map4dFLTConvert toInt:strokeWidth]];
+  }
+  
+  NSNumber* fillColor = data[@"fillColor"];
+  if (fillColor != nil) {
+    [self setFillColor:[Map4dFLTConvert toColor:fillColor]];
   }
 }
 

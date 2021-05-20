@@ -6,7 +6,7 @@
 //
 
 #import "FMFTileOverlay.h"
-#import "FMFConvert.h"
+#import "Map4dFLTConvert.h"
 
 @implementation FMFTileOverlay {
   MFURLTileLayer* _overlay;
@@ -46,12 +46,12 @@
 - (void)interpretTileOverlayOptions:(NSDictionary*)data {
   NSNumber* visible = data[@"visible"];
   if (visible != nil) {
-    [self setVisible:[FMFConvert toBool:visible]];
+    [self setVisible:[Map4dFLTConvert toBool:visible]];
   }
   
   NSNumber* zIndex = data[@"zIndex"];
   if (zIndex != nil) {
-    [self setZIndex:[FMFConvert toInt:zIndex]];
+    [self setZIndex:[Map4dFLTConvert toInt:zIndex]];
   }
 }
 

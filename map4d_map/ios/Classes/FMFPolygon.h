@@ -26,20 +26,9 @@
 @interface FMFPolygon : NSObject<FMFPolygonOptionsSink>
 @property(atomic, readonly) NSString* polygonId;
 - (instancetype)initPolygonWithId:(NSString*)polygonId;
+- (void)setMap:(MFMapView*)mapView;
 - (void)removePolygon;
-@end
-
-
-#pragma mark - FMFPolygonsController
-
-@interface FMFPolygonsController : NSObject
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
-- (void)addPolygons:(NSArray*)polygonsToAdd;
-- (void)changePolygons:(NSArray*)polygonsToChange;
-- (void)removePolygonIds:(NSArray*)polygonIdsToRemove;
-- (void)onPolygonTap:(NSString*)polygonId;
+- (void)interpretPolygonOptions:(NSDictionary*)data;
 @end
 
 #endif /* FMFPolygon_h */

@@ -5,16 +5,17 @@
 //  Created by Sua Le on 05/05/2021.
 //
 
+
 #import "FMFMapView.h"
-#import "FMFConvert.h"
-#import "FMFInterpretation.h"
+#import "Map4dFLTConvert.h"
 #import "FMFMethod.h"
-#import "FMFCircle.h"
-#import "FMFMarker.h"
-#import "FMFPolygon.h"
+#import "Map4dAnnotationManager.h"
 #import "Map4dOverlayManager.h"
 #import <Map4dMap/Map4dMap.h>
 #import <UIKit/UIKit.h>
+
+#define kMFMinZoomLevel 2
+#define kMFMaxZoomLevel 22
 
 #pragma mark - FMFMapViewFactory
 
@@ -64,6 +65,7 @@
 
 @interface FMFMapView()
 @property(nonatomic, strong) Map4dOverlayManager* overlayManager;
+@property(nonatomic, strong) Map4dAnnotationManager* annotationManager;
 @end
 
 @implementation FMFMapView {
@@ -72,13 +74,6 @@
   FlutterMethodChannel* _channel;
   NSObject<FlutterPluginRegistrar>* _registrar;
   FMFEventTracking* _track;
-  
-  FMFPOIsController* _poisController;
-  FMFBuildingsController* _buildingsController;
-  FMFPolylinesController* _polylinesController;
-  FMFPolygonsController* _polygonsController;
-  FMFCirclesController* _circlesController;
-  FMFMarkersController* _markersController;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -89,17 +84,11 @@
     _viewId = viewId;
     _registrar = registrar;
     _track = [[FMFEventTracking alloc] init];
+    
+    // setup MFMapView
     _mapView = [[MFMapView alloc] initWithFrame:frame];
     _mapView.delegate = self;
-    
-    // initial map options
-    [FMFInterpretation interpretMapOptions:args[@"options"] sink:self];
-    
-    // initial camera position
-    MFCameraPosition* camera = [FMFConvert toCameraPosition:args[@"initialCameraPosition"]];
-    if (camera != nil) {
-      _mapView.camera = camera;
-    }
+    [self setupMapViewWithArguments:args];
     
     // flutter channel
     NSString* channelName = [NSString stringWithFormat:@"plugin:map4d-map-view-type_%lld", viewId];
@@ -112,73 +101,71 @@
       }
     }];
     
-    // overlay manager
-    _overlayManager = [[Map4dOverlayManager alloc] init:_channel
-                                               mapView:_mapView
-                                             registrar:registrar];
+    // setup annotation manger & init annotations
+    [self setupAnnotationWithArguments:args];
     
-    id tileOverlaysToAdd = args[@"tileOverlaysToAdd"];
-    if ([tileOverlaysToAdd isKindOfClass:[NSArray class]]) {
-      [_overlayManager addTileOverlays:tileOverlaysToAdd];
-    }
-    
-    // annotations controller
-    _poisController = [[FMFPOIsController alloc] init:_channel
-                                              mapView:_mapView
-                                            registrar:registrar];
-    
-    _buildingsController = [[FMFBuildingsController alloc] init:_channel
-                                                        mapView:_mapView
-                                                      registrar:registrar];
-
-    _polylinesController = [[FMFPolylinesController alloc] init:_channel
-                                                        mapView:_mapView
-                                                      registrar:registrar];
-    
-    _polygonsController = [[FMFPolygonsController alloc] init:_channel
-                                                        mapView:_mapView
-                                                      registrar:registrar];
-
-    _circlesController = [[FMFCirclesController alloc] init:_channel
-                                                    mapView:_mapView
-                                                  registrar:registrar];
-    
-    _markersController = [[FMFMarkersController alloc] init: _channel
-                                                    mapView:_mapView
-                                                  registrar:registrar];
-    // initial annotations
-    id poisToAdd = args[@"poisToAdd"];
-    if ([poisToAdd isKindOfClass:[NSArray class]]) {
-      [_poisController addPOIs:poisToAdd];
-    }
-    
-    id buildingsToAdd = args[@"buildingsToAdd"];
-    if ([buildingsToAdd isKindOfClass:[NSArray class]]) {
-      [_buildingsController addBuildings:buildingsToAdd];
-    }
-    
-    id polylinesToAdd = args[@"polylinesToAdd"];
-    if ([polylinesToAdd isKindOfClass:[NSArray class]]) {
-      [_polylinesController addPolylines:polylinesToAdd];
-    }
-    
-    id polygonsToAdd = args[@"polygonsToAdd"];
-    if ([polygonsToAdd isKindOfClass:[NSArray class]]) {
-      [_polygonsController addPolygons:polygonsToAdd];
-    }
-
-
-    id circlesToAdd = args[@"circlesToAdd"];
-    if ([circlesToAdd isKindOfClass:[NSArray class]]) {
-      [_circlesController addCircles:circlesToAdd];
-    }
-    
-    id markersToAdd = args[@"markersToAdd"];
-    if ([markersToAdd isKindOfClass:[NSArray class]]) {
-      [_markersController addMarkers:markersToAdd];
-    }
+    // setup annotation manger & init overlays
+    [self setupOverlayWithArguments:args];
   }
   return self;
+}
+
+- (void)setupMapViewWithArguments:(id _Nullable)args {
+  // initial map options
+  [self interpretMapOptions:args[@"options"]];
+  
+  // initial camera position
+  MFCameraPosition* camera = [Map4dFLTConvert toCameraPosition:args[@"initialCameraPosition"]];
+  if (camera != nil) {
+    _mapView.camera = camera;
+  }
+}
+
+- (void)setupAnnotationWithArguments:(id _Nullable)args {
+  _annotationManager = [[Map4dAnnotationManager alloc] init:_channel
+                                                    mapView:_mapView
+                                                  registrar:_registrar];
+  
+  id markersToAdd = args[@"markersToAdd"];
+  if ([markersToAdd isKindOfClass:[NSArray class]]) {
+    [_annotationManager addMarkers:markersToAdd];
+  }
+  
+  id circlesToAdd = args[@"circlesToAdd"];
+  if ([circlesToAdd isKindOfClass:[NSArray class]]) {
+    [_annotationManager addCircles:circlesToAdd];
+  }
+  
+  id polylinesToAdd = args[@"polylinesToAdd"];
+  if ([polylinesToAdd isKindOfClass:[NSArray class]]) {
+    [_annotationManager addPolylines:polylinesToAdd];
+  }
+  
+  id polygonsToAdd = args[@"polygonsToAdd"];
+  if ([polygonsToAdd isKindOfClass:[NSArray class]]) {
+    [_annotationManager addPolygons:polygonsToAdd];
+  }
+  
+  id poisToAdd = args[@"poisToAdd"];
+  if ([poisToAdd isKindOfClass:[NSArray class]]) {
+    [_annotationManager addPOIs:poisToAdd];
+  }
+  
+  id buildingsToAdd = args[@"buildingsToAdd"];
+  if ([buildingsToAdd isKindOfClass:[NSArray class]]) {
+    [_annotationManager addBuildings:buildingsToAdd];
+  }
+}
+
+- (void)setupOverlayWithArguments:(id _Nullable)args {
+  _overlayManager = [[Map4dOverlayManager alloc] init:_channel
+                                              mapView:_mapView
+                                            registrar:_registrar];
+  
+  id tileOverlaysToAdd = args[@"tileOverlaysToAdd"];
+  if ([tileOverlaysToAdd isKindOfClass:[NSArray class]]) {
+    [_overlayManager addTileOverlays:tileOverlaysToAdd];
+  }
 }
 
 - (UIView*)view {
@@ -190,36 +177,36 @@
   FMFMethodID methodID = [FMFMethod getMethodIdByName:call.method];
   switch (methodID) {
     case FMFMethodMapUpdate:
-      [FMFInterpretation interpretMapOptions:call.arguments[@"options"] sink:self];
+      [self interpretMapOptions:call.arguments[@"options"]];
       result(nil);
       break;
     case FMFMethodGetZoomLevel:
       result(@(_mapView.camera.zoom));
       break;
     case FMFMethodCameraForBounds: {
-      MFCoordinateBounds* bounds = [FMFConvert toCoordinateBounds:call.arguments[@"bounds"]];
-      double padding = [FMFConvert toDouble:call.arguments[@"padding"]];
+      MFCoordinateBounds* bounds = [Map4dFLTConvert toCoordinateBounds:call.arguments[@"bounds"]];
+      double padding = [Map4dFLTConvert toDouble:call.arguments[@"padding"]];
       UIEdgeInsets insets = UIEdgeInsetsMake(padding, padding, padding, padding);
       MFCameraPosition* camera = [_mapView cameraForBounds:bounds insets:insets];
-      result([FMFConvert positionToJson:camera]);
+      result([Map4dFLTConvert positionToJson:camera]);
       break;
     }
     case FMFMethodFitBounds: {
-      MFCoordinateBounds* bounds = [FMFConvert toCoordinateBounds:call.arguments[@"bounds"]];
-      double padding = [FMFConvert toDouble:call.arguments[@"padding"]];
+      MFCoordinateBounds* bounds = [Map4dFLTConvert toCoordinateBounds:call.arguments[@"bounds"]];
+      double padding = [Map4dFLTConvert toDouble:call.arguments[@"padding"]];
       UIEdgeInsets insets = UIEdgeInsetsMake(padding, padding, padding, padding);
       [_mapView moveCamera:[MFCameraUpdate fitBounds:bounds withEdgeInsets:insets]];
       result(nil);
       break;
     }
     case FMFMethodMoveCamera: {
-      MFCameraUpdate* cameraUpdate = [FMFConvert toCameraUpdate:call.arguments[@"cameraUpdate"]];
+      MFCameraUpdate* cameraUpdate = [Map4dFLTConvert toCameraUpdate:call.arguments[@"cameraUpdate"]];
       [_mapView moveCamera:cameraUpdate];
       result(nil);
       break;
     }
     case FMFMethodAnimateCamera: {
-      MFCameraUpdate* cameraUpdate = [FMFConvert toCameraUpdate:call.arguments[@"cameraUpdate"]];
+      MFCameraUpdate* cameraUpdate = [Map4dFLTConvert toCameraUpdate:call.arguments[@"cameraUpdate"]];
       [_mapView animateCamera:cameraUpdate];
       result(nil);
       break;
@@ -247,15 +234,15 @@
     case FMFMethodPOIUpdate: {
       id poisToAdd = call.arguments[@"poisToAdd"];
       if ([poisToAdd isKindOfClass:[NSArray class]]) {
-        [_poisController addPOIs:poisToAdd];
+        [_annotationManager addPOIs:poisToAdd];
       }
       id poisToChange = call.arguments[@"poisToChange"];
       if ([poisToChange isKindOfClass:[NSArray class]]) {
-        [_poisController changePOIs:poisToChange];
+        [_annotationManager changePOIs:poisToChange];
       }
       id poiIdsToRemove = call.arguments[@"poiIdsToRemove"];
       if ([poiIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_poisController removePOIIds:poiIdsToRemove];
+        [_annotationManager removePOIIds:poiIdsToRemove];
       }
       result(nil);
       break;
@@ -263,15 +250,15 @@
     case FMFMethodBuildingUpdate: {
       id buildingsToAdd = call.arguments[@"buildingsToAdd"];
       if ([buildingsToAdd isKindOfClass:[NSArray class]]) {
-        [_buildingsController addBuildings:buildingsToAdd];
+        [_annotationManager addBuildings:buildingsToAdd];
       }
       id buildingsToChange = call.arguments[@"buildingsToChange"];
       if ([buildingsToChange isKindOfClass:[NSArray class]]) {
-        [_buildingsController changeBuildings:buildingsToChange];
+        [_annotationManager changeBuildings:buildingsToChange];
       }
       id buildingIdsToRemove = call.arguments[@"buildingIdsToRemove"];
       if ([buildingIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_buildingsController removeBuildingIds:buildingIdsToRemove];
+        [_annotationManager removeBuildingIds:buildingIdsToRemove];
       }
       result(nil);
       break;
@@ -279,32 +266,32 @@
     case FMFMethodPolylineUpdate: {
       id polylinesToAdd = call.arguments[@"polylinesToAdd"];
       if ([polylinesToAdd isKindOfClass:[NSArray class]]) {
-        [_polylinesController addPolylines:polylinesToAdd];
+        [_annotationManager addPolylines:polylinesToAdd];
       }
       id polylinesToChange = call.arguments[@"polylinesToChange"];
       if ([polylinesToChange isKindOfClass:[NSArray class]]) {
-        [_polylinesController changePolylines:polylinesToChange];
+        [_annotationManager changePolylines:polylinesToChange];
       }
       id polylineIdsToRemove = call.arguments[@"polylineIdsToRemove"];
       if ([polylineIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_polylinesController removePolylineIds:polylineIdsToRemove];
+        [_annotationManager removePolylineIds:polylineIdsToRemove];
       }
       result(nil);
       break;
     }
-
+      
     case FMFMethodPolygonUpdate: {
       id polygonsToAdd = call.arguments[@"polygonsToAdd"];
       if ([polygonsToAdd isKindOfClass:[NSArray class]]) {
-        [_polygonsController addPolygons:polygonsToAdd];
+        [_annotationManager addPolygons:polygonsToAdd];
       }
       id polygonsToChange = call.arguments[@"polygonsToChange"];
       if ([polygonsToChange isKindOfClass:[NSArray class]]) {
-        [_polygonsController changePolygons:polygonsToChange];
+        [_annotationManager changePolygons:polygonsToChange];
       }
       id polygonIdsToRemove = call.arguments[@"polygonIdsToRemove"];
       if ([polygonIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_polygonsController removePolygonIds:polygonIdsToRemove];
+        [_annotationManager removePolygonIds:polygonIdsToRemove];
       }
       result(nil);
       break;
@@ -313,37 +300,37 @@
     case FMFMethodCirclesUpdate: {
       id circlesToAdd = call.arguments[@"circlesToAdd"];
       if ([circlesToAdd isKindOfClass:[NSArray class]]) {
-        [_circlesController addCircles:circlesToAdd];
+        [_annotationManager addCircles:circlesToAdd];
       }
       id circlesToChange = call.arguments[@"circlesToChange"];
       if ([circlesToChange isKindOfClass:[NSArray class]]) {
-        [_circlesController changeCircles:circlesToChange];
+        [_annotationManager changeCircles:circlesToChange];
       }
       id circleIdsToRemove = call.arguments[@"circleIdsToRemove"];
       if ([circleIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_circlesController removeCircleIds:circleIdsToRemove];
+        [_annotationManager removeCircleIds:circleIdsToRemove];
       }
       break;
     }
-    
+      
     case FMFMethodMarkersUpdate: {
       id markersToAdd = call.arguments[@"markersToAdd"];
       if ([markersToAdd isKindOfClass: [NSArray class]]) {
-        [_markersController addMarkers: markersToAdd];
+        [_annotationManager addMarkers: markersToAdd];
       }
       id markerToChange = call.arguments[@"markersToChange"];
       if ([markerToChange isKindOfClass:[NSArray class]]) {
-        [_markersController changeMarkers:markerToChange];
+        [_annotationManager changeMarkers:markerToChange];
       }
       id markerIdsToRemove = call.arguments[@"markerIdsToRemove"];
       if ([markerIdsToRemove isKindOfClass:[NSArray class]]) {
-        [_markersController removeMarkerIds:markerIdsToRemove];
+        [_annotationManager removeMarkerIds:markerIdsToRemove];
       }
       break;
     }
       
     case FMFMethodEnable3DMode: {
-      BOOL isEnable = [FMFConvert toBool:call.arguments[@"enable3DMode"]];
+      BOOL isEnable = [Map4dFLTConvert toBool:call.arguments[@"enable3DMode"]];
       [_mapView enable3DMode: isEnable];
       result(nil);
       break;
@@ -352,6 +339,68 @@
       NSLog(@"Unknow call method: %@", call.method);
       result(nil);
       break;
+  }
+}
+
+#pragma mark - Interpret Map options
+- (void)interpretMapOptions:(NSDictionary*)data {
+  //  NSArray* cameraTargetBounds = data[@"cameraTargetBounds"];
+  //  if (cameraTargetBounds) {
+  //    [sink setCameraTargetBounds:ToOptionalBounds(cameraTargetBounds)];
+  //  }
+  
+  id buildingsEnabled = data[@"buildingsEnabled"];
+  if (buildingsEnabled) {
+    [self setBuildingsEnabled:[Map4dFLTConvert toBool:buildingsEnabled]];
+  }
+  
+  id poisEnabled = data[@"poisEnabled"];
+  if (poisEnabled) {
+    [self setPOIsEnabled:[Map4dFLTConvert toBool:poisEnabled]];
+  }
+  
+  NSArray* zoomData = data[@"minMaxZoomPreference"];
+  if (zoomData) {
+    float minZoom = (zoomData[0] == [NSNull null]) ? kMFMinZoomLevel : [Map4dFLTConvert toFloat:zoomData[0]];
+    float maxZoom = (zoomData[1] == [NSNull null]) ? kMFMaxZoomLevel : [Map4dFLTConvert toFloat:zoomData[1]];
+    [self setMinZoom:minZoom maxZoom:maxZoom];
+  }
+  
+  NSNumber* rotateGesturesEnabled = data[@"rotateGesturesEnabled"];
+  if (rotateGesturesEnabled != nil) {
+    [self setRotateGesturesEnabled:[Map4dFLTConvert toBool:rotateGesturesEnabled]];
+  }
+  NSNumber* scrollGesturesEnabled = data[@"scrollGesturesEnabled"];
+  if (scrollGesturesEnabled != nil) {
+    [self setScrollGesturesEnabled:[Map4dFLTConvert toBool:scrollGesturesEnabled]];
+  }
+  NSNumber* tiltGesturesEnabled = data[@"tiltGesturesEnabled"];
+  if (tiltGesturesEnabled != nil) {
+    [self setTiltGesturesEnabled:[Map4dFLTConvert toBool:tiltGesturesEnabled]];
+  }
+  NSNumber* trackCameraPosition = data[@"trackCameraPosition"];
+  if (trackCameraPosition != nil) {
+    [self setTrackCameraPosition:[Map4dFLTConvert toBool:trackCameraPosition]];
+  }
+  NSNumber* zoomGesturesEnabled = data[@"zoomGesturesEnabled"];
+  if (zoomGesturesEnabled != nil) {
+    [self setZoomGesturesEnabled:[Map4dFLTConvert toBool:zoomGesturesEnabled]];
+  }
+  NSNumber* myLocationEnabled = data[@"myLocationEnabled"];
+  if (myLocationEnabled != nil) {
+    [self setMyLocationEnabled:[Map4dFLTConvert toBool:myLocationEnabled]];
+  }
+  NSNumber* myLocationButtonEnabled = data[@"myLocationButtonEnabled"];
+  if (myLocationButtonEnabled != nil) {
+    [self setMyLocationButtonEnabled:[Map4dFLTConvert toBool:myLocationButtonEnabled]];
+  }
+  NSNumber* mode3dEnabled = data[@"mode3dEnabled"];
+  if (mode3dEnabled != nil) {
+    [self set3DModeEnabled:[Map4dFLTConvert toBool:mode3dEnabled]];
+  }
+  NSNumber* waterEffectEnabled = data[@"waterEffectEnabled"];
+  if (waterEffectEnabled != nil) {
+    [self setWaterEffectEnabled:[Map4dFLTConvert toBool:waterEffectEnabled]];
   }
 }
 
@@ -419,38 +468,38 @@
 - (BOOL)mapview: (MFMapView*) mapView didTapMarker: (MFMarker*) marker {
   NSArray* userData = (NSArray*) marker.userData;
   NSString* markerId = userData[0];
-  [_markersController onMarkerTap:markerId];
+  [_annotationManager onMarkerTap:markerId];
   return false;
 }
 
 - (void)mapview: (MFMapView*) mapView didEndDraggingMarker: (MFMarker*) marker {
   NSArray* userData = (NSArray*) marker.userData;
   NSString* markerId = userData[0];
-  [_markersController onDragEndMarker: markerId position: marker.position];
+  [_annotationManager onDragEndMarker: markerId position: marker.position];
 }
 
 - (void)mapview: (MFMapView*) mapView didTapInfoWindowOfMarker: (MFMarker*) marker{
   NSArray* userData = (NSArray*) marker.userData;
   NSString* markerId = userData[0];
-  [_markersController onInfoWindowTap:markerId];
+  [_annotationManager onInfoWindowTap:markerId];
 }
 
 - (void)mapview: (MFMapView*)  mapView didTapPolyline: (MFPolyline*) polyline {
   NSArray* userData = (NSArray*) polyline.userData;
   NSString* polylineId = userData[0];
-  [_polylinesController onPolylineTap:polylineId];
+  [_annotationManager onPolylineTap:polylineId];
 }
 
 - (void)mapview: (MFMapView*)  mapView didTapPolygon: (MFPolygon*) polygon {
   NSArray* userData = (NSArray*) polygon.userData;
   NSString* polygonId = userData[0];
-  [_polygonsController onPolygonTap: polygonId];
+  [_annotationManager onPolygonTap: polygonId];
 }
 
 - (void)mapview: (MFMapView*)  mapView didTapCircle: (MFCircle*) circle {
   NSArray* userData = (NSArray*) circle.userData;
   NSString* circleId = userData[0];
-  [_circlesController onCircleTap:circleId];
+  [_annotationManager onCircleTap:circleId];
 }
 
 - (void)mapView: (MFMapView*)  mapView willMove: (BOOL) gesture {
@@ -459,7 +508,7 @@
 
 - (void)mapView: (MFMapView*)  mapView movingCameraPosition: (MFCameraPosition*) position {
   if (_track.cameraPosition) {
-    NSDictionary* response = [FMFConvert positionToJson:position];
+    NSDictionary* response = [Map4dFLTConvert positionToJson:position];
     [_channel invokeMethod:@"camera#onMove" arguments:@{@"position" : response}];
   }
 }
@@ -471,7 +520,7 @@
 }
 
 - (void)mapView: (MFMapView*) mapView didTapAtCoordinate: (CLLocationCoordinate2D) coordinate {
-  NSArray* response = [FMFConvert locationToJson:coordinate];
+  NSArray* response = [Map4dFLTConvert locationToJson:coordinate];
   [_channel invokeMethod:@"map#didTapAtCoordinate" arguments:@{@"coordinate": response}];
 }
 
@@ -483,7 +532,7 @@
 - (void)mapView: (MFMapView*)  mapView didTapBuilding: (MFBuilding*) building {
   NSArray* userData = (NSArray*) building.userData;
   NSString* buildingId = userData[0];
-  [_buildingsController onBuildingTap:buildingId];
+  [_annotationManager onBuildingTap:buildingId];
 }
 
 ///* Called after a base map building has been tapped */
@@ -492,7 +541,7 @@
 - (void)mapView: (MFMapView*)  mapView didTapPOI: (MFPOI*) poi {
   NSArray* userData = (NSArray*) poi.userData;
   NSString* poiId = userData[0];
-  [_poisController onPOITap:poiId];
+  [_annotationManager onPOITap:poiId];
 }
 
 ///* Called after a base map POI has been tapped */

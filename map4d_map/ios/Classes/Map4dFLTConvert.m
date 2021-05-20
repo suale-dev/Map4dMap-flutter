@@ -1,14 +1,14 @@
 //
-//  FMFConvert.m
+//  Map4dFLTConvert.m
 //  map4d_map
 //
 //  Created by Huy Dang on 07/05/2021.
 //
 
-#import "FMFConvert.h"
+#import "Map4dFLTConvert.h"
 #import <Map4dMap/Map4dMap.h>
 
-@implementation FMFConvert
+@implementation Map4dFLTConvert
 
 + (bool)toBool:(NSNumber*)data {
   return data.boolValue;
@@ -27,11 +27,11 @@
 }
 
 + (CLLocationCoordinate2D)toLocation:(NSArray*)data {
-  return CLLocationCoordinate2DMake([FMFConvert toDouble:data[0]], [FMFConvert toDouble:data[1]]);
+  return CLLocationCoordinate2DMake([Map4dFLTConvert toDouble:data[0]], [Map4dFLTConvert toDouble:data[1]]);
 }
 
 + (CGPoint)toPoint:(NSArray*)data {
-  return CGPointMake([FMFConvert toDouble:data[0]], [FMFConvert toDouble:data[1]]);
+  return CGPointMake([Map4dFLTConvert toDouble:data[0]], [Map4dFLTConvert toDouble:data[1]]);
 }
 
 + (MFPolylineStyle)toPolylineStyle:(NSNumber*)data {
@@ -58,8 +58,8 @@
   for (unsigned i = 0; i < [data count]; i++) {
     NSNumber* latitude = data[i][0];
     NSNumber* longitude = data[i][1];
-    CLLocation* point = [[CLLocation alloc] initWithLatitude:[FMFConvert toDouble:latitude]
-                                                   longitude:[FMFConvert toDouble:longitude]];
+    CLLocation* point = [[CLLocation alloc] initWithLatitude:[Map4dFLTConvert toDouble:latitude]
+                                                   longitude:[Map4dFLTConvert toDouble:longitude]];
     [points addObject:point];
   }
 
@@ -69,7 +69,7 @@
 + (NSArray<NSArray<CLLocation*>*>*)toHoles:(NSArray*)data {
   NSMutableArray<NSArray<CLLocation*>*>* holes = [[[NSMutableArray alloc] init] init];
   for (unsigned i = 0; i < [data count]; i++) {
-    NSArray<CLLocation*>* points = [FMFConvert toPoints:data[i]];
+    NSArray<CLLocation*>* points = [Map4dFLTConvert toPoints:data[i]];
     [holes addObject:points];
   }
 
@@ -77,8 +77,8 @@
 }
 
 + (MFCoordinateBounds*) toCoordinateBounds:(NSArray*)data {
-  CLLocationCoordinate2D loc0 = [FMFConvert toLocation:data[0]];
-  CLLocationCoordinate2D loc1 = [FMFConvert toLocation:data[1]];
+  CLLocationCoordinate2D loc0 = [Map4dFLTConvert toLocation:data[0]];
+  CLLocationCoordinate2D loc1 = [Map4dFLTConvert toLocation:data[1]];
   return [[MFCoordinateBounds alloc] initWithCoordinate:loc0 coordinate1:loc1];
 }
 
@@ -87,10 +87,10 @@
     return nil;
   }
 
-  CLLocationCoordinate2D target = [FMFConvert toLocation:data[@"target"]];
-  float zoom = [FMFConvert toFloat:data[@"zoom"]];
-  double bearing = [FMFConvert toDouble:data[@"bearing"]];
-  double tilt = [FMFConvert toDouble:data[@"tilt"]];
+  CLLocationCoordinate2D target = [Map4dFLTConvert toLocation:data[@"target"]];
+  float zoom = [Map4dFLTConvert toFloat:data[@"zoom"]];
+  double bearing = [Map4dFLTConvert toDouble:data[@"bearing"]];
+  double tilt = [Map4dFLTConvert toDouble:data[@"tilt"]];
   return [[MFCameraPosition alloc] initWithTarget:target zoom:zoom tilt:tilt bearing:bearing];
 }
 
@@ -101,17 +101,17 @@
 
   NSString* update = data[0];
   if ([update isEqualToString:@"newCameraPosition"]) {
-    MFCameraPosition* position = [FMFConvert toCameraPosition:data[1]];
+    MFCameraPosition* position = [Map4dFLTConvert toCameraPosition:data[1]];
     return [MFCameraUpdate setCamera:position];
   } else if ([update isEqualToString:@"newLatLng"]) {
-    CLLocationCoordinate2D location = [FMFConvert toLocation:data[1]];
+    CLLocationCoordinate2D location = [Map4dFLTConvert toLocation:data[1]];
     return [MFCameraUpdate setTarget:location];
   } else if ([update isEqualToString:@"newLatLngBounds"]) {
-    MFCoordinateBounds* bounds = [FMFConvert toCoordinateBounds:data[1]];
+    MFCoordinateBounds* bounds = [Map4dFLTConvert toCoordinateBounds:data[1]];
     return [MFCameraUpdate fitBounds:bounds];
   } else if ([update isEqualToString:@"newLatLngZoom"]) {
-    CLLocationCoordinate2D target = [FMFConvert toLocation:data[1]];
-    float zoom = [FMFConvert toFloat:data[2]];
+    CLLocationCoordinate2D target = [Map4dFLTConvert toLocation:data[1]];
+    float zoom = [Map4dFLTConvert toFloat:data[2]];
     return [MFCameraUpdate setTarget:target zoom:zoom];
 //  } else if ([update isEqualToString:@"scrollBy"]) {
 //    return [MFCameraUpdate scrollByX:ToDouble(data[1]) Y:ToDouble(data[2])];
@@ -140,7 +140,7 @@
     return nil;
   }
   return @{
-    @"target" : [FMFConvert locationToJson:position.target],
+    @"target" : [Map4dFLTConvert locationToJson:position.target],
     @"zoom" : @(position.zoom),
     @"bearing" : @(position.bearing),
     @"tilt" : @(position.tilt),
@@ -176,7 +176,7 @@
     if (iconData.count == 3) {
       image = [UIImage imageNamed:[registrar lookupKeyForAsset:iconData[1]]];
       NSNumber* scaleParam = iconData[2];
-      image = [FMFConvert scaleImage:image scale:scaleParam];
+      image = [Map4dFLTConvert scaleImage:image scale:scaleParam];
     } else {
       NSLog(@"InvalidBitmapDescriptor | 'fromAssetImage' should have exactly 3 arguments. Got: %lu",
             (unsigned long)iconData.count);

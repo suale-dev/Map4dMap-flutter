@@ -24,20 +24,9 @@
 @interface FMFPolyline : NSObject<FMFPolylineOptionsSink>
 @property(atomic, readonly) NSString* polylineId;
 - (instancetype)initPolylineWithId:(NSString*)polylineId;
+- (void)setMap:(MFMapView*)mapView;
 - (void)removePolyline;
-@end
-
-
-#pragma mark - FMFPolylinesController
-
-@interface FMFPolylinesController : NSObject
-- (instancetype)init:(FlutterMethodChannel*)methodChannel
-             mapView:(MFMapView*)mapView
-           registrar:(NSObject<FlutterPluginRegistrar>*)registrar;
-- (void)addPolylines:(NSArray*)polylinesToAdd;
-- (void)changePolylines:(NSArray*)polylinesToChange;
-- (void)removePolylineIds:(NSArray*)polylineIdsToRemove;
-- (void)onPolylineTap:(NSString*)polylineId;
+- (void)interpretPolylineOptions:(NSDictionary*)data;
 @end
 
 #endif /* FMFPolyline_h */
