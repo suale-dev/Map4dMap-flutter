@@ -468,38 +468,52 @@
 - (BOOL)mapview: (MFMapView*) mapView didTapMarker: (MFMarker*) marker {
   NSArray* userData = (NSArray*) marker.userData;
   NSString* markerId = userData[0];
-  [_annotationManager onMarkerTap:markerId];
+  if ([_annotationManager hasMarker:markerId]) {
+    [_channel invokeMethod:@"marker#onTap" arguments:@{@"markerId" : markerId}];
+  }
   return false;
 }
 
 - (void)mapview: (MFMapView*) mapView didEndDraggingMarker: (MFMarker*) marker {
   NSArray* userData = (NSArray*) marker.userData;
   NSString* markerId = userData[0];
-  [_annotationManager onDragEndMarker: markerId position: marker.position];
+  if ([_annotationManager hasMarker:markerId]) {
+    NSArray* position = [Map4dFLTConvert locationToJson:marker.position];
+    [_channel invokeMethod:@"marker#onDragEnd"
+                 arguments:@{@"markerId": markerId, @"position": position}];
+  }
 }
 
 - (void)mapview: (MFMapView*) mapView didTapInfoWindowOfMarker: (MFMarker*) marker{
   NSArray* userData = (NSArray*) marker.userData;
   NSString* markerId = userData[0];
-  [_annotationManager onInfoWindowTap:markerId];
+  if ([_annotationManager hasMarker:markerId]) {
+    [_channel invokeMethod:@"infoWindow#onTap" arguments:@{@"markerId" : markerId}];
+  }
 }
 
 - (void)mapview: (MFMapView*)  mapView didTapPolyline: (MFPolyline*) polyline {
   NSArray* userData = (NSArray*) polyline.userData;
   NSString* polylineId = userData[0];
-  [_annotationManager onPolylineTap:polylineId];
+  if ([_annotationManager hasPolyline:polylineId]) {
+    [_channel invokeMethod:@"polyline#onTap" arguments:@{@"polylineId" : polylineId}];
+  }
 }
 
 - (void)mapview: (MFMapView*)  mapView didTapPolygon: (MFPolygon*) polygon {
   NSArray* userData = (NSArray*) polygon.userData;
   NSString* polygonId = userData[0];
-  [_annotationManager onPolygonTap: polygonId];
+  if ([_annotationManager hasPolygon:polygonId]) {
+    [_channel invokeMethod:@"polygon#onTap" arguments:@{@"polygonId" : polygonId}];
+  }
 }
 
 - (void)mapview: (MFMapView*)  mapView didTapCircle: (MFCircle*) circle {
   NSArray* userData = (NSArray*) circle.userData;
   NSString* circleId = userData[0];
-  [_annotationManager onCircleTap:circleId];
+  if ([_annotationManager hasCircle:circleId]) {
+    [_channel invokeMethod:@"circle#onTap" arguments:@{@"circleId" : circleId}];
+  }
 }
 
 - (void)mapView: (MFMapView*)  mapView willMove: (BOOL) gesture {
@@ -532,7 +546,9 @@
 - (void)mapView: (MFMapView*)  mapView didTapBuilding: (MFBuilding*) building {
   NSArray* userData = (NSArray*) building.userData;
   NSString* buildingId = userData[0];
-  [_annotationManager onBuildingTap:buildingId];
+  if ([_annotationManager hasBuilding:buildingId]) {
+    [_channel invokeMethod:@"building#onTap" arguments:@{@"buildingId" : buildingId}];
+  }
 }
 
 ///* Called after a base map building has been tapped */
@@ -541,7 +557,9 @@
 - (void)mapView: (MFMapView*)  mapView didTapPOI: (MFPOI*) poi {
   NSArray* userData = (NSArray*) poi.userData;
   NSString* poiId = userData[0];
-  [_annotationManager onPOITap:poiId];
+  if ([_annotationManager hasPOI:poiId]) {
+    [_channel invokeMethod:@"poi#onTap" arguments:@{@"poiId" : poiId}];
+  }
 }
 
 ///* Called after a base map POI has been tapped */
