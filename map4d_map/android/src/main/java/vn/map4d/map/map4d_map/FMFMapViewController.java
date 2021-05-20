@@ -69,12 +69,14 @@ public class FMFMapViewController implements
   private final FMFCirclesController circlesController;
   private final FMFPolylinesController polylinesController;
   private final FMFPolygonsController polygonsController;
+  private final FMFMarkersController markersController;
   private final FMFPOIsController poisController;
   private final FMFBuildingsController buildingsController;
 
   private List<Object> initialCircles;
   private List<Object> initialPolylines;
   private List<Object> initialPolygons;
+  private List<Object> initialMarkers;
   private List<Object> initialPOIs;
   private List<Object> initialBuildings;
 
@@ -89,6 +91,7 @@ public class FMFMapViewController implements
     this.circlesController = new FMFCirclesController(methodChannel, density);
     this.polylinesController = new FMFPolylinesController(methodChannel, density);
     this.polygonsController = new FMFPolygonsController(methodChannel, density);
+    this.markersController = new FMFMarkersController(context, methodChannel, density);
     this.poisController = new FMFPOIsController(methodChannel, density);
     this.buildingsController = new FMFBuildingsController(methodChannel, density);
   }
@@ -121,11 +124,13 @@ public class FMFMapViewController implements
     circlesController.setMap(map4D);
     polylinesController.setMap(map4D);
     polygonsController.setMap(map4D);
+    markersController.setMap(map4D);
     poisController.setMap(map4D);
     buildingsController.setMap(map4D);
     updateInitialCircles();
     updateInitialPolylines();
     updateInitialPolygons();
+    updateInitialMarkers();
     updateInitialPOIs();
     updateInitialBuildings();
 
@@ -292,6 +297,16 @@ public class FMFMapViewController implements
         polygonsController.changePolygons(polygonsToChange);
         List<Object> polygonIdsToRemove = call.argument("polygonIdsToRemove");
         polygonsController.removePolygons(polygonIdsToRemove);
+        result.success(null);
+        break;
+      }
+      case "markers#update": {
+        List<Object> markersToAdd = call.argument("markersToAdd");
+        markersController.addMarkers(markersToAdd);
+        List<Object> markersToChange = call.argument("markersToChange");
+        markersController.changeMarkers(markersToChange);
+        List<Object> markerIdsToRemove = call.argument("markerIdsToRemove");
+        markersController.removeMarkers(markerIdsToRemove);
         result.success(null);
         break;
       }
@@ -507,6 +522,19 @@ public class FMFMapViewController implements
 
 
   @Override
+  public void setInitialMarkers(Object initialMarkers) {
+    ArrayList<?> markers = (ArrayList<?>) initialMarkers;
+    this.initialMarkers = markers != null ? new ArrayList<>(markers) : null;
+    if (map4D != null) {
+      updateInitialMarkers();
+    }
+  }
+
+  private void updateInitialMarkers() {
+    markersController.addMarkers(initialMarkers);
+  }
+
+  @Override
   public void setInitialPOIs(Object initialPOIs) {
     ArrayList<?> pois = (ArrayList<?>) initialPOIs;
     this.initialPOIs = pois != null ? new ArrayList<>(pois) : null;
@@ -562,7 +590,7 @@ public class FMFMapViewController implements
 
   @Override
   public void onInfoWindowClick(@NonNull MFMarker mfMarker) {
-
+    markersController.onInfoWindowTap(mfMarker.getId());
   }
 
   @Override
@@ -574,7 +602,10 @@ public class FMFMapViewController implements
 
   @Override
   public boolean onMarkerClick(MFMarker mfMarker) {
-    return false;
+    final long markerId = mfMarker.getId();
+    markersController.onMarkerTap(markerId);
+    /** InfoWindow show when return false and vice versa **/
+    return !markersController.isShowInfoWindowOnTap(markerId);
   }
 
   @Override
@@ -584,7 +615,7 @@ public class FMFMapViewController implements
 
   @Override
   public void onMarkerDragEnd(MFMarker mfMarker) {
-
+    markersController.onMarkerDragEnd(mfMarker.getId(), mfMarker.getPosition());
   }
 
   @Override
