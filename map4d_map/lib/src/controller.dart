@@ -74,6 +74,24 @@ class MFMapViewController {
           _mapState.widget.onTap!(coordinate!);
         }
         break;
+      case 'map#onTapPOI':
+        final onPOITap = _mapState.widget.onPOITap;
+        if (onPOITap != null) {
+          final String placeId = call.arguments['placeId'];
+          final String name = call.arguments['name'];
+          final LatLng location = LatLng.fromJson(call.arguments['location'])!;
+          onPOITap(placeId, name, location);
+        }
+        break;
+      case 'map#onTapBuilding':
+        final onBuildingTap = _mapState.widget.onBuildingTap;
+        if (onBuildingTap != null) {
+          final String buildingId = call.arguments['buildingId'];
+          final String name = call.arguments['name'];
+          final LatLng location = LatLng.fromJson(call.arguments['location'])!;
+          onBuildingTap(buildingId, name, location);
+        }
+        break;
       case 'map#onModeChange':
         final is3DMode = call.arguments['is3DMode'];
         _mapState.widget.onModeChange!(is3DMode);

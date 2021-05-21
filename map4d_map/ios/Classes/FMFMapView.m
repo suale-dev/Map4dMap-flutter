@@ -513,6 +513,8 @@
   return false;
 }
 
+//- (void)mapview: (MFMapView*)  mapView didBeginDraggingMarker: (MFMarker*) marker;
+
 - (void)mapview: (MFMapView*) mapView didEndDraggingMarker: (MFMarker*) marker {
   NSArray* userData = (NSArray*) marker.userData;
   NSString* markerId = userData[0];
@@ -522,6 +524,8 @@
                  arguments:@{@"markerId": markerId, @"position": position}];
   }
 }
+
+//- (void)mapview: (MFMapView*)  mapView didDragMarker: (MFMarker*) marker;
 
 - (void)mapview: (MFMapView*) mapView didTapInfoWindowOfMarker: (MFMarker*) marker{
   NSArray* userData = (NSArray*) marker.userData;
@@ -591,7 +595,14 @@
 }
 
 ///* Called after a base map building has been tapped */
-//- (void)mapView: (MFMapView*)  mapView didTapBuildingWithBuildingID: (NSString*) buildingID name: (NSString*) name location: (CLLocationCoordinate2D) location;
+- (void)mapView:(MFMapView*)mapView didTapBuildingWithBuildingID:(NSString*)buildingID name:(NSString*)name location:(CLLocationCoordinate2D)location {
+  NSDictionary* arguments = @{
+    @"buildingId": buildingID,
+    @"name": name,
+    @"location": [Map4dFLTConvert locationToJson:location]
+  };
+  [_channel invokeMethod:@"map#onTapBuilding" arguments:arguments];
+}
 
 - (void)mapView: (MFMapView*)  mapView didTapPOI: (MFPOI*) poi {
   NSArray* userData = (NSArray*) poi.userData;
@@ -602,7 +613,15 @@
 }
 
 ///* Called after a base map POI has been tapped */
-//- (void)mapView: (MFMapView*)  mapView didTapPOIWithPlaceID: (NSString*) placeID name: (NSString*) name location: (CLLocationCoordinate2D) location;
+- (void)mapView: (MFMapView*)  mapView didTapPOIWithPlaceID: (NSString*) placeID name: (NSString*) name location: (CLLocationCoordinate2D) location {
+  NSDictionary* arguments = @{
+    @"placeId": placeID,
+    @"name": name,
+    @"location": [Map4dFLTConvert locationToJson:location]
+  };
+  [_channel invokeMethod:@"map#onTapPOI" arguments:arguments];
+}
+
 //- (void)mapView: (MFMapView*)  mapView didTapMyLocation: (CLLocationCoordinate2D) location;
 //
 //- (BOOL)shouldChangeMapModeForMapView: (MFMapView*)  mapView;

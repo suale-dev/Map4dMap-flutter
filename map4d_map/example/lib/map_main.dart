@@ -46,6 +46,8 @@ class _MyAppState extends State<MyApp> {
       myLocationButtonEnabled: true,
       onTap: onTap,
       onModeChange: onModeChange,
+      onPOITap: onBaseMapPOITap,
+      onBuildingTap: onBaseMapBuildingTap,
     );
 
     return MaterialApp(
@@ -154,5 +156,13 @@ class _MyAppState extends State<MyApp> {
       mode = '3D';
     }
     print('Mode of map is: ' + mode);
+  }
+
+  void onBaseMapPOITap(String placeId, String name, LatLng location) {
+    print('Tap on POI $placeId, name: $name, location: $location');
+  }
+
+  void onBaseMapBuildingTap(String buildingId, String name, LatLng location) {
+    print('Tap on Building $buildingId, name: $name, location: $location');
   }
 }

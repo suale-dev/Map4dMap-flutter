@@ -44,6 +44,8 @@ class MFMapView extends StatefulWidget {
     this.onCameraIdle,
     this.onTap,
     this.onModeChange,
+    this.onPOITap,
+    this.onBuildingTap,
     this.tileOverlays = const <MFTileOverlay>{},
     this.pois = const<MFPOI>{},
     this.buildings = const<MFBuilding>{},
@@ -114,15 +116,22 @@ class MFMapView extends StatefulWidget {
   final VoidCallback? onCameraMoveStarted;
 
   /// Called repeatedly as the camera continues to move after an onCameraMoveStarted call.
-  final CameraPositionCallback? onCameraMove;
+  final MFCameraPositionCallback? onCameraMove;
 
   /// Called when camera movement has ended, there are no pending animations and the user has stopped interacting with the map.
   final VoidCallback? onCameraIdle;
 
   /// Called when did tap at coordinate
-  final CoordinateCallback? onTap;
+  final MFLatLngCallback? onTap;
 
-  final ModeChangeCallback? onModeChange;
+  /// Called when map mode change from 2D -> 3D & 3D -> 2D
+  final MFModeChangedCallback? onModeChange;
+
+  /// Called after a base map POI has been tapped
+  final MFMapPOICallback? onPOITap;
+
+  /// Called after a base map building has been tapped
+  final MFMapBuildingCallback? onBuildingTap;
 }
 
 class _MFMapViewState extends State<MFMapView> {

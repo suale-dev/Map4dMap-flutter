@@ -32,7 +32,10 @@ export 'src/camera.dart'
 
 export 'src/callbacks.dart'
   show
-    CameraPositionCallback
+    MFCameraPositionCallback,
+    MFLatLngCallback,
+    MFMapPOICallback,
+    MFMapBuildingCallback
   ;
 
 export 'src/annotations/annotations.dart'
