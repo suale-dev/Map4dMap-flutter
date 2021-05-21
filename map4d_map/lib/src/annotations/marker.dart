@@ -94,7 +94,7 @@ class MFMarker implements MapsObject {
   /// If this is false, [onTap] callback will not be triggered.
   final bool consumeTapEvents;
 
-  final LatLng position;
+  final MFLatLng position;
 
   final double elevation;
 
@@ -117,13 +117,13 @@ class MFMarker implements MapsObject {
   /// Callbacks to receive tap events for marker placed on this map.
   final VoidCallback? onTap;
 
-  /// Signature reporting the new [LatLng] at the end of a drag event.
-  final ValueChanged<LatLng>? onDragEnd;
+  /// Signature reporting the new [MFLatLng] at the end of a drag event.
+  final ValueChanged<MFLatLng>? onDragEnd;
 
   const MFMarker({
     required this.markerId,
     this.consumeTapEvents = false,
-    this.position = const LatLng(0.0, 0.0),
+    this.position = const MFLatLng(0.0, 0.0),
     this.elevation = 0.0,
     this.rotation = 0.0,
     this.anchor = const Offset(0.5, 0.5),
@@ -140,7 +140,7 @@ class MFMarker implements MapsObject {
   /// unless overwritten by the specified parameters.
   MFMarker copyWith({
     bool? consumeTapEventsParam,
-    LatLng? positionParam,
+    MFLatLng? positionParam,
     Offset? anchorParam,
     double? elevationParam,
     double? rotationParam,
@@ -150,7 +150,7 @@ class MFMarker implements MapsObject {
     MFBitmap? iconParam,
     MFInfoWindow? infoWindowParam,
     VoidCallback? onTapParam,
-    ValueChanged<LatLng>? onDragEndParam,
+    ValueChanged<MFLatLng>? onDragEndParam,
   }) {
     return MFMarker(
       consumeTapEvents: consumeTapEventsParam ?? consumeTapEvents,

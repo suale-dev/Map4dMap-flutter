@@ -23,7 +23,7 @@ class MFCameraPosition {
   final double bearing;
 
   /// The geographical location that the camera is pointing at.
-  final LatLng target;
+  final MFLatLng target;
 
   /// The angle, in degrees, of the camera angle from the nadir.
   ///
@@ -66,7 +66,7 @@ class MFCameraPosition {
     if (json == null || !(json is Map<dynamic, dynamic>)) {
       return null;
     }
-    final LatLng? target = LatLng.fromJson(json['target']);
+    final MFLatLng? target = MFLatLng.fromJson(json['target']);
     if (target == null) {
       return null;
     }
@@ -110,7 +110,7 @@ class MFCameraUpdate {
 
   /// Returns a camera update that moves the camera target to the specified
   /// geographical location.
-  static MFCameraUpdate newLatLng(LatLng latLng) {
+  static MFCameraUpdate newLatLng(MFLatLng latLng) {
     return MFCameraUpdate._(<Object>['newLatLng', latLng.toJson()]);
   }
 
@@ -118,7 +118,7 @@ class MFCameraUpdate {
   /// geographical bounding box is centered in the map view at the greatest
   /// possible zoom level. A non-zero [padding] insets the bounding box from the
   /// map view's edges. The camera's new tilt and bearing will both be 0.0.
-  static MFCameraUpdate newLatLngBounds(LatLngBounds bounds, double padding) {
+  static MFCameraUpdate newLatLngBounds(MFLatLngBounds bounds, double padding) {
     return MFCameraUpdate._(<Object>[
       'newLatLngBounds',
       bounds.toJson(),
@@ -128,7 +128,7 @@ class MFCameraUpdate {
 
   /// Returns a camera update that moves the camera target to the specified
   /// geographical location and zoom level.
-  static MFCameraUpdate newLatLngZoom(LatLng latLng, double zoom) {
+  static MFCameraUpdate newLatLngZoom(MFLatLng latLng, double zoom) {
     return MFCameraUpdate._(
       <Object>['newLatLngZoom', latLng.toJson(), zoom],
     );

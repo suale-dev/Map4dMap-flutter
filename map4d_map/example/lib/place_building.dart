@@ -22,9 +22,9 @@ class PlaceBuildingBody extends StatefulWidget {
 class PlaceBuildingBodyState extends State<PlaceBuildingBody> {
   PlaceBuildingBodyState();
 
-  static final LatLng _kInitPosition = LatLng(12.205748339991535, 109.21646118164062);
-  static final LatLng _kInitExtrudeBuildingPosition = LatLng(12.204364143802083, 109.21652555465698);
-  static final LatLng _kInitTextureBuildingPosition = LatLng(12.206755023585973, 109.21641826629639);
+  static final MFLatLng _kInitPosition = MFLatLng(12.205748339991535, 109.21646118164062);
+  static final MFLatLng _kInitExtrudeBuildingPosition = MFLatLng(12.204364143802083, 109.21652555465698);
+  static final MFLatLng _kInitTextureBuildingPosition = MFLatLng(12.206755023585973, 109.21641826629639);
 
   late MFMapViewController controller;
   Map<MFBuildingId, MFBuilding> buildings = <MFBuildingId, MFBuilding>{};
@@ -66,12 +66,12 @@ class PlaceBuildingBodyState extends State<PlaceBuildingBody> {
     final String buildingIdVal = 'building_id_$_buildingIdCounter';
     _buildingIdCounter++;
 
-    final List<LatLng> coordinates = <LatLng>[
-      LatLng(12.204259280159668, 109.21635255217552),
-      LatLng(12.204259280159668,109.2167267203331),
-      LatLng(12.20450177726977, 109.2167267203331),
-      LatLng(12.20450177726977, 109.21635255217552),
-      LatLng(12.204259280159668,109.21635255217552)
+    final List<MFLatLng> coordinates = <MFLatLng>[
+      MFLatLng(12.204259280159668, 109.21635255217552),
+      MFLatLng(12.204259280159668,109.2167267203331),
+      MFLatLng(12.20450177726977, 109.2167267203331),
+      MFLatLng(12.20450177726977, 109.21635255217552),
+      MFLatLng(12.204259280159668,109.21635255217552)
     ];
     final MFBuildingId buildingId = MFBuildingId(buildingIdVal);
     final MFBuilding building = MFBuilding(

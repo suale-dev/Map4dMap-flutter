@@ -35,7 +35,7 @@ class PlacePOIBodyState extends State<PlacePOIBody> {
     this.controller = controller;
   }
 
-  void _onTap(LatLng coordinate) {
+  void _onTap(MFLatLng coordinate) {
     _add(coordinate);
   }
 
@@ -56,7 +56,7 @@ class PlacePOIBodyState extends State<PlacePOIBody> {
     });
   }
 
-  void _add(LatLng position) {
+  void _add(MFLatLng position) {
     final String poiIdVal = 'poi_id_$_poiIdCounter';
     _poiIdCounter++;
     final MFPOIId poiId = MFPOIId(poiIdVal);

@@ -22,8 +22,8 @@ class MFPolygon implements MapsObject {
     required this.polygonId,
     this.consumeTapEvents = false,
     this.fillColor = Colors.black,
-    this.points = const <LatLng>[],
-    this.holes = const <List<LatLng>>[],
+    this.points = const <MFLatLng>[],
+    this.holes = const <List<MFLatLng>>[],
     this.strokeColor = Colors.black,
     this.strokeWidth = 10,
     this.visible = true,
@@ -49,7 +49,7 @@ class MFPolygon implements MapsObject {
   ///
   /// Line segments are drawn between consecutive points. A polygon is not closed by
   /// default; to form a closed polygon, the start and end points must be the same.
-  final List<LatLng> points;
+  final List<MFLatLng> points;
 
   /// To create an empty area within a polygon, you need to use holes.
   /// To create the hole, the coordinates defining the hole path must be inside the polygon.
@@ -57,7 +57,7 @@ class MFPolygon implements MapsObject {
   /// The vertices of the holes to be cut out of polygon.
   ///
   /// Line segments of each points of hole are drawn inside polygon between consecutive hole points.
-  final List<List<LatLng>> holes;
+  final List<List<MFLatLng>> holes;
 
   /// True if the marker is visible.
   final bool visible;
@@ -86,8 +86,8 @@ class MFPolygon implements MapsObject {
   MFPolygon copyWith({
     bool? consumeTapEventsParam,
     Color? fillColorParam,
-    List<LatLng>? pointsParam,
-    List<List<LatLng>>? holesParam,
+    List<MFLatLng>? pointsParam,
+    List<List<MFLatLng>>? holesParam,
     Color? strokeColorParam,
     int? strokeWidthParam,
     bool? visibleParam,
@@ -112,7 +112,7 @@ class MFPolygon implements MapsObject {
   /// instance.
   MFPolygon clone() {
     return copyWith(
-      pointsParam: List<LatLng>.of(points),
+      pointsParam: List<MFLatLng>.of(points),
     );
   }
 
@@ -167,7 +167,7 @@ class MFPolygon implements MapsObject {
 
   Object _pointsToJson() {
     final List<Object> result = <Object>[];
-    for (final LatLng point in points) {
+    for (final MFLatLng point in points) {
       result.add(point.toJson());
     }
     return result;
@@ -175,9 +175,9 @@ class MFPolygon implements MapsObject {
 
   List<List<Object>> _holesToJson() {
     final List<List<Object>> result = <List<Object>>[];
-    for (final List<LatLng> hole in holes) {
+    for (final List<MFLatLng> hole in holes) {
       final List<Object> jsonHole = <Object>[];
-      for (final LatLng point in hole) {
+      for (final MFLatLng point in hole) {
         jsonHole.add(point.toJson());
       }
       result.add(jsonHole);

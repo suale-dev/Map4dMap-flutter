@@ -22,8 +22,8 @@ class MFBuilding implements MapsObject {
     required this.buildingId,
     this.consumeTapEvents = false,
     this.name = '',
-    this.position = const LatLng(0, 0),
-    this.coordinates = const <LatLng>[],
+    this.position = const MFLatLng(0, 0),
+    this.coordinates = const <MFLatLng>[],
     this.modelUrl = '',
     this.textureUrl = '',
     this.height = 1,
@@ -47,13 +47,13 @@ class MFBuilding implements MapsObject {
   final bool consumeTapEvents;
 
   /// Geographical location of the POI.
-  final LatLng position;
+  final MFLatLng position;
 
   /// Name of the building.
   final String name;
 
   ///
-  final List<LatLng> coordinates;
+  final List<MFLatLng> coordinates;
 
   ///
   final String modelUrl;
@@ -87,8 +87,8 @@ class MFBuilding implements MapsObject {
   MFBuilding copyWith({
     bool? consumeTapEventsParam,
     String? nameParam,
-    LatLng? positionParam,
-    List<LatLng>? coordinatesParam,
+    MFLatLng? positionParam,
+    List<MFLatLng>? coordinatesParam,
     String? modelUrlParam,
     String? textureUrlParam,
     double? heightParam,
@@ -172,7 +172,7 @@ class MFBuilding implements MapsObject {
 
   Object _coordinatesToJson() {
     final List<Object> result = <Object>[];
-    for (final LatLng coordinate in coordinates) {
+    for (final MFLatLng coordinate in coordinates) {
       result.add(coordinate.toJson());
     }
     return result;

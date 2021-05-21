@@ -20,7 +20,7 @@ class MFPOI implements MapsObject<MFPOI> {
   const MFPOI({
     required this.poiId,
     this.consumeTapEvents = false,
-    this.position = const LatLng(0.0, 0.0),
+    this.position = const MFLatLng(0.0, 0.0),
     this.title = '',
     this.titleColor = Colors.blue,
     // this.subtitle = '',
@@ -43,7 +43,7 @@ class MFPOI implements MapsObject<MFPOI> {
   final bool consumeTapEvents;
 
   /// Geographical location of the POI.
-  final LatLng position;
+  final MFLatLng position;
 
   /// Title of the POI.
   final String title;
@@ -77,7 +77,7 @@ class MFPOI implements MapsObject<MFPOI> {
   /// unless overwritten by the specified parameters.
   MFPOI copyWith({
     bool? consumeTapEventsParam,
-    LatLng? positionParam,
+    MFLatLng? positionParam,
     String? titleParam,
     Color? titleColorParam,
     // String? subtitleParam,

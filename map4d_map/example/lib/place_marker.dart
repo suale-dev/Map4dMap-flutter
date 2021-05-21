@@ -25,7 +25,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     final MFMarker marker = MFMarker(
         consumeTapEvents: true,
         markerId: markerId,
-        position: LatLng(16.0324816, 108.132791),
+        position: MFLatLng(16.0324816, 108.132791),
         anchor: Offset(0.5, 1.0),
         infoWindow: MFInfoWindow(
             snippet: "Snippet",
@@ -38,7 +38,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
         onTap: () {
           _onMarkerTapped(markerId);
         },
-        onDragEnd: (LatLng position) {
+        onDragEnd: (MFLatLng position) {
           _onMarkerDragEnd(markerId, position);
         });
     markers[markerId] = marker;
@@ -101,7 +101,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     });
   }
 
-  void _onMarkerDragEnd(MFMarkerId markerId, LatLng newPosition) async {
+  void _onMarkerDragEnd(MFMarkerId markerId, MFLatLng newPosition) async {
     final MFMarker? tappedMarker = markers[markerId];
     if (tappedMarker != null) {
       await showDialog<void>(
@@ -171,7 +171,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
       onTap: () {
         _onMarkerTapped(markerId);
       },
-      onDragEnd: (LatLng position) {
+      onDragEnd: (MFLatLng position) {
         _onMarkerDragEnd(markerId, position);
       },
     );
@@ -188,7 +188,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     final MFMarker marker = markers[markerId]!;
     setState(() {
       markers[markerId] = marker.copyWith(
-        positionParam: LatLng(
+        positionParam: MFLatLng(
             16.0324816 + sin(_indexPosition * pi / 4.0) / 6.0 * 0.8,
             108.132791 + cos(_indexPosition * pi / 4.0) / 6.0),
       );
@@ -267,7 +267,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
             height: 300.0,
             child: MFMapView(
               initialCameraPosition: const MFCameraPosition(
-                target: LatLng(16.0324816, 108.132791),
+                target: MFLatLng(16.0324816, 108.132791),
                 zoom: 10.0,
               ),
               markers: Set<MFMarker>.of(markers.values),
@@ -351,14 +351,14 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     );
   }
 
-  LatLng _createCenter() {
+  MFLatLng _createCenter() {
     return _createLatLng(
         16.0324816 + sin(_markerIdCounter * pi / 6.0) / 10.0 * 0.8,
         108.132791 + cos(_markerIdCounter * pi / 6.0) / 10.0);
   }
 
-  LatLng _createLatLng(double lat, double lng) {
-    return LatLng(lat, lng);
+  MFLatLng _createLatLng(double lat, double lng) {
+    return MFLatLng(lat, lng);
   }
 
   Future<void> _createMarkerImageFromAsset(BuildContext context) async {

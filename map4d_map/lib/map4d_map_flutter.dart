@@ -20,8 +20,8 @@ import 'src/overlays/overlays.dart';
 export 'src/ui.dart' show MFMinMaxZoom;
 export 'src/location.dart'
   show
-    LatLng,
-    LatLngBounds
+    MFLatLng,
+    MFLatLngBounds
   ;
 
 export 'src/camera.dart'

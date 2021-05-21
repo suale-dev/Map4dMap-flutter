@@ -22,7 +22,7 @@ class MapUiBodyState extends State<MapUiBody> {
   MapUiBodyState();
 
   static final MFCameraPosition _kInitialPosition = MFCameraPosition(
-    target: LatLng(16.0750, 108.2122),
+    target: MFLatLng(16.0750, 108.2122),
     zoom: 15.0,
   );
 

@@ -72,7 +72,7 @@ class TileOverlayBodyState extends State<TileOverlayBody> {
             height: 300.0,
             child: MFMapView(
               initialCameraPosition: const MFCameraPosition(
-                target: LatLng(59.935460, 30.325177),
+                target: MFLatLng(59.935460, 30.325177),
                 zoom: 7.0,
               ),
               tileOverlays: overlays,

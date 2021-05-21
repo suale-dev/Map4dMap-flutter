@@ -21,7 +21,7 @@ class MFCircle implements MapsObject<MFCircle> {
     required this.circleId,
     this.consumeTapEvents = false,
     this.fillColor = Colors.transparent,
-    this.center = const LatLng(0.0, 0.0),
+    this.center = const MFLatLng(0.0, 0.0),
     this.radius = 0,
     this.strokeColor = Colors.black,
     this.strokeWidth = 10,
@@ -45,7 +45,7 @@ class MFCircle implements MapsObject<MFCircle> {
   final Color fillColor;
 
   /// Geographical location of the circle center.
-  final LatLng center;
+  final MFLatLng center;
 
   /// Radius of the circle in meters; must be positive. The default value is 0.
   final double radius;
@@ -78,7 +78,7 @@ class MFCircle implements MapsObject<MFCircle> {
   MFCircle copyWith({
     bool? consumeTapEventsParam,
     Color? fillColorParam,
-    LatLng? centerParam,
+    MFLatLng? centerParam,
     double? radiusParam,
     Color? strokeColorParam,
     int? strokeWidthParam,

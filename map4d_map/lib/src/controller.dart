@@ -62,7 +62,7 @@ class MFMapViewController {
         break;
       case 'marker#onDragEnd':
         final markerId = MFMarkerId(call.arguments['markerId']);
-        final position = LatLng.fromJson(call.arguments['position']);
+        final position = MFLatLng.fromJson(call.arguments['position']);
         if (position == null) {
           return;
         }
@@ -70,7 +70,7 @@ class MFMapViewController {
         break;
       case 'map#didTapAtCoordinate':
         if (_mapState.widget.onTap != null) {
-          final coordinate = LatLng.fromJson(call.arguments['coordinate']);
+          final coordinate = MFLatLng.fromJson(call.arguments['coordinate']);
           _mapState.widget.onTap!(coordinate!);
         }
         break;
@@ -79,7 +79,7 @@ class MFMapViewController {
         if (onPOITap != null) {
           final String placeId = call.arguments['placeId'];
           final String name = call.arguments['name'];
-          final LatLng location = LatLng.fromJson(call.arguments['location'])!;
+          final MFLatLng location = MFLatLng.fromJson(call.arguments['location'])!;
           onPOITap(placeId, name, location);
         }
         break;
@@ -88,7 +88,7 @@ class MFMapViewController {
         if (onBuildingTap != null) {
           final String buildingId = call.arguments['buildingId'];
           final String name = call.arguments['name'];
-          final LatLng location = LatLng.fromJson(call.arguments['location'])!;
+          final MFLatLng location = MFLatLng.fromJson(call.arguments['location'])!;
           onBuildingTap(buildingId, name, location);
         }
         break;
@@ -116,7 +116,7 @@ class MFMapViewController {
         <String, Object>{'cameraUpdate': cameraUpdate.toJson()});
   }
 
-  Future<MFCameraPosition> cameraForBounds(LatLngBounds bounds, { double padding = 0 }) async {
+  Future<MFCameraPosition> cameraForBounds(MFLatLngBounds bounds, { double padding = 0 }) async {
     final Map<String, dynamic> cameraPosition = (await _channel.invokeMapMethod<String, dynamic>('map#cameraForBounds',
         <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding}))!;
     return MFCameraPosition.fromMap(cameraPosition)!;
@@ -127,7 +127,7 @@ class MFMapViewController {
     return MFCameraPosition.fromMap(cameraPosition);
   }
 
-  Future<void> fitBounds(LatLngBounds bounds, { double padding = 0 }) async {
+  Future<void> fitBounds(MFLatLngBounds bounds, { double padding = 0 }) async {
     return _channel.invokeMethod<void>('map#fitBounds',
         <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding});
   }

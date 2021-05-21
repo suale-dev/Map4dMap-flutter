@@ -28,7 +28,7 @@ class PlaceCircleBodyState extends State<PlaceCircleBody> {
       strokeColor: Colors.orange,
       fillColor: Colors.green,
       strokeWidth: 5,
-      center: LatLng(51.4816, -3.1791),
+      center: MFLatLng(51.4816, -3.1791),
       radius: 50000,
       onTap: () {
         _onCircleTapped(circleId);
@@ -160,7 +160,7 @@ class PlaceCircleBodyState extends State<PlaceCircleBody> {
             height: 300.0,
             child: MFMapView(
               initialCameraPosition: const MFCameraPosition(
-                target: LatLng(52.4478, -3.5402),
+                target: MFLatLng(52.4478, -3.5402),
                 zoom: 7.0,
               ),
               circles: Set<MFCircle>.of(circles.values),
@@ -227,12 +227,12 @@ class PlaceCircleBodyState extends State<PlaceCircleBody> {
     );
   }
 
-  LatLng _createCenter() {
+  MFLatLng _createCenter() {
     final double offset = _circleIdCounter.ceilToDouble();
     return _createLatLng(51.4816 + offset * 0.2, -3.1791);
   }
 
-  LatLng _createLatLng(double lat, double lng) {
-    return LatLng(lat, lng);
+  MFLatLng _createLatLng(double lat, double lng) {
+    return MFLatLng(lat, lng);
   }
 }

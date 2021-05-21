@@ -298,12 +298,12 @@ class _MFMapViewState extends State<MFMapView> {
     }
   }
   
-  void onMarkerDragEnd(MFMarkerId markerId, LatLng position) {
+  void onMarkerDragEnd(MFMarkerId markerId, MFLatLng position) {
     final MFMarker? marker = _markers[markerId];
     if (marker == null) {
       throw UnknownMapObjectIdError('marker', markerId, 'onMarkerDragEnd');
     }
-    final ValueChanged<LatLng>? onDragEnd = marker.onDragEnd;
+    final ValueChanged<MFLatLng>? onDragEnd = marker.onDragEnd;
     if (onDragEnd != null) {
       onDragEnd(position);
     }

@@ -35,7 +35,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final position =
-        MFCameraPosition(target: LatLng(21.030041, 105.8502223), zoom: 16);
+        MFCameraPosition(target: MFLatLng(21.030041, 105.8502223), zoom: 16);
     final MFMapView map = MFMapView(
       initialCameraPosition: position,
       onMapCreated: onMapCreated,
@@ -123,14 +123,14 @@ class _MyAppState extends State<MyApp> {
 
   void moveCamera() {
     final cameraUpdate = MFCameraUpdate.newLatLng(
-        LatLng(10.779348472547028, 106.71295166015625));
+        MFLatLng(10.779348472547028, 106.71295166015625));
     print('moveCamera to: ' + cameraUpdate.toString());
     _controller.moveCamera(cameraUpdate);
   }
 
   void animateCamera() {
     final cameraUpdate =
-        MFCameraUpdate.newLatLng(LatLng(16.088414, 108.230563));
+        MFCameraUpdate.newLatLng(MFLatLng(16.088414, 108.230563));
     print('animateCamera to: ' + cameraUpdate.toString());
     _controller.animateCamera(cameraUpdate);
   }
@@ -146,7 +146,7 @@ class _MyAppState extends State<MyApp> {
     _controller.enable3DMode(_is3DMode);
   }
 
-  void onTap(LatLng coordinate) {
+  void onTap(MFLatLng coordinate) {
     print('Did tap ' + coordinate.toString());
   }
 
@@ -158,11 +158,11 @@ class _MyAppState extends State<MyApp> {
     print('Mode of map is: ' + mode);
   }
 
-  void onBaseMapPOITap(String placeId, String name, LatLng location) {
+  void onBaseMapPOITap(String placeId, String name, MFLatLng location) {
     print('Tap on POI $placeId, name: $name, location: $location');
   }
 
-  void onBaseMapBuildingTap(String buildingId, String name, LatLng location) {
+  void onBaseMapBuildingTap(String buildingId, String name, MFLatLng location) {
     print('Tap on Building $buildingId, name: $name, location: $location');
   }
 }

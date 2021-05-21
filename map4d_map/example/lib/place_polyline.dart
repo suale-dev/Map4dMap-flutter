@@ -23,12 +23,12 @@ class PlacePolylineBody extends StatefulWidget {
 class PlacePolylineBodyState extends State<PlacePolylineBody> {
   PlacePolylineBodyState() {
     final MFPolylineId polylineId = MFPolylineId('polyline_id_0');
-    List<LatLng> points = <LatLng>[
-          LatLng(52.30176096373671, -5.767822265625),
-          LatLng(50.93073802371819, -4.954833984374999),
-          LatLng(52.1267438596429, -1.8896484375),
-          LatLng(53.35710874569601, -5.33935546875),
-          LatLng(54.59752785211386, -2.252197265625)
+    List<MFLatLng> points = <MFLatLng>[
+          MFLatLng(52.30176096373671, -5.767822265625),
+          MFLatLng(50.93073802371819, -4.954833984374999),
+          MFLatLng(52.1267438596429, -1.8896484375),
+          MFLatLng(53.35710874569601, -5.33935546875),
+          MFLatLng(54.59752785211386, -2.252197265625)
     ];
     final MFPolyline polyline = MFPolyline(
       polylineId: polylineId,
@@ -170,7 +170,7 @@ class PlacePolylineBodyState extends State<PlacePolylineBody> {
             height: 300.0,
             child: MFMapView(
               initialCameraPosition: const MFCameraPosition(
-                target: LatLng(53.1721, -3.5402),
+                target: MFLatLng(53.1721, -3.5402),
                 zoom: 5.0,
               ),
               polylines: Set<MFPolyline>.of(polylines.values),
@@ -237,8 +237,8 @@ class PlacePolylineBodyState extends State<PlacePolylineBody> {
     );
   }
 
-  List<LatLng> _createPoints() {
-    final List<LatLng> points = <LatLng>[];
+  List<MFLatLng> _createPoints() {
+    final List<MFLatLng> points = <MFLatLng>[];
     final double offset = _polylineIdCounter.ceilToDouble();
     points.add(_createLatLng(51.4816 + offset, -3.1791));
     points.add(_createLatLng(53.0430 + offset, -2.9925));
@@ -247,7 +247,7 @@ class PlacePolylineBodyState extends State<PlacePolylineBody> {
     return points;
   }
 
-  LatLng _createLatLng(double lat, double lng) {
-    return LatLng(lat, lng);
+  MFLatLng _createLatLng(double lat, double lng) {
+    return MFLatLng(lat, lng);
   }
 }

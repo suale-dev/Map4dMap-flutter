@@ -36,7 +36,7 @@ class MFPolyline implements MapsObject {
     this.consumeTapEvents = false,
     this.color = Colors.black,
     this.style = MFPolylineStyle.solid,
-    this.points = const <LatLng>[],
+    this.points = const <MFLatLng>[],
     this.visible = true,
     this.width = 10,
     this.zIndex = 0,
@@ -64,7 +64,7 @@ class MFPolyline implements MapsObject {
   ///
   /// Line segments are drawn between consecutive points. A polyline is not closed by
   /// default; to form a closed polyline, the start and end points must be the same.
-  final List<LatLng> points;
+  final List<MFLatLng> points;
 
   /// True if the marker is visible.
   final bool visible;
@@ -91,7 +91,7 @@ class MFPolyline implements MapsObject {
     Color? colorParam,
     bool? consumeTapEventsParam,
     MFPolylineStyle? styleParam,
-    List<LatLng>? pointsParam,
+    List<MFLatLng>? pointsParam,
     bool? visibleParam,
     int? widthParam,
     int? zIndexParam,
@@ -114,7 +114,7 @@ class MFPolyline implements MapsObject {
   /// instance.
   MFPolyline clone() {
     return copyWith(
-      pointsParam: List<LatLng>.of(points),
+      pointsParam: List<MFLatLng>.of(points),
     );
   }
 
@@ -163,7 +163,7 @@ class MFPolyline implements MapsObject {
 
   Object _pointsToJson() {
     final List<Object> result = <Object>[];
-    for (final LatLng point in points) {
+    for (final MFLatLng point in points) {
       result.add(point.toJson());
     }
     return result;

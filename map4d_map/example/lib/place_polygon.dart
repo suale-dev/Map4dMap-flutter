@@ -133,7 +133,7 @@ class PlacePolygonBodyState extends State<PlacePolygonBody> {
     final MFPolygon polygon = polygons[polygonId]!;
     setState(() {
       polygons[polygonId] = polygon.copyWith(
-        holesParam: <List<LatLng>>[],
+        holesParam: <List<MFLatLng>>[],
       );
     });
   }
@@ -178,7 +178,7 @@ class PlacePolygonBodyState extends State<PlacePolygonBody> {
             height: 300.0,
             child: MFMapView(
               initialCameraPosition: const MFCameraPosition(
-                target: LatLng(16.09628897915164, 108.09963226318358),
+                target: MFLatLng(16.09628897915164, 108.09963226318358),
                 zoom: 10.0,
               ),
               polygons: Set<MFPolygon>.of(polygons.values),
@@ -257,8 +257,8 @@ class PlacePolygonBodyState extends State<PlacePolygonBody> {
     );
   }
 
-  List<LatLng> _createPoints() {
-    final List<LatLng> points = <LatLng>[];
+  List<MFLatLng> _createPoints() {
+    final List<MFLatLng> points = <MFLatLng>[];
     final double offset = (_polygonIdCounter.ceilToDouble() - 1) / 4;
     points.add(_createLatLng(16.09628897915164 + offset, 108.09963226318358));
     points.add(_createLatLng(15.948785390273288 + offset, 108.08521270751953));
@@ -269,18 +269,18 @@ class PlacePolygonBodyState extends State<PlacePolygonBody> {
     return points;
   }
 
-  List<List<LatLng>> _createHoles(MFPolygonId polygonId) {
-    final List<List<LatLng>> holes = <List<LatLng>>[];
+  List<List<MFLatLng>> _createHoles(MFPolygonId polygonId) {
+    final List<List<MFLatLng>> holes = <List<MFLatLng>>[];
     final double offset = (polygonOffsets[polygonId]! - 1) / 4;
 
-    final List<LatLng> hole1 = <LatLng>[];
+    final List<MFLatLng> hole1 = <MFLatLng>[];
     hole1.add(_createLatLng(16.102556286933407 + offset, 108.19370269775389));
     hole1.add(_createLatLng(16.058021127461473 + offset, 108.16280364990233));
     hole1.add(_createLatLng(16.05274222526572 + offset, 108.24897766113281));
     hole1.add(_createLatLng(16.102556286933407 + offset, 108.19370269775389));
     holes.add(hole1);
 
-    final List<LatLng> hole2 = <LatLng>[];
+    final List<MFLatLng> hole2 = <MFLatLng>[];
     hole2.add(_createLatLng(16.055483506239545 + offset, 108.17070007324219));
     hole2.add(_createLatLng(16.00220588906289 + offset, 108.1710433959961));
     hole2.add(_createLatLng(16.008525929134183 + offset, 108.20022583007812));
@@ -291,7 +291,7 @@ class PlacePolygonBodyState extends State<PlacePolygonBody> {
     return holes;
   }
 
-  LatLng _createLatLng(double lat, double lng) {
-    return LatLng(lat, lng);
+  MFLatLng _createLatLng(double lat, double lng) {
+    return MFLatLng(lat, lng);
   }
 }
