@@ -31,6 +31,7 @@
       @"map#getZoomLevel": @(FMFMethodGetZoomLevel),
       @"map#fitBounds": @(FMFMethodFitBounds),
       @"map#cameraForBounds": @(FMFMethodCameraForBounds),
+      @"map#getCameraPosition" : @(FMFMethodGetCameraPosition),
       @"map#enable3DMode": @(FMFMethodEnable3DMode),
       /* camera **/
       @"camera#move": @(FMFMethodMoveCamera),

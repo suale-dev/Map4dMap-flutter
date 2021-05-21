@@ -27,6 +27,12 @@ typedef enum : NSUInteger {
   // map#cameraForBounds
   FMFMethodCameraForBounds,
   
+  // map#getCameraPosition
+  FMFMethodGetCameraPosition,
+  
+  // map#enable3DMode
+  FMFMethodEnable3DMode,
+  
   // camera#move
   FMFMethodMoveCamera,
   
@@ -56,11 +62,8 @@ typedef enum : NSUInteger {
   
   // markers#update
   FMFMethodMarkersUpdate,
-
-  // map#enable3DMode
-  FMFMethodEnable3DMode,
   
-  // count - all method is must add above this
+  // count - all method must add above this
   FMFMethodMaxItem
 
 } FMFMethodID;

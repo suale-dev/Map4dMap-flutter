@@ -204,6 +204,18 @@
       result(nil);
       break;
     }
+      
+    /* map # get camera position **/
+    case FMFMethodGetCameraPosition: {
+      if (_mapView != nil) {
+        result([Map4dFLTConvert positionToJson:_mapView.camera]);
+      } else {
+        result([FlutterError errorWithCode:@"MFMapView uninitialized"
+                                   message:@"getCameraPosition called prior to map initialization"
+                                   details:nil]);
+      }
+      break;
+    }
 
     /* map # set 3D mode **/
     case FMFMethodEnable3DMode: {

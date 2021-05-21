@@ -104,6 +104,11 @@ class MFMapViewController {
     return MFCameraPosition.fromMap(cameraPosition)!;
   }
 
+  Future<MFCameraPosition?> getCameraPosition() async {
+    final Map<String, dynamic> cameraPosition = (await _channel.invokeMapMethod<String, dynamic>('map#getCameraPosition'))!;
+    return MFCameraPosition.fromMap(cameraPosition);
+  }
+
   Future<void> fitBounds(LatLngBounds bounds, { double padding = 0 }) async {
     return _channel.invokeMethod<void>('map#fitBounds',
         <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding});
