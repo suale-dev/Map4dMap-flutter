@@ -33,7 +33,6 @@
 @interface FMFMarker : NSObject<FMFMarkerOptionsSink>
 
 @property(atomic, readonly) NSString* markerId;
-@property(nonatomic) BOOL showInfoWindowOnTap;
 
 - (instancetype)initMarkerWithId:(NSString*)markerId;
 - (void)setMap:(MFMapView*)mapView;

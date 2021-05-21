@@ -498,7 +498,7 @@
   if ([_annotationManager hasMarker:markerId]) {
     [_channel invokeMethod:@"marker#onTap" arguments:@{@"markerId" : markerId}];
   }
-  return ![_annotationManager isShowMarkerInfoWindow:markerId];
+  return false;
 }
 
 - (void)mapview: (MFMapView*) mapView didEndDraggingMarker: (MFMarker*) marker {

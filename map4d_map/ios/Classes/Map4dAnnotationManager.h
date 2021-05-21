@@ -22,7 +22,6 @@
 - (void)changeMarkers:(NSArray*)markersToChange;
 - (void)removeMarkerIds:(NSArray*)markerIdsToRemove;
 - (BOOL)hasMarker:(NSString*)markerId;
-- (BOOL)isShowMarkerInfoWindow:(NSString*)markerId;
 
 // Circle
 - (void)addCircles:(NSArray*)circlesToAdd;

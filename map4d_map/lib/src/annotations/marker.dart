@@ -114,8 +114,6 @@ class MFMarker implements MapsObject {
   /// The window is displayed when the marker is tapped.
   final MFInfoWindow infoWindow;
 
-  final bool showInfoWindowOnTap;
-
   /// Callbacks to receive tap events for marker placed on this map.
   final VoidCallback? onTap;
 
@@ -134,7 +132,6 @@ class MFMarker implements MapsObject {
     this.zIndex = 0.0,
     this.icon = MFBitmap.defaultIcon,
     this.infoWindow = MFInfoWindow.noText,
-    this.showInfoWindowOnTap = true,
     this.onTap,
     this.onDragEnd,
   });
@@ -152,7 +149,6 @@ class MFMarker implements MapsObject {
     double? zIndexParam,
     MFBitmap? iconParam,
     MFInfoWindow? infoWindowParam,
-    bool? showInfoWindowOnTapParam,
     VoidCallback? onTapParam,
     ValueChanged<LatLng>? onDragEndParam,
   }) {
@@ -168,7 +164,6 @@ class MFMarker implements MapsObject {
       zIndex: zIndexParam ?? zIndex,
       icon: iconParam ?? icon,
       infoWindow: infoWindowParam ?? infoWindow,
-      showInfoWindowOnTap: showInfoWindowOnTapParam ?? showInfoWindowOnTap,
       onTap: onTapParam ?? onTap,
       onDragEnd: onDragEndParam ?? onDragEnd,
     );
@@ -197,7 +192,6 @@ class MFMarker implements MapsObject {
     addIfPresent('visible', visible);
     addIfPresent('zIndex', zIndex);
     addIfPresent('infoWindow', infoWindow._toJson());
-    addIfPresent('showInfoWindowOnTap', showInfoWindowOnTap);
     return json;
   }
 
@@ -216,7 +210,6 @@ class MFMarker implements MapsObject {
         visible == typedOther.visible &&
         icon == typedOther.icon &&
         infoWindow == typedOther.infoWindow &&
-        showInfoWindowOnTap == typedOther.showInfoWindowOnTap &&
         zIndex == typedOther.zIndex;
   }
 

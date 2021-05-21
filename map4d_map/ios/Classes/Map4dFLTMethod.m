@@ -44,17 +44,16 @@
       @"building#update": @(FMFMethodBuildingUpdate),
       /* overlays **/
       @"tileOverlays#update": @(FMFMethodTileOverlaysUpdate),
-      @"tileOverlays#clearTileCache": @(FMFMethodTileOverlaysClearTileCache),
+      @"tileOverlays#clearTileCache": @(FMFMethodTileOverlaysClearTileCache)
     };
 
     // +1 cause by FMFMethodUnknow
-    assert(_methods.count + 1 == FMFMethodMaxItem);
+    NSAssert(_methods.count + 1 == FMFMethodMaxItem, @"Missing method define");
   }
   return self;
 }
 
 - (FMFMethodID)getIdByName:(NSString*)name {
-  
   NSNumber* methodId = _methods[name];
   if (methodId != nil) {
     return methodId.integerValue;

@@ -18,7 +18,6 @@
     _marker = [[MFMarker alloc] init];
     _marker.userData = @[ markerId ];
     _markerId = markerId;
-    _showInfoWindowOnTap = true;
   }
   return self;
 }
@@ -153,10 +152,6 @@
     }
   }
   
-  NSNumber* showInfoWindowOnTap = data[@"showInfoWindowOnTap"];
-  if (showInfoWindowOnTap) {
-    _showInfoWindowOnTap = [Map4dFLTConvert toBool:showInfoWindowOnTap];
-  }
 }
 
 @end
