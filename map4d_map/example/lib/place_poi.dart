@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
-import 'package:map4d_map/map4d_map_flutter.dart';
+import 'package:map4d_map/map4d_map.dart';
 
 import 'page.dart';
 

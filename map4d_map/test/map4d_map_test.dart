@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:map4d_map/map4d_map_flutter.dart';
+import 'package:map4d_map/map4d_map.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('map4d_map');

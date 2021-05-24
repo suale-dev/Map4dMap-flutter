@@ -63,5 +63,5 @@ export 'src/overlays/overlays.dart'
     MFTileOverlayId
   ;
 
-part 'src/map4d_map.dart';
+part 'src/mapview.dart';
 part 'src/controller.dart';
