@@ -1,17 +1,13 @@
-#
-# To learn more about a Podspec see http://guides.cocoapods.org/syntax/podspec.html.
-# Run `pod lib lint map4d_map.podspec` to validate before publishing.
-#
 Pod::Spec.new do |s|
   s.name             = 'map4d_map'
   s.version          = '0.0.1'
-  s.summary          = 'A new flutter plugin project.'
+  s.summary          = 'Map4d Map SDK for Flutter'
   s.description      = <<-DESC
-A new flutter plugin project.
+  A Flutter plugin that provides a Map4d Map widget.
                        DESC
-  s.homepage         = 'http://example.com'
+  s.homepage         = 'https://map4d.vn'
   s.license          = { :file => '../LICENSE' }
-  s.author           = { 'Your Company' => 'email@example.com' }
+  s.author           = { 'IOTLink' => 'admin@iotlink.com.vn' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
