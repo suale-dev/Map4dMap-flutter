@@ -2,6 +2,7 @@ package vn.map4d.map.map4d_map;
 
 import android.content.Context;
 
+import java.util.List;
 import java.util.Map;
 
 import io.flutter.plugin.common.BinaryMessenger;
@@ -46,6 +47,9 @@ public class FMFMapViewFactory extends PlatformViewFactory {
     }
     if (creationParams.containsKey("buildingsToAdd")) {
       builder.setInitialBuildings(creationParams.get("buildingsToAdd"));
+    }
+    if (creationParams.containsKey("tileOverlaysToAdd")) {
+      builder.setInitialTileOverlays((List<Map<String, ?>>) creationParams.get("tileOverlaysToAdd"));
     }
 
     return builder.build(viewId, context, binaryMessenger);

@@ -1,5 +1,8 @@
 package vn.map4d.map.map4d_map;
 
+import java.util.List;
+import java.util.Map;
+
 /** Receiver of Map4D configuration options. */
 interface FMFMapViewOptionsSink {
 
@@ -34,4 +37,6 @@ interface FMFMapViewOptionsSink {
   void setInitialPOIs(Object initialPOIs);
 
   void setInitialBuildings(Object initialBuildings);
+
+  void setInitialTileOverlays(List<Map<String, ?>> initialTileOverlays);
 }
