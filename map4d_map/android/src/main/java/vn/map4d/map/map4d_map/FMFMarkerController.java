@@ -9,13 +9,11 @@ class FMFMarkerController implements FMFMarkerOptionsSink {
   private final MFMarker marker;
   private final long mfMarkerId;
   private boolean consumeTapEvents;
-  private boolean showInfoWindowOnTap;
   private final float density;
 
-  FMFMarkerController(MFMarker marker, boolean consumeTapEvents, boolean showInfoWindowOnTap, float density) {
+  FMFMarkerController(MFMarker marker, boolean consumeTapEvents, float density) {
     this.marker = marker;
     this.consumeTapEvents = consumeTapEvents;
-    this.showInfoWindowOnTap = showInfoWindowOnTap;
     this.density = density;
     this.mfMarkerId = marker.getId();
   }
@@ -30,10 +28,6 @@ class FMFMarkerController implements FMFMarkerOptionsSink {
 
   boolean consumeTapEvents() {
     return consumeTapEvents;
-  }
-
-  boolean isShowInfoWindowOnTap() {
-    return showInfoWindowOnTap;
   }
 
   @Override
@@ -92,11 +86,6 @@ class FMFMarkerController implements FMFMarkerOptionsSink {
   @Override
   public void setWindowAnchor(float windowAnchorU, float windowAnchorV) {
     marker.setWindowAnchor(windowAnchorU, windowAnchorV);
-  }
-
-  @Override
-  public void setShowWindowInfoOnTap(boolean showWindowInfoOnTap) {
-    this.showInfoWindowOnTap = showWindowInfoOnTap;
   }
 
   @Override

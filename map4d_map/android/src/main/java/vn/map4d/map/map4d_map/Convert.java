@@ -470,10 +470,6 @@ public class Convert {
     if (infoWindow != null) {
       interpretInfoWindowOptions(sink, toObjectMap(infoWindow));
     }
-    final Object showInfoWindow = data.get("showInfoWindowOnTap");
-    if (showInfoWindow != null) {
-      sink.setShowWindowInfoOnTap(toBoolean(showInfoWindow));
-    }
     final String markerId = (String) data.get("markerId");
     if (markerId == null) {
       throw new IllegalArgumentException("markerId was null");

@@ -637,8 +637,7 @@ public class FMFMapViewController implements
   public boolean onMarkerClick(MFMarker mfMarker) {
     final long markerId = mfMarker.getId();
     markersController.onMarkerTap(markerId);
-    /** InfoWindow show when return false and vice versa **/
-    return !markersController.isShowInfoWindowOnTap(markerId);
+    return false;
   }
 
   @Override

@@ -27,7 +27,5 @@ interface FMFMarkerOptionsSink {
 
   void setWindowAnchor(float windowAnchorU, float windowAnchorV);
 
-  void setShowWindowInfoOnTap(boolean showWindowInfoOnTap);
-
   void setZIndex(float zIndex);
 }
