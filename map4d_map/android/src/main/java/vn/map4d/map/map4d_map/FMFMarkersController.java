@@ -80,18 +80,6 @@ public class FMFMarkersController {
     return false;
   }
 
-  boolean isShowInfoWindowOnTap(long mfMarkerId) {
-    String markerId = mfMarkerIdToDartMarkerId.get(mfMarkerId);
-    if (markerId == null) {
-      return false;
-    }
-    FMFMarkerController markerController = markerIdToController.get(markerId);
-    if (markerController != null) {
-      return markerController.isShowInfoWindowOnTap();
-    }
-    return false;
-  }
-
   void onMarkerDragEnd(long mfMarkerId, MFLocationCoordinate position) {
     String markerId = mfMarkerIdToDartMarkerId.get(mfMarkerId);
     if (markerId == null) {
@@ -118,12 +106,12 @@ public class FMFMarkersController {
     FMFMarkerBuilder markerBuilder = new FMFMarkerBuilder(density);
     String markerId = Convert.interpretMarkerOptions(context, marker, markerBuilder);
     MFMarkerOptions options = markerBuilder.build();
-    addMarker(markerId, options, markerBuilder.consumeTapEvents(), markerBuilder.isShowInfoWindowOnTap());
+    addMarker(markerId, options, markerBuilder.consumeTapEvents());
   }
 
-  private void addMarker(String markerId, MFMarkerOptions markerOptions, boolean consumeTapEvents, boolean showMarkerWindowOnTap) {
+  private void addMarker(String markerId, MFMarkerOptions markerOptions, boolean consumeTapEvents) {
     final MFMarker marker = map4D.addMarker(markerOptions);
-    FMFMarkerController controller = new FMFMarkerController(marker, consumeTapEvents, showMarkerWindowOnTap, density);
+    FMFMarkerController controller = new FMFMarkerController(marker, consumeTapEvents, density);
     markerIdToController.put(markerId, controller);
     mfMarkerIdToDartMarkerId.put(marker.getId(), markerId);
   }

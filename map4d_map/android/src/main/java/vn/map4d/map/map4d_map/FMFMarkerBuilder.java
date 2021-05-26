@@ -7,7 +7,6 @@ import vn.map4d.types.MFLocationCoordinate;
 class FMFMarkerBuilder implements FMFMarkerOptionsSink {
   private final MFMarkerOptions markerOptions;
   private boolean consumeTapEvents;
-  private boolean showInfoWindowOnTap;
   private final float density;
 
   FMFMarkerBuilder(float density) {
@@ -21,10 +20,6 @@ class FMFMarkerBuilder implements FMFMarkerOptionsSink {
 
   boolean consumeTapEvents() {
     return consumeTapEvents;
-  }
-
-  boolean isShowInfoWindowOnTap() {
-    return showInfoWindowOnTap;
   }
 
   @Override
@@ -81,11 +76,6 @@ class FMFMarkerBuilder implements FMFMarkerOptionsSink {
   @Override
   public void setWindowAnchor(float windowAnchorU, float windowAnchorV) {
     markerOptions.infoWindowAnchor(windowAnchorU, windowAnchorV);
-  }
-
-  @Override
-  public void setShowWindowInfoOnTap(boolean showWindowInfoOnTap) {
-    this.showInfoWindowOnTap = showWindowInfoOnTap;
   }
 
   @Override
