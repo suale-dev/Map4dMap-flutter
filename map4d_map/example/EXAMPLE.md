@@ -51,7 +51,7 @@ class _Map4dSampleState extends State<Map4dSample> {
   }
 
   void _onPOITap(String placeId, String name, MFLatLng location) {
-    print('Tap on place: $placeId, nameL $name, location: $location');
+    print('Tap on place: $placeId, name: $name, location: $location');
   }
 
   void _switch3dMode() async {

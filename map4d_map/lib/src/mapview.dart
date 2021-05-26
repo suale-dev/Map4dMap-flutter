@@ -1,7 +1,7 @@
 part of map4d_map_flutter;
 
 /// Pass to [Map4dMap.onMapCreated] to receive a [MFMapViewController] when the map is created.
-typedef void MapCreatedCallback(MFMapViewController controller);
+typedef void MFMapCreatedCallback(MFMapViewController controller);
 
 /// Error thrown when an unknown map object ID is provided to a method.
 class UnknownMapObjectIdError extends Error {
@@ -46,13 +46,13 @@ class MFMapView extends StatefulWidget {
     this.onModeChange,
     this.onPOITap,
     this.onBuildingTap,
-    this.tileOverlays = const <MFTileOverlay>{},
+    this.markers = const <MFMarker>{},
+    this.circles = const <MFCircle>{},
+    this.polygons = const<MFPolygon>{},
+    this.polylines = const<MFPolyline>{},
     this.pois = const<MFPOI>{},
     this.buildings = const<MFBuilding>{},
-    this.polylines = const<MFPolyline>{},
-    this.polygons = const<MFPolygon>{},
-    this.circles = const <MFCircle>{},
-    this.markers = const <MFMarker>{},
+    this.tileOverlays = const <MFTileOverlay>{},
   }) : super(key: key);
 
   @override
@@ -80,7 +80,7 @@ class MFMapView extends StatefulWidget {
 
   /// Callback method for when the map is ready to be used.
   /// Used to receive a [MFMapViewController] for this [Map4dMap].
-  final MapCreatedCallback? onMapCreated;
+  final MFMapCreatedCallback? onMapCreated;
 
   /// The initial position of the map's camera.
   final MFCameraPosition? initialCameraPosition;
@@ -210,7 +210,7 @@ class _MFMapViewState extends State<MFMapView> {
   Future<void> onPlatformViewCreated(int id) async {
     final controller = await MFMapViewController.init(id, this);
     _controller.complete(controller);
-    final MapCreatedCallback? onMapCreated = widget.onMapCreated;
+    final MFMapCreatedCallback? onMapCreated = widget.onMapCreated;
     if (onMapCreated != null) {
       onMapCreated(controller);
     }
