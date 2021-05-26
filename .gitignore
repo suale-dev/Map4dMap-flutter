@@ -6,10 +6,13 @@
 .classpath
 .settings
 
-# Podfile.lock
 # **/Flutter/ephemeral/
 # keystore.properties
 *.iml
+
+#
+example/ios/Podfile
+example/ios/Podfile.lock
 
 # Created by https://www.toptal.com/developers/gitignore/api/dart,flutter
 # Edit at https://www.toptal.com/developers/gitignore?templates=dart,flutter

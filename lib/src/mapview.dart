@@ -1,4 +1,4 @@
-part of map4d_map_flutter;
+part of map4d_map;
 
 /// Pass to [Map4dMap.onMapCreated] to receive a [MFMapViewController] when the map is created.
 typedef void MFMapCreatedCallback(MFMapViewController controller);

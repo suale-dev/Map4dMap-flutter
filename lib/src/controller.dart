@@ -1,4 +1,4 @@
-part of map4d_map_flutter;
+part of map4d_map;
 
 class MFMapViewController {
   final int mapId;

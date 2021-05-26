@@ -1,4 +1,4 @@
-library map4d_map_flutter;
+library map4d_map;
 
 import 'dart:async';
 import 'dart:io';
