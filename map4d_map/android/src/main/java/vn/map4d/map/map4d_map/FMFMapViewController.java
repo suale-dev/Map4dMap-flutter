@@ -178,7 +178,9 @@ public class FMFMapViewController implements
     map4D.setOnPolygonClickListener(listener);
     map4D.setOnPolylineClickListener(listener);
     map4D.setOnCircleClickListener(listener);
+    map4D.setOnPOIClickListener(listener);
     map4D.setOnUserPOIClickListener(listener);
+    map4D.setOnBuildingClickListener(listener);
     map4D.setOnUserBuildingClickListener(listener);
     map4D.setOnMapClickListener(listener);
   }
@@ -206,6 +208,18 @@ public class FMFMapViewController implements
           map4D.enable3DMode(enable3DMode);
         }
         result.success(null);
+        break;
+      }
+      case "map#getCameraPosition": {
+        if (map4D != null) {
+          result.success(Convert.cameraPositionToJson(getCameraPosition()));
+        }
+        else {
+          result.error(
+            "Map4D uninitialized",
+            "getCameraPosition called prior to map initialization",
+            null);
+        }
         break;
       }
       case "map#fitBounds": {
@@ -673,5 +687,23 @@ public class FMFMapViewController implements
   @Override
   public void onUserPOIClick(MFPOI mfpoi) {
     poisController.onPOITap(mfpoi.getId());
+  }
+
+  @Override
+  public void onBuildingClick(String buildingId, String name, MFLocationCoordinate location) {
+    final Map<String, Object> arguments = new HashMap<>(2);
+    arguments.put("buildingId", buildingId);
+    arguments.put("name", name);
+    arguments.put("location", Convert.latLngToJson(location));
+    methodChannel.invokeMethod("map#onTapBuilding", arguments);
+  }
+
+  @Override
+  public void onPOIClick(String placeId, String name, MFLocationCoordinate location) {
+    final Map<String, Object> arguments = new HashMap<>(2);
+    arguments.put("placeId", placeId);
+    arguments.put("name", name);
+    arguments.put("location", Convert.latLngToJson(location));
+    methodChannel.invokeMethod("map#onTapPOI", arguments);
   }
 }
