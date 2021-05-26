@@ -496,7 +496,7 @@ public class Convert {
     }
   }
 
-  static String interpretPOIOptions(Object o, FMFPOIOptionsSink sink) {
+  static String interpretPOIOptions(Context context, Object o, FMFPOIOptionsSink sink) {
     final Map<?, ?> data = toMap(o);
     final Object consumeTapEvents = data.get("consumeTapEvents");
     if (consumeTapEvents != null) {
@@ -525,6 +525,10 @@ public class Convert {
     final Object position = data.get("position");
     if (position != null) {
       sink.setPosition(toCoordinate(position));
+    }
+    final Object icon = data.get("icon");
+    if (icon != null) {
+      sink.setIcon(toBitmapDescriptor(context, icon));
     }
     final String poiId = (String) data.get("poiId");
     if (poiId == null) {

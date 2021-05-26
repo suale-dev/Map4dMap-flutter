@@ -94,7 +94,7 @@ public class FMFMapViewController implements
     this.polylinesController = new FMFPolylinesController(methodChannel, density);
     this.polygonsController = new FMFPolygonsController(methodChannel, density);
     this.markersController = new FMFMarkersController(context, methodChannel, density);
-    this.poisController = new FMFPOIsController(methodChannel, density);
+    this.poisController = new FMFPOIsController(context, methodChannel, density);
     this.buildingsController = new FMFBuildingsController(methodChannel, density);
     this.tileOverlaysController = new FMFTileOverlaysController(methodChannel);
   }

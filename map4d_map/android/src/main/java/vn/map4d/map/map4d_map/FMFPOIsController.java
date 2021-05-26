@@ -1,5 +1,9 @@
 package vn.map4d.map.map4d_map;
 
+import android.content.Context;
+
+import androidx.annotation.NonNull;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,12 +18,14 @@ public class FMFPOIsController {
   private final Map<Long, String> mfPOIIdToDartPOIId;
   private final MethodChannel methodChannel;
   private Map4D map4D;
+  private final Context context;
   private final float density;
 
-  FMFPOIsController(MethodChannel methodChannel, float density) {
+  FMFPOIsController(@NonNull Context context, MethodChannel methodChannel, float density) {
     this.poiIdToController = new HashMap<>();
     this.mfPOIIdToDartPOIId = new HashMap<>();
     this.methodChannel = methodChannel;
+    this.context = context;
     this.density = density;
   }
 
@@ -78,7 +84,7 @@ public class FMFPOIsController {
       return;
     }
     FMFPOIBuilder poiBuilder = new FMFPOIBuilder(density);
-    String poiId = Convert.interpretPOIOptions(poi, poiBuilder);
+    String poiId = Convert.interpretPOIOptions(context, poi, poiBuilder);
     MFPOIOptions options = poiBuilder.build();
     addPOI(poiId, options, poiBuilder.consumeTapEvents());
   }
@@ -97,7 +103,7 @@ public class FMFPOIsController {
     String poiId = getPOIId(poi);
     FMFPOIController poiController = poiIdToController.get(poiId);
     if (poiController != null) {
-      Convert.interpretPOIOptions(poi, poiController);
+      Convert.interpretPOIOptions(context, poi, poiController);
     }
   }
 
