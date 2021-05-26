@@ -72,6 +72,7 @@ public class FMFMapViewController implements
   private final FMFMarkersController markersController;
   private final FMFPOIsController poisController;
   private final FMFBuildingsController buildingsController;
+  private final FMFTileOverlaysController tileOverlaysController;
 
   private List<Object> initialCircles;
   private List<Object> initialPolylines;
@@ -79,6 +80,7 @@ public class FMFMapViewController implements
   private List<Object> initialMarkers;
   private List<Object> initialPOIs;
   private List<Object> initialBuildings;
+  private List<Map<String, ?>> initialTileOverlays;
 
   FMFMapViewController(@NonNull Context context, int id, BinaryMessenger binaryMessenger, @Nullable MFCameraPosition initialCameraPosition) {
     this.mapView = new MFMapView(context, null);
@@ -94,6 +96,7 @@ public class FMFMapViewController implements
     this.markersController = new FMFMarkersController(context, methodChannel, density);
     this.poisController = new FMFPOIsController(methodChannel, density);
     this.buildingsController = new FMFBuildingsController(methodChannel, density);
+    this.tileOverlaysController = new FMFTileOverlaysController(methodChannel);
   }
 
   void init() {
@@ -127,12 +130,14 @@ public class FMFMapViewController implements
     markersController.setMap(map4D);
     poisController.setMap(map4D);
     buildingsController.setMap(map4D);
+    tileOverlaysController.setMap(map4D);
     updateInitialCircles();
     updateInitialPolylines();
     updateInitialPolygons();
     updateInitialMarkers();
     updateInitialPOIs();
     updateInitialBuildings();
+    updateInitialTileOverlays();
 
     this.map4D.setOnMapModeChange(new Map4D.OnMapModeChangeListener() {
       @Override
@@ -327,6 +332,22 @@ public class FMFMapViewController implements
         buildingsController.changeBuildings(buildingsToChange);
         List<Object> buildingIdsToRemove = call.argument("buildingIdsToRemove");
         buildingsController.removeBuildings(buildingIdsToRemove);
+        result.success(null);
+        break;
+      }
+      case "tileOverlays#update": {
+        List<Map<String, ?>> tileOverlaysToAdd = call.argument("tileOverlaysToAdd");
+        tileOverlaysController.addTileOverlays(tileOverlaysToAdd);
+        List<Map<String, ?>> tileOverlaysToChange = call.argument("tileOverlaysToChange");
+        tileOverlaysController.changeTileOverlays(tileOverlaysToChange);
+        List<String> tileOverlaysToRemove = call.argument("tileOverlayIdsToRemove");
+        tileOverlaysController.removeTileOverlays(tileOverlaysToRemove);
+        result.success(null);
+        break;
+      }
+      case "tileOverlays#clearTileCache": {
+        String tileOverlayId = call.argument("tileOverlayId");
+        tileOverlaysController.clearTileCache(tileOverlayId);
         result.success(null);
         break;
       }
@@ -558,6 +579,18 @@ public class FMFMapViewController implements
 
   private void updateInitialBuildings() {
     buildingsController.addBuildings(initialBuildings);
+  }
+
+  @Override
+  public void setInitialTileOverlays(List<Map<String, ?>> initialTileOverlays) {
+    this.initialTileOverlays = initialTileOverlays;
+    if (map4D != null) {
+      updateInitialTileOverlays();
+    }
+  }
+
+  private void updateInitialTileOverlays() {
+    tileOverlaysController.addTileOverlays(initialTileOverlays);
   }
 
   @Override

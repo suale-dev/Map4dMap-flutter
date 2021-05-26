@@ -598,4 +598,25 @@ public class Convert {
       return buildingId;
     }
   }
+
+  static String interpretTileOverlayOptions(Map<String, ?> data, FMFTileOverlaySink sink) {
+    final Object zIndex = data.get("zIndex");
+    if (zIndex != null) {
+      sink.setZIndex(toFloat(zIndex));
+    }
+    final Object visible = data.get("visible");
+    if (visible != null) {
+      sink.setVisible(toBoolean(visible));
+    }
+    final Object urlPattern = data.get("urlPattern");
+    if (urlPattern != null) {
+      sink.setUrlPattern(toString(urlPattern));
+    }
+    final String tileOverlayId = (String) data.get("tileOverlayId");
+    if (tileOverlayId == null) {
+      throw new IllegalArgumentException("tileOverlayId was null");
+    } else {
+      return tileOverlayId;
+    }
+  }
 }

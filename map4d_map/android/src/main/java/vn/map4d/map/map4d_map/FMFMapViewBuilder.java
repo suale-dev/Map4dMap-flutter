@@ -2,6 +2,9 @@ package vn.map4d.map.map4d_map;
 
 import android.content.Context;
 
+import java.util.List;
+import java.util.Map;
+
 import io.flutter.plugin.common.BinaryMessenger;
 import vn.map4d.map.camera.MFCameraPosition;
 
@@ -24,6 +27,7 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   private Object initialMarkers;
   private Object initialPOIs;
   private Object initialBuildings;
+  private List<Map<String, ?>> initialTileOverlays;
 
   FMFMapViewController build(
     int id,
@@ -46,6 +50,7 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
     controller.setInitialMarkers(initialMarkers);
     controller.setInitialPOIs(initialPOIs);
     controller.setInitialBuildings(initialBuildings);
+    controller.setInitialTileOverlays(initialTileOverlays);
     controller.setTrackCameraPosition(trackCameraPosition);
     return controller;
   }
@@ -133,5 +138,10 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   @Override
   public void setInitialBuildings(Object initialBuildings) {
     this.initialBuildings = initialBuildings;
+  }
+
+  @Override
+  public void setInitialTileOverlays(List<Map<String, ?>> initialTileOverlays) {
+    this.initialTileOverlays = initialTileOverlays;
   }
 }
