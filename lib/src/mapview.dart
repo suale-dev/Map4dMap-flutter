@@ -48,10 +48,10 @@ class MFMapView extends StatefulWidget {
     this.onBuildingTap,
     this.markers = const <MFMarker>{},
     this.circles = const <MFCircle>{},
-    this.polygons = const<MFPolygon>{},
-    this.polylines = const<MFPolyline>{},
-    this.pois = const<MFPOI>{},
-    this.buildings = const<MFBuilding>{},
+    this.polygons = const <MFPolygon>{},
+    this.polylines = const <MFPolyline>{},
+    this.pois = const <MFPOI>{},
+    this.buildings = const <MFBuilding>{},
     this.tileOverlays = const <MFTileOverlay>{},
   }) : super(key: key);
 
@@ -135,9 +135,11 @@ class MFMapView extends StatefulWidget {
 }
 
 class _MFMapViewState extends State<MFMapView> {
-  final Completer<MFMapViewController> _controller = Completer<MFMapViewController>();
+  final Completer<MFMapViewController> _controller =
+      Completer<MFMapViewController>();
   late _MFMapViewOptions _mapOptions;
-  Map<MFTileOverlayId, MFTileOverlay> _tileOverlays = <MFTileOverlayId, MFTileOverlay>{};
+  Map<MFTileOverlayId, MFTileOverlay> _tileOverlays =
+      <MFTileOverlayId, MFTileOverlay>{};
   Map<MFPOIId, MFPOI> _pois = <MFPOIId, MFPOI>{};
   Map<MFBuildingId, MFBuilding> _buildings = <MFBuildingId, MFBuilding>{};
   Map<MFPolylineId, MFPolyline> _polylines = <MFPolylineId, MFPolyline>{};
@@ -297,7 +299,7 @@ class _MFMapViewState extends State<MFMapView> {
       onTap();
     }
   }
-  
+
   void onMarkerDragEnd(MFMarkerId markerId, MFLatLng position) {
     final MFMarker? marker = _markers[markerId];
     if (marker == null) {
@@ -324,7 +326,8 @@ class _MFMapViewState extends State<MFMapView> {
   void _updateTileOverlays() async {
     final MFMapViewController controller = await _controller.future;
     // ignore: unawaited_futures
-    controller._updateTileOverlays(TileOverlayUpdates.from(_tileOverlays.values.toSet(), widget.tileOverlays));
+    controller._updateTileOverlays(TileOverlayUpdates.from(
+        _tileOverlays.values.toSet(), widget.tileOverlays));
     _tileOverlays = keyTileOverlayId(widget.tileOverlays);
   }
 
@@ -338,7 +341,8 @@ class _MFMapViewState extends State<MFMapView> {
   void _updateBuildings() async {
     final MFMapViewController controller = await _controller.future;
     // ignore: unawaited_futures
-    controller._updateBuildings(BuildingUpdates.from(_buildings.values.toSet(), widget.buildings));
+    controller._updateBuildings(
+        BuildingUpdates.from(_buildings.values.toSet(), widget.buildings));
     _buildings = keyByBuildingId(widget.buildings);
   }
 
@@ -361,7 +365,8 @@ class _MFMapViewState extends State<MFMapView> {
   void _updateCircles() async {
     final MFMapViewController controller = await _controller.future;
     // ignore: unawaited_futures
-    controller._updateCircles(CircleUpdates.from(_circles.values.toSet(), widget.circles));
+    controller._updateCircles(
+        CircleUpdates.from(_circles.values.toSet(), widget.circles));
     _circles = keyByCircleId(widget.circles);
   }
 
@@ -377,18 +382,16 @@ class _MFMapViewState extends State<MFMapView> {
 /// MFMapView configuration options.
 class _MFMapViewOptions {
   _MFMapViewOptions.fromWidget(MFMapView map)
-    :
-      rotateGesturesEnabled = map.rotateGesturesEnabled,
-      scrollGesturesEnabled = map.scrollGesturesEnabled,
-      tiltGesturesEnabled = map.tiltGesturesEnabled,
-      zoomGesturesEnabled = map.zoomGesturesEnabled,
-      myLocationEnabled = map.myLocationEnabled,
-      myLocationButtonEnabled = map.myLocationButtonEnabled,
-      buildingsEnabled = map.buildingsEnabled,
-      poisEnabled = map.poisEnabled,
-      minMaxZoomPreference = map.minMaxZoomPreference,
-      trackCameraPosition = map.onCameraMove != null
-  ;
+      : rotateGesturesEnabled = map.rotateGesturesEnabled,
+        scrollGesturesEnabled = map.scrollGesturesEnabled,
+        tiltGesturesEnabled = map.tiltGesturesEnabled,
+        zoomGesturesEnabled = map.zoomGesturesEnabled,
+        myLocationEnabled = map.myLocationEnabled,
+        myLocationButtonEnabled = map.myLocationButtonEnabled,
+        buildingsEnabled = map.buildingsEnabled,
+        poisEnabled = map.poisEnabled,
+        minMaxZoomPreference = map.minMaxZoomPreference,
+        trackCameraPosition = map.onCameraMove != null;
 
   // final CameraTargetBounds cameraTargetBounds;
   final MFMinMaxZoom minMaxZoomPreference;

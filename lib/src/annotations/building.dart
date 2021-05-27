@@ -18,29 +18,28 @@ class MFBuildingId extends MapsObjectId<MFBuilding> {
 @immutable
 class MFBuilding implements MapsObject {
   /// Creates an immutable representation of a [MFPOI] to draw on [Map4dMap].
-  const MFBuilding({
-    required this.buildingId,
-    this.consumeTapEvents = false,
-    this.name = '',
-    this.position = const MFLatLng(0, 0),
-    this.coordinates = const <MFLatLng>[],
-    this.modelUrl = '',
-    this.textureUrl = '',
-    this.height = 1,
-    this.scale = 1,
-    this.bearing = 0,
-    this.elevation = 0,
-    this.selected = false,
-    this.visible = true,
-    this.onTap
-  });
+  const MFBuilding(
+      {required this.buildingId,
+      this.consumeTapEvents = false,
+      this.name = '',
+      this.position = const MFLatLng(0, 0),
+      this.coordinates = const <MFLatLng>[],
+      this.modelUrl = '',
+      this.textureUrl = '',
+      this.height = 1,
+      this.scale = 1,
+      this.bearing = 0,
+      this.elevation = 0,
+      this.selected = false,
+      this.visible = true,
+      this.onTap});
 
   /// Uniquely identifies a [MFBuilding].
   final MFBuildingId buildingId;
 
   @override
   MFBuildingId get mapsId => buildingId;
-  
+
   /// True if the [MFBuilding] consumes tap events.
   ///
   /// If this is false, [onTap] callback will not be triggered.
@@ -100,21 +99,20 @@ class MFBuilding implements MapsObject {
     VoidCallback? onTapParam,
   }) {
     return MFBuilding(
-      buildingId: buildingId,
-      consumeTapEvents: consumeTapEventsParam ?? consumeTapEvents,
-      name: nameParam ?? name,
-      position: positionParam ?? position,
-      coordinates: coordinatesParam ?? coordinates,
-      modelUrl: modelUrlParam ?? modelUrl,
-      textureUrl: textureUrlParam ?? textureUrl,
-      height: heightParam ?? height, 
-      scale: scaleParam ?? scale,
-      bearing: bearingParam ?? bearing,
-      elevation: elevationParam ?? elevation,
-      selected: selectedParam ?? selected,
-      visible: visibleParam ?? visible,
-      onTap: onTapParam ?? onTap
-    );
+        buildingId: buildingId,
+        consumeTapEvents: consumeTapEventsParam ?? consumeTapEvents,
+        name: nameParam ?? name,
+        position: positionParam ?? position,
+        coordinates: coordinatesParam ?? coordinates,
+        modelUrl: modelUrlParam ?? modelUrl,
+        textureUrl: textureUrlParam ?? textureUrl,
+        height: heightParam ?? height,
+        scale: scaleParam ?? scale,
+        bearing: bearingParam ?? bearing,
+        elevation: elevationParam ?? elevation,
+        selected: selectedParam ?? selected,
+        visible: visibleParam ?? visible,
+        onTap: onTapParam ?? onTap);
   }
 
   /// Creates a new [MFBuilding] object whose values are the same as this instance.

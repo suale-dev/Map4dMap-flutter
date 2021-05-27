@@ -8,7 +8,7 @@ import 'annotations.dart';
 /// Uniquely identifies a [MFPolygon] among [MFMapView] polygons.
 ///
 /// This does not have to be globally unique, only unique among the list.
-/// 
+///
 class MFPolygonId extends MapsObjectId<MFPolygon> {
   /// Creates an immutable identifier for a [Polygon].
   const MFPolygonId(String value) : super(value);

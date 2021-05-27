@@ -11,4 +11,5 @@ typedef void MFModeChangedCallback(bool is3DMode);
 
 typedef void MFMapPOICallback(String placeId, String name, MFLatLng location);
 
-typedef void MFMapBuildingCallback(String buildingId, String name, MFLatLng location);
+typedef void MFMapBuildingCallback(
+    String buildingId, String name, MFLatLng location);

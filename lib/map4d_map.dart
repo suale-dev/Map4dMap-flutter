@@ -18,51 +18,37 @@ import 'src/annotations/annotations.dart';
 import 'src/overlays/overlays.dart';
 
 export 'src/ui.dart' show MFMinMaxZoom;
-export 'src/location.dart'
-  show
-    MFLatLng,
-    MFLatLngBounds
-  ;
+export 'src/location.dart' show MFLatLng, MFLatLngBounds;
 
-export 'src/camera.dart'
-  show
-    MFCameraPosition,
-    MFCameraUpdate
-  ;
+export 'src/camera.dart' show MFCameraPosition, MFCameraUpdate;
 
 export 'src/callbacks.dart'
-  show
-    MFCameraPositionCallback,
-    MFLatLngCallback,
-    MFModeChangedCallback,
-    MFMapPOICallback,
-    MFMapBuildingCallback
-  ;
+    show
+        MFCameraPositionCallback,
+        MFLatLngCallback,
+        MFModeChangedCallback,
+        MFMapPOICallback,
+        MFMapBuildingCallback;
 
 export 'src/annotations/annotations.dart'
-  show
-    MFBitmap,
-    MFMarker,
-    MFMarkerId,
-    MFInfoWindow,
-    MFCircle,
-    MFCircleId,
-    MFPolyline,
-    MFPolylineId,
-    MFPolylineStyle,
-    MFPolygon,
-    MFPolygonId,
-    MFPOI,
-    MFPOIId,
-    MFBuilding,
-    MFBuildingId
-  ;
+    show
+        MFBitmap,
+        MFMarker,
+        MFMarkerId,
+        MFInfoWindow,
+        MFCircle,
+        MFCircleId,
+        MFPolyline,
+        MFPolylineId,
+        MFPolylineStyle,
+        MFPolygon,
+        MFPolygonId,
+        MFPOI,
+        MFPOIId,
+        MFBuilding,
+        MFBuildingId;
 
-export 'src/overlays/overlays.dart'
-  show
-    MFTileOverlay,
-    MFTileOverlayId
-  ;
+export 'src/overlays/overlays.dart' show MFTileOverlay, MFTileOverlayId;
 
 part 'src/mapview.dart';
 part 'src/controller.dart';

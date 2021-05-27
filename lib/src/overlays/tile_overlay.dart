@@ -21,8 +21,14 @@ class MFTileOverlay implements MapsObject {
     this.visible = true,
   });
 
-  static MFTileOverlay newWithUrlPattern(MFTileOverlayId tileOverlayId, String urlPattern, {int zIndex = 0, bool visible = true }) {
-    return MFTileOverlay._(tileOverlayId: tileOverlayId, urlPattern: urlPattern, zIndex: zIndex, visible: visible);
+  static MFTileOverlay newWithUrlPattern(
+      MFTileOverlayId tileOverlayId, String urlPattern,
+      {int zIndex = 0, bool visible = true}) {
+    return MFTileOverlay._(
+        tileOverlayId: tileOverlayId,
+        urlPattern: urlPattern,
+        zIndex: zIndex,
+        visible: visible);
   }
 
   /// Uniquely identifies a [MFTileOverlay].

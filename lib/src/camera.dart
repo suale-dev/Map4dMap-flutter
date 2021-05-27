@@ -97,7 +97,6 @@ class MFCameraPosition {
       'CameraPosition(bearing: $bearing, target: $target, tilt: $tilt, zoom: $zoom)';
 }
 
-
 class MFCameraUpdate {
   const MFCameraUpdate._(this._json);
 

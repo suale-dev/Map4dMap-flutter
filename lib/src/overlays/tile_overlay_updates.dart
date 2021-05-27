@@ -3,7 +3,8 @@ import 'overlays.dart';
 /// Update specification for a set of [MFTileOverlay]s.
 class TileOverlayUpdates extends MapsObjectUpdates<MFTileOverlay> {
   /// Computes [TileOverlayUpdates] given previous and current [MFTileOverlay]s.
-  TileOverlayUpdates.from(Set<MFTileOverlay> previous, Set<MFTileOverlay> current)
+  TileOverlayUpdates.from(
+      Set<MFTileOverlay> previous, Set<MFTileOverlay> current)
       : super.from(previous, current, objectName: 'tileOverlay');
 
   /// Set of TileOverlays to be added in this update.

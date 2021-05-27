@@ -2,7 +2,8 @@ import 'dart:async' show Future;
 import 'dart:typed_data' show Uint8List;
 import 'dart:ui' show Size;
 
-import 'package:flutter/material.dart' show ImageConfiguration, AssetImage, AssetBundleImageKey;
+import 'package:flutter/material.dart'
+    show ImageConfiguration, AssetImage, AssetBundleImageKey;
 import 'package:flutter/services.dart' show AssetBundle;
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -17,8 +18,7 @@ class MFBitmap {
   static const String _fromBytes = 'fromBytes';
 
   /// Creates a BitmapDescriptor that refers to the default marker image.
-  static const MFBitmap defaultIcon =
-      MFBitmap._(<Object>[_defaultIcon]);
+  static const MFBitmap defaultIcon = MFBitmap._(<Object>[_defaultIcon]);
 
   /// Creates a [MFBitmap] from an asset image.
   ///

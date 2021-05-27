@@ -79,7 +79,8 @@ class MFMapViewController {
         if (onPOITap != null) {
           final String placeId = call.arguments['placeId'];
           final String name = call.arguments['name'];
-          final MFLatLng location = MFLatLng.fromJson(call.arguments['location'])!;
+          final MFLatLng location =
+              MFLatLng.fromJson(call.arguments['location'])!;
           onPOITap(placeId, name, location);
         }
         break;
@@ -88,7 +89,8 @@ class MFMapViewController {
         if (onBuildingTap != null) {
           final String buildingId = call.arguments['buildingId'];
           final String name = call.arguments['name'];
-          final MFLatLng location = MFLatLng.fromJson(call.arguments['location'])!;
+          final MFLatLng location =
+              MFLatLng.fromJson(call.arguments['location'])!;
           onBuildingTap(buildingId, name, location);
         }
         break;
@@ -116,18 +118,21 @@ class MFMapViewController {
         <String, Object>{'cameraUpdate': cameraUpdate.toJson()});
   }
 
-  Future<MFCameraPosition> cameraForBounds(MFLatLngBounds bounds, { double padding = 0 }) async {
-    final Map<String, dynamic> cameraPosition = (await _channel.invokeMapMethod<String, dynamic>('map#cameraForBounds',
-        <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding}))!;
+  Future<MFCameraPosition> cameraForBounds(MFLatLngBounds bounds,
+      {double padding = 0}) async {
+    final Map<String, dynamic> cameraPosition = (await _channel
+        .invokeMapMethod<String, dynamic>('map#cameraForBounds',
+            <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding}))!;
     return MFCameraPosition.fromMap(cameraPosition)!;
   }
 
   Future<MFCameraPosition?> getCameraPosition() async {
-    final Map<String, dynamic> cameraPosition = (await _channel.invokeMapMethod<String, dynamic>('map#getCameraPosition'))!;
+    final Map<String, dynamic> cameraPosition = (await _channel
+        .invokeMapMethod<String, dynamic>('map#getCameraPosition'))!;
     return MFCameraPosition.fromMap(cameraPosition);
   }
 
-  Future<void> fitBounds(MFLatLngBounds bounds, { double padding = 0 }) async {
+  Future<void> fitBounds(MFLatLngBounds bounds, {double padding = 0}) async {
     return _channel.invokeMethod<void>('map#fitBounds',
         <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding});
   }
@@ -137,7 +142,7 @@ class MFMapViewController {
         'map#enable3DMode', <String, Object>{'enable3DMode': isEnable});
   }
 
-    /// Clears the tile cache so that all tiles will be requested again from the
+  /// Clears the tile cache so that all tiles will be requested again from the
   /// [TileProvider].
   ///
   /// The current tiles from this tile overlay will also be
@@ -146,8 +151,8 @@ class MFMapViewController {
   /// should implement an on-disk cache.
   Future<void> clearTileCache(MFTileOverlayId tileOverlayId) async {
     assert(tileOverlayId != null);
-    return _channel.invokeMethod<void>(
-      'tileOverlays#clearTileCache', <String, Object>{'tileOverlayId': tileOverlayId.value});
+    return _channel.invokeMethod<void>('tileOverlays#clearTileCache',
+        <String, Object>{'tileOverlayId': tileOverlayId.value});
   }
 
   /// Updates configuration options of the map user interface.
@@ -158,7 +163,9 @@ class MFMapViewController {
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updateMapOptions(Map<String, dynamic> optionsUpdate) {
     assert(optionsUpdate != null);
-    return _channel.invokeMethod<void>('map#update', <String, dynamic>{'options': optionsUpdate},
+    return _channel.invokeMethod<void>(
+      'map#update',
+      <String, dynamic>{'options': optionsUpdate},
     );
   }
 
@@ -171,8 +178,7 @@ class MFMapViewController {
   Future<void> _updateTileOverlays(TileOverlayUpdates tileOverlayUpdates) {
     assert(tileOverlayUpdates != null);
     return _channel.invokeMethod<void>(
-      'tileOverlays#update',
-      tileOverlayUpdates.toJson());
+        'tileOverlays#update', tileOverlayUpdates.toJson());
   }
 
   /// Updates POI configuration.
@@ -183,8 +189,7 @@ class MFMapViewController {
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updatePOIs(POIUpdates poiUpdates) {
     assert(poiUpdates != null);
-    return _channel.invokeMethod<void>(
-        'poi#update', poiUpdates.toJson());
+    return _channel.invokeMethod<void>('poi#update', poiUpdates.toJson());
   }
 
   /// Updates Building configuration.
@@ -243,6 +248,7 @@ class MFMapViewController {
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updateMarkers(MarkerUpdates markerUpdates) {
     assert(markerUpdates != null);
-    return _channel.invokeMethod<void>('markers#update', markerUpdates.toJson());
+    return _channel.invokeMethod<void>(
+        'markers#update', markerUpdates.toJson());
   }
 }

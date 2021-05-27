@@ -17,19 +17,18 @@ class MFPOIId extends MapsObjectId<MFPOI> {
 @immutable
 class MFPOI implements MapsObject<MFPOI> {
   /// Creates an immutable representation of a [MFPOI] to draw on [Map4dMap].
-  const MFPOI({
-    required this.poiId,
-    this.consumeTapEvents = false,
-    this.position = const MFLatLng(0.0, 0.0),
-    this.title = '',
-    this.titleColor = Colors.blue,
-    // this.subtitle = '',
-    this.icon = MFBitmap.defaultIcon,
-    this.type = 'point',
-    this.visible = true,
-    this.zIndex = 0,
-    this.onTap
-  });
+  const MFPOI(
+      {required this.poiId,
+      this.consumeTapEvents = false,
+      this.position = const MFLatLng(0.0, 0.0),
+      this.title = '',
+      this.titleColor = Colors.blue,
+      // this.subtitle = '',
+      this.icon = MFBitmap.defaultIcon,
+      this.type = 'point',
+      this.visible = true,
+      this.zIndex = 0,
+      this.onTap});
 
   /// Uniquely identifies a [MFPOI].
   final MFPOIId poiId;
@@ -72,7 +71,7 @@ class MFPOI implements MapsObject<MFPOI> {
 
   /// Callbacks to receive tap events for POI placed on this map.
   final VoidCallback? onTap;
-  
+
   /// Creates a new [MFPOI] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
   MFPOI copyWith({
