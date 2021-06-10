@@ -3,7 +3,6 @@
 [![platform](https://img.shields.io/badge/platform-flutter-45d2fd.svg)](https://flutter.dev/)
 [![pub package](https://img.shields.io/pub/v/map4d_map.svg)](https://pub.dev/packages/map4d_map)
 [![github issues](https://img.shields.io/github/issues/map4d/map4d-map-flutter)](https://github.com/map4d/map4d-map-flutter/issues)
-[![license](https://img.shields.io/github/license/map4d/map4d-map-flutter)](https://github.com/map4d/map4d-map-flutter/blob/master/LICENSE)
 
 A Flutter plugin that provides a [Map4dMap](https://map4d.vn/) widget.
 
@@ -13,7 +12,7 @@ To use this plugin, add `map4d_map` as a dependency in your `pubspec.yaml` file.
 
 ```yaml
 dependencies:
-  map4d_map: ^1.0.0
+  map4d_map: ^1.1.0
 ```
 
 ## Minium Android/iOS SDK version support
