@@ -1,9 +1,9 @@
 Pod::Spec.new do |s|
   s.name             = 'map4d_map'
-  s.version          = '1.0.0'
-  s.summary          = 'Map4d Map SDK for Flutter'
+  s.version          = '1.1.0'
+  s.summary          = 'Map4dMap SDK for Flutter'
   s.description      = <<-DESC
-  A Flutter plugin that provides a Map4d Map widget.
+  A Flutter plugin that provides a MFMapView widget.
                        DESC
   s.homepage         = 'https://map4d.vn'
   s.license          = { :file => '../LICENSE' }

@@ -1,11 +1,10 @@
-# Map4d Map for Flutter
-
+# Map4dMap for Flutter
+[![map4d](https://img.shields.io/badge/map4d-map-orange)](https://map4d.vn/)
+[![platform](https://img.shields.io/badge/platform-flutter-45d2fd.svg)](https://flutter.dev/)
 [![pub package](https://img.shields.io/pub/v/map4d_map.svg)](https://pub.dev/packages/map4d_map)
-[![platform flutter](https://img.shields.io/badge/platform-flutter-9cf.svg)](https://flutter.dev/)
 [![github issues](https://img.shields.io/github/issues/map4d/map4d-map-flutter)](https://github.com/map4d/map4d-map-flutter/issues)
-[![license](https://img.shields.io/github/license/map4d/map4d-map-flutter)](https://github.com/map4d/map4d-map-flutter/blob/master/LICENSE)
 
-A Flutter plugin that provides a [Map4d Map](https://map4d.vn/) widget.
+A Flutter plugin that provides a [Map4dMap](https://map4d.vn/) widget.
 
 ## Usage
 
@@ -13,7 +12,7 @@ To use this plugin, add `map4d_map` as a dependency in your `pubspec.yaml` file.
 
 ```yaml
 dependencies:
-  map4d_map: ^1.0.0
+  map4d_map: ^1.1.0
 ```
 
 ## Minium Android/iOS SDK version support
@@ -87,3 +86,8 @@ class MyApp extends StatelessWidget {
 ```
 
 See [example](https://github.com/map4d/map4d-map-flutter/tree/master/example) directory for more examples
+
+## Documents
+
+- Guides: <https://docs.map4d.vn/map4d-map/flutter/>
+- API Reference: <https://pub.dev/documentation/map4d_map/latest/>

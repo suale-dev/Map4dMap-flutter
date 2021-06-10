@@ -20,14 +20,12 @@ public class FMFMarkersController {
   private final MethodChannel methodChannel;
   private Map4D map4D;
   private final float density;
-  private final Context context;
 
   FMFMarkersController(@NonNull Context context, MethodChannel methodChannel, float density) {
     this.markerIdToController = new HashMap<>();
     this.mfMarkerIdToDartMarkerId = new HashMap<>();
     this.methodChannel = methodChannel;
     this.density = density;
-    this.context = context;
   }
 
   void setMap(Map4D map4D) {
@@ -104,7 +102,7 @@ public class FMFMarkersController {
       return;
     }
     FMFMarkerBuilder markerBuilder = new FMFMarkerBuilder(density);
-    String markerId = Convert.interpretMarkerOptions(context, marker, markerBuilder);
+    String markerId = Convert.interpretMarkerOptions(marker, markerBuilder);
     MFMarkerOptions options = markerBuilder.build();
     addMarker(markerId, options, markerBuilder.consumeTapEvents());
   }
@@ -123,7 +121,7 @@ public class FMFMarkersController {
     String markerId = getMarkerId(marker);
     FMFMarkerController markerController = markerIdToController.get(markerId);
     if (markerController != null) {
-      Convert.interpretMarkerOptions(context, marker, markerController);
+      Convert.interpretMarkerOptions(marker, markerController);
     }
   }
 
