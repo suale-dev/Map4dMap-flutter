@@ -48,14 +48,12 @@ class FMFMarkerController implements FMFMarkerOptionsSink {
 
   @Override
   public void setElevation(double elevation) {
-    /** Need update SDK **/
-//    marker.setElevation(elevation);
+    marker.setElevation(elevation);
   }
 
   @Override
   public void setAnchor(float anchorU, float anchorV) {
-    /** Need update SDK **/
-//    marker.setAnchor(anchorU, anchorV);
+    marker.setAnchor(anchorU, anchorV);
   }
 
   @Override

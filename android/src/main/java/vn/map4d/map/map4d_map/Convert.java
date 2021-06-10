@@ -29,21 +29,14 @@ public class Convert {
   // TODO : FlutterMain has been deprecated and should be replaced with FlutterLoader
   //  when it's available in Stable channel: https://github.com/flutter/flutter/issues/70923.
   @SuppressWarnings("deprecation")
-  private static MFBitmapDescriptor toBitmapDescriptor(Context context, Object o) {
+  private static MFBitmapDescriptor toBitmapDescriptor(Object o) {
     final List<?> data = toList(o);
     switch (toString(data.get(0))) {
       case "defaultMarker":
         return MFBitmapDescriptorFactory.defaultMarker();
       case "fromAssetImage":
         if (data.size() == 3) {
-          AssetManager assetManager = context.getAssets();
-          String fileName = FlutterMain.getLookupKeyForAsset(toString(data.get(1)));
-          try {
-            InputStream stream = assetManager.open(fileName);
-            return MFBitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeStream(stream));
-          } catch (IOException e) {
-            throw new IllegalArgumentException("Error when read data from asset " + fileName);
-          }
+          return MFBitmapDescriptorFactory.fromAsset(FlutterMain.getLookupKeyForAsset(toString(data.get(1))));
         } else {
           throw new IllegalArgumentException(
             "'fromAssetImage' Expected exactly 3 arguments, got: " + data.size());
@@ -427,7 +420,7 @@ public class Convert {
     }
   }
 
-  static String interpretMarkerOptions(Context context, Object o, FMFMarkerOptionsSink sink) {
+  static String interpretMarkerOptions(Object o, FMFMarkerOptionsSink sink) {
     final Map<?, ?> data = toMap(o);
     final Object consumeTapEvents = data.get("consumeTapEvents");
     if (consumeTapEvents != null) {
@@ -452,7 +445,7 @@ public class Convert {
     }
     final Object icon = data.get("icon");
     if (icon != null) {
-      sink.setIcon(toBitmapDescriptor(context, icon));
+      sink.setIcon(toBitmapDescriptor(icon));
     }
     final Object draggable = data.get("draggable");
     if (draggable != null) {
@@ -496,7 +489,7 @@ public class Convert {
     }
   }
 
-  static String interpretPOIOptions(Context context, Object o, FMFPOIOptionsSink sink) {
+  static String interpretPOIOptions(Object o, FMFPOIOptionsSink sink) {
     final Map<?, ?> data = toMap(o);
     final Object consumeTapEvents = data.get("consumeTapEvents");
     if (consumeTapEvents != null) {
@@ -528,7 +521,7 @@ public class Convert {
     }
     final Object icon = data.get("icon");
     if (icon != null) {
-      sink.setIcon(toBitmapDescriptor(context, icon));
+      sink.setIcon(toBitmapDescriptor(icon));
     }
     final String poiId = (String) data.get("poiId");
     if (poiId == null) {
