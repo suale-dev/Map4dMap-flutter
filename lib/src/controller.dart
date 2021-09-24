@@ -94,6 +94,15 @@ class MFMapViewController {
           onBuildingTap(buildingId, name, location);
         }
         break;
+      case 'map#onTapPlace':
+        final onPlaceTap = _mapState.widget.onPlaceTap;
+        if (onPlaceTap != null) {
+          final String name = call.arguments['name'];
+          final MFLatLng location =
+              MFLatLng.fromJson(call.arguments['location'])!;
+          onPlaceTap(name, location);
+        }
+        break;
       case 'map#onModeChange':
         final is3DMode = call.arguments['is3DMode'];
         _mapState.widget.onModeChange!(is3DMode);

@@ -48,6 +48,7 @@ class _MyAppState extends State<MyApp> {
       onModeChange: onModeChange,
       onPOITap: onBaseMapPOITap,
       onBuildingTap: onBaseMapBuildingTap,
+      onPlaceTap: onBaseMapPlaceTap,
     );
 
     return MaterialApp(
@@ -164,5 +165,9 @@ class _MyAppState extends State<MyApp> {
 
   void onBaseMapBuildingTap(String buildingId, String name, MFLatLng location) {
     print('Tap on Building $buildingId, name: $name, location: $location');
+  }
+
+  void onBaseMapPlaceTap(String name, MFLatLng location) {
+    print('Tap on Place $name, location: $location');
   }
 }

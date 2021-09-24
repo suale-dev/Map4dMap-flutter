@@ -637,6 +637,15 @@
   [_channel invokeMethod:@"map#onTapPOI" arguments:arguments];
 }
 
+///* Called after a base map Place has been tapped */
+- (void)mapView:(MFMapView *)mapView didTapPlaceWithName:(NSString *)name location:(CLLocationCoordinate2D)location {
+  NSDictionary* arguments = @{
+    @"name": name,
+    @"location": [Map4dFLTConvert locationToJson:location]
+  };
+  [_channel invokeMethod:@"map#onTapPlace" arguments:arguments];
+}
+
 //- (void)mapView: (MFMapView*)  mapView didTapMyLocation: (CLLocationCoordinate2D) location;
 //
 //- (BOOL)shouldChangeMapModeForMapView: (MFMapView*)  mapView;

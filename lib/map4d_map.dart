@@ -28,7 +28,8 @@ export 'src/callbacks.dart'
         MFLatLngCallback,
         MFModeChangedCallback,
         MFMapPOICallback,
-        MFMapBuildingCallback;
+        MFMapBuildingCallback,
+        MFMapPlaceCallback;
 
 export 'src/annotations/annotations.dart'
     show

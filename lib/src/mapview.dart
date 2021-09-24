@@ -47,6 +47,7 @@ class MFMapView extends StatefulWidget {
     this.onModeChange,
     this.onPOITap,
     this.onBuildingTap,
+    this.onPlaceTap,
     this.markers = const <MFMarker>{},
     this.circles = const <MFCircle>{},
     this.polygons = const <MFPolygon>{},
@@ -136,6 +137,9 @@ class MFMapView extends StatefulWidget {
 
   /// Called after a base map building has been tapped
   final MFMapBuildingCallback? onBuildingTap;
+
+  ///
+  final MFMapPlaceCallback? onPlaceTap;
 }
 
 class _MFMapViewState extends State<MFMapView> {
