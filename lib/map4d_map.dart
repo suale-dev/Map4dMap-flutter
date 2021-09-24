@@ -17,7 +17,7 @@ import 'src/callbacks.dart';
 import 'src/annotations/annotations.dart';
 import 'src/overlays/overlays.dart';
 
-export 'src/ui.dart' show MFMinMaxZoom;
+export 'src/ui.dart' show MFMapType, MFMinMaxZoom;
 export 'src/location.dart' show MFLatLng, MFLatLngBounds;
 
 export 'src/camera.dart' show MFCameraPosition, MFCameraUpdate;

@@ -1,5 +1,14 @@
 import 'dart:ui' show hashValues;
 
+/// Type of map tiles to display
+enum MFMapType {
+  /// Roadmap tiles, default
+  roadmap,
+
+  /// Raster tiles
+  raster,
+}
+
 class MFMinMaxZoom {
   /// Creates a immutable representation of the preferred minimum and maximum zoom values for the map camera.
   ///

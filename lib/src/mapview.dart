@@ -30,6 +30,7 @@ class MFMapView extends StatefulWidget {
     Key? key,
     this.initialCameraPosition,
     this.onMapCreated,
+    this.mapType = MFMapType.roadmap,
     this.minMaxZoomPreference = MFMinMaxZoom.unbounded,
     this.rotateGesturesEnabled = true,
     this.scrollGesturesEnabled = true,
@@ -84,6 +85,9 @@ class MFMapView extends StatefulWidget {
 
   /// The initial position of the map's camera.
   final MFCameraPosition? initialCameraPosition;
+
+  /// Type of map tiles to be rendered.
+  final MFMapType mapType;
 
   /// Preferred bounds for the camera zoom level.
   final MFMinMaxZoom minMaxZoomPreference;
@@ -390,10 +394,12 @@ class _MFMapViewOptions {
         myLocationButtonEnabled = map.myLocationButtonEnabled,
         buildingsEnabled = map.buildingsEnabled,
         poisEnabled = map.poisEnabled,
+        mapType = map.mapType,
         minMaxZoomPreference = map.minMaxZoomPreference,
         trackCameraPosition = map.onCameraMove != null;
 
   // final CameraTargetBounds cameraTargetBounds;
+  final MFMapType mapType;
   final MFMinMaxZoom minMaxZoomPreference;
   final bool rotateGesturesEnabled;
   final bool scrollGesturesEnabled;
@@ -409,6 +415,7 @@ class _MFMapViewOptions {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       // 'cameraTargetBounds': cameraTargetBounds.toJson(),
+      'mapType': mapType.index,
       'minMaxZoomPreference': minMaxZoomPreference.toJson(),
       'rotateGesturesEnabled': rotateGesturesEnabled,
       'scrollGesturesEnabled': scrollGesturesEnabled,

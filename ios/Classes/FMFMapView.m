@@ -388,6 +388,17 @@
   //    [sink setCameraTargetBounds:ToOptionalBounds(cameraTargetBounds)];
   //  }
   
+  id mapType = data[@"mapType"];
+  if (mapType) {
+    int type = [Map4dFLTConvert toInt:mapType];
+    if (type == 1) {
+      [self setMapType:MFMapTypeRaster];
+    }
+    else {
+      [self setMapType:MFMapTypeRoadmap];
+    }
+  }
+  
   id buildingsEnabled = data[@"buildingsEnabled"];
   if (buildingsEnabled) {
     [self setBuildingsEnabled:[Map4dFLTConvert toBool:buildingsEnabled]];
@@ -460,6 +471,10 @@
 
 - (void)setPOIsEnabled:(BOOL)enabled {
   [_mapView setPOIsEnabled:enabled];
+}
+
+- (void)setMapType:(MFMapType)type {
+  [_mapView setMapType:type];
 }
 
 - (void)setMinZoom:(float)minZoom maxZoom:(float)maxZoom {

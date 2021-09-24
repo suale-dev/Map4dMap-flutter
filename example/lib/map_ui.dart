@@ -30,6 +30,7 @@ class MapUiBodyState extends State<MapUiBody> {
   bool _isMapCreated = false;
   bool _isMoving = false;
   MFMinMaxZoom _minMaxZoomPreference = MFMinMaxZoom.unbounded;
+  MFMapType _mapType = MFMapType.roadmap;
   bool _rotateGesturesEnabled = true;
   bool _scrollGesturesEnabled = true;
   bool _tiltGesturesEnabled = true;
@@ -70,6 +71,18 @@ class MapUiBodyState extends State<MapUiBody> {
       onPressed: () {
         setState(() {
           _minMaxZoomPreference = _minMaxZoomPreference.minZoom == null ? const MFMinMaxZoom(12.0, 16.0) : MFMinMaxZoom.unbounded;
+        });
+      },
+    );
+  }
+
+  Widget _mapTypeToggler() {
+    var newType = _mapType == MFMapType.raster ? MFMapType.roadmap : MFMapType.raster;
+    return TextButton(
+      child: Text('Map Type: ${_mapType == MFMapType.raster ? 'RASTER' : 'ROADMAP'}'),
+      onPressed: () {
+        setState(() {
+          _mapType = newType;
         });
       },
     );
@@ -171,6 +184,7 @@ class MapUiBodyState extends State<MapUiBody> {
       onMapCreated: onMapCreated,
       initialCameraPosition: _kInitialPosition,
       minMaxZoomPreference: _minMaxZoomPreference,
+      mapType: _mapType,
       poisEnabled: _poisEnabled,
       buildingsEnabled: _buildingsEnabled,
       rotateGesturesEnabled: _rotateGesturesEnabled,
@@ -207,6 +221,7 @@ class MapUiBodyState extends State<MapUiBody> {
               Text('camera zoom: ${_position.zoom}'),
               Text('camera tilt: ${_position.tilt}'),
               Text(_isMoving ? '(Camera moving)' : '(Camera idle)'),
+              _mapTypeToggler(),
               _poisEnabledToggler(),
               _buildingsEnabledToggler(),
               _zoomBoundsToggler(),

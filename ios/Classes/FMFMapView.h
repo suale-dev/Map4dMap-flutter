@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setCameraTargetBounds:(nullable MFCoordinateBounds *)bounds;
 - (void)setBuildingsEnabled:(BOOL)enabled;
 - (void)setPOIsEnabled:(BOOL)enabled;
+- (void)setMapType:(MFMapType)type;
 - (void)setMinZoom:(float)minZoom maxZoom:(float)maxZoom;
 //- (void)setPaddingTop:(float)top left:(float)left bottom:(float)bottom right:(float)right;//TODO
 - (void)setRotateGesturesEnabled:(BOOL)enabled;
