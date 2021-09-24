@@ -30,6 +30,9 @@ typedef enum : NSUInteger {
   // map#getCameraPosition
   FMFMethodGetCameraPosition,
   
+  // map#getBounds
+  FMFMethodGetBounds,
+  
   // map#enable3DMode
   FMFMethodEnable3DMode,
   

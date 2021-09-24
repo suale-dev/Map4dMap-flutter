@@ -141,6 +141,20 @@ class MFMapViewController {
     return MFCameraPosition.fromMap(cameraPosition);
   }
 
+  /// Return [MFLatLngBounds] defining the region that is visible in a map.
+  Future<MFLatLngBounds?> getBounds() async {
+    final Map<String, dynamic> latLngBounds = (await _channel
+        .invokeMapMethod<String, dynamic>('map#getBounds'))!;
+    print('bounds rs: $latLngBounds');
+    final MFLatLng? southwest = MFLatLng.fromJson(latLngBounds['southwest']);
+    final MFLatLng? northeast = MFLatLng.fromJson(latLngBounds['northeast']);
+    if (southwest == null || northeast == null) {
+      return null;
+    }
+
+    return MFLatLngBounds(southwest: southwest, northeast: northeast);
+  }
+
   Future<void> fitBounds(MFLatLngBounds bounds, {double padding = 0}) async {
     return _channel.invokeMethod<void>('map#fitBounds',
         <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding});

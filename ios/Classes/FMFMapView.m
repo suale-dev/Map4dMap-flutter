@@ -216,6 +216,19 @@
       }
       break;
     }
+      
+    /* map # get bounds */
+    case FMFMethodGetBounds: {
+      MFCoordinateBounds* bounds = [_mapView getBounds];
+      if (bounds == nil) {
+        result(@{});
+      }
+      result(@{
+        @"southwest" : [Map4dFLTConvert locationToJson:bounds.southWest],
+        @"northeast" : [Map4dFLTConvert locationToJson:bounds.northEast],
+      });
+      break;
+    }
 
     /* map # set 3D mode **/
     case FMFMethodEnable3DMode: {
