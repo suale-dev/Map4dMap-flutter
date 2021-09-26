@@ -188,6 +188,7 @@ public class FMFMapViewController implements
     map4D.setOnBuildingClickListener(listener);
     map4D.setOnUserBuildingClickListener(listener);
     map4D.setOnMapClickListener(listener);
+    map4D.setOnPlaceClickListener(listener);
   }
 
   @Override
@@ -722,5 +723,13 @@ public class FMFMapViewController implements
     arguments.put("name", name);
     arguments.put("location", Convert.latLngToJson(location));
     methodChannel.invokeMethod("map#onTapPOI", arguments);
+  }
+
+  @Override
+  public void onPlaceClick(@NonNull String name, @NonNull MFLocationCoordinate location) {
+    final Map<String, Object> arguments = new HashMap<>(2);
+    arguments.put("name", name);
+    arguments.put("location", Convert.latLngToJson(location));
+    methodChannel.invokeMethod("map#onTapPlace", arguments);
   }
 }
