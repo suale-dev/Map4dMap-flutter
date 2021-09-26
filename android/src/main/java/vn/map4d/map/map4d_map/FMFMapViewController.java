@@ -228,6 +228,27 @@ public class FMFMapViewController implements
         }
         break;
       }
+      case "map#getBounds": {
+        if (map4D != null) {
+          final MFCoordinateBounds bounds = map4D.getBounds();
+          if (bounds == null) {
+            result.success(null);
+          }
+          else {
+            final Map<String, Object> data = new HashMap<>();
+            data.put("southwest", Convert.latLngToJson(bounds.getSouthwest()));
+            data.put("northeast", Convert.latLngToJson(bounds.getNortheast()));
+            result.success(data);
+          }
+        }
+        else {
+          result.error(
+            "Map4D uninitialized",
+            "getBounds called prior to map initialization",
+            null);
+        }
+        break;
+      }
       case "map#fitBounds": {
         if (map4D != null) {
           final MFCoordinateBounds bounds = Convert.toCoordinateBounds(call.argument("bounds"));
