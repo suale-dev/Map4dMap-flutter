@@ -30,6 +30,7 @@ import vn.map4d.map.camera.MFCameraPosition;
 import vn.map4d.map.camera.MFCameraUpdate;
 import vn.map4d.map.camera.MFCameraUpdateFactory;
 import vn.map4d.map.core.MFCoordinateBounds;
+import vn.map4d.map.core.MFMapType;
 import vn.map4d.map.core.MFMapView;
 import vn.map4d.map.core.Map4D;
 import vn.map4d.map.core.OnMapReadyCallback;
@@ -63,6 +64,7 @@ public class FMFMapViewController implements
   private Float minZoomPreference = null;
   private Float maxZoomPreference = null;
   private boolean enable3DMode;
+  private MFMapType mapType;
 
   private MFCameraPosition initialCameraPosition;
 
@@ -158,6 +160,9 @@ public class FMFMapViewController implements
     }
     if (maxZoomPreference != null) {
       map4D.setMaxZoomPreference(maxZoomPreference);
+    }
+    if (mapType != null) {
+      map4D.setMapType(mapType);
     }
     map4D.enable3DMode(enable3DMode);
     map4D.setBuildingsEnabled(this.buildingsEnabled);
@@ -380,6 +385,9 @@ public class FMFMapViewController implements
   }
 
   private MFCameraPosition getCameraPosition() {
+    if (map4D == null) {
+      return null;
+    }
     return trackCameraPosition ? map4D.getCameraPosition() : null;
   }
 
@@ -422,6 +430,15 @@ public class FMFMapViewController implements
 
   private void updateInitialCircles() {
     circlesController.addCircles(initialCircles);
+  }
+
+  @Override
+  public void setMapType(MFMapType mapType) {
+    this.mapType = mapType;
+    if (map4D == null) {
+      return;
+    }
+    map4D.setMapType(mapType);
   }
 
   @Override

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import io.flutter.plugin.common.BinaryMessenger;
 import vn.map4d.map.camera.MFCameraPosition;
+import vn.map4d.map.core.MFMapType;
 
 public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   private Float minZoomPreference = 2.f;
@@ -20,6 +21,7 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   private boolean zoomGesturesEnabled = true;
   private boolean buildingsEnabled = true;
   private boolean poisEnabled = true;
+  private MFMapType mapType;
   MFCameraPosition initialCameraPosition;
   private Object initialCircles;
   private Object initialPolylines;
@@ -39,6 +41,7 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
     controller.setMyLocationEnabled(myLocationEnabled);
     controller.setMyLocationButtonEnabled(myLocationButtonEnabled);
     controller.setRotateGesturesEnabled(rotateGesturesEnabled);
+    controller.setMapType(mapType);
     controller.setTiltGesturesEnabled(tiltGesturesEnabled);
     controller.setZoomGesturesEnabled(zoomGesturesEnabled);
     controller.setScrollGesturesEnabled(scrollGesturesEnabled);
@@ -57,6 +60,11 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
 
   void setInitialCameraPosition(MFCameraPosition position) {
     this.initialCameraPosition = position;
+  }
+
+  @Override
+  public void setMapType(MFMapType mapType) {
+    this.mapType = mapType;
   }
 
   @Override

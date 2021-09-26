@@ -3,8 +3,12 @@ package vn.map4d.map.map4d_map;
 import java.util.List;
 import java.util.Map;
 
+import vn.map4d.map.core.MFMapType;
+
 /** Receiver of Map4D configuration options. */
 interface FMFMapViewOptionsSink {
+
+  void setMapType(MFMapType mapType);
 
   void setMinMaxZoomPreference(Float min, Float max);
 

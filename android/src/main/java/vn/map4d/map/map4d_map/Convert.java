@@ -20,6 +20,7 @@ import vn.map4d.map.camera.MFCameraPosition;
 import vn.map4d.map.camera.MFCameraUpdate;
 import vn.map4d.map.camera.MFCameraUpdateFactory;
 import vn.map4d.map.core.MFCoordinateBounds;
+import vn.map4d.map.core.MFMapType;
 import vn.map4d.map.core.MFPolylineStyle;
 import vn.map4d.types.MFLocationCoordinate;
 
@@ -147,6 +148,16 @@ public class Convert {
     return new MFLocationCoordinate(toDouble(data.get(0)), toDouble(data.get(1)));
   }
 
+  static MFMapType toMapType(Object o) {
+    final int mapType = toInt(o);
+    switch (mapType) {
+      case 0:
+        return MFMapType.ROADMAP;
+      default:
+        return MFMapType.RASTER;
+    }
+  }
+
   static MFPolylineStyle toPolylineStyle(Object o) {
     final int style = toInt(o);
     switch (style) {
@@ -165,6 +176,10 @@ public class Convert {
       sink.setMinMaxZoomPreference( //
         toFloatWrapper(zoomPreferenceData.get(0)), //
         toFloatWrapper(zoomPreferenceData.get(1)));
+    }
+    final Object mapType = data.get("mapType");
+    if (mapType != null) {
+      sink.setMapType(toMapType(mapType));
     }
     final Object rotateGesturesEnabled = data.get("rotateGesturesEnabled");
     if (rotateGesturesEnabled != null) {
