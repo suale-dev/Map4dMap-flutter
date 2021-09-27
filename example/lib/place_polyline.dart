@@ -24,11 +24,11 @@ class PlacePolylineBodyState extends State<PlacePolylineBody> {
   PlacePolylineBodyState() {
     final MFPolylineId polylineId = MFPolylineId('polyline_id_0');
     List<MFLatLng> points = <MFLatLng>[
-          MFLatLng(52.30176096373671, -5.767822265625),
-          MFLatLng(50.93073802371819, -4.954833984374999),
-          MFLatLng(52.1267438596429, -1.8896484375),
-          MFLatLng(53.35710874569601, -5.33935546875),
-          MFLatLng(54.59752785211386, -2.252197265625)
+      MFLatLng(52.30176096373671, -5.767822265625),
+      MFLatLng(50.93073802371819, -4.954833984374999),
+      MFLatLng(52.1267438596429, -1.8896484375),
+      MFLatLng(53.35710874569601, -5.33935546875),
+      MFLatLng(54.59752785211386, -2.252197265625)
     ];
     final MFPolyline polyline = MFPolyline(
       polylineId: polylineId,
@@ -149,7 +149,8 @@ class PlacePolylineBodyState extends State<PlacePolylineBody> {
     final MFPolyline polyline = polylines[polylineId]!;
     setState(() {
       polylines[polylineId] = polyline.copyWith(
-        styleParam: polylineStyles[++polylineStyleIndex % polylineStyles.length],
+        styleParam:
+            polylineStyles[++polylineStyleIndex % polylineStyles.length],
       );
     });
   }

@@ -124,8 +124,7 @@ class PlacePolygonBodyState extends State<PlacePolygonBody> {
     final MFPolygon polygon = polygons[polygonId]!;
     setState(() {
       var holes = _createHoles(polygonId);
-      polygons[polygonId] =
-          polygon.copyWith(holesParam: holes);
+      polygons[polygonId] = polygon.copyWith(holesParam: holes);
     });
   }
 

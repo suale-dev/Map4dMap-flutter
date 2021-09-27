@@ -53,8 +53,7 @@ class MapUiBodyState extends State<MapUiBody> {
 
   Widget _fitBoundsToggler() {
     return TextButton(
-      child: Text('Fit Bounds'
-      ),
+      child: Text('Fit Bounds'),
       onPressed: () {
         setState(() {
           print('_fitBoundsToggler');
@@ -70,16 +69,20 @@ class MapUiBodyState extends State<MapUiBody> {
           : 'Release Zoom'),
       onPressed: () {
         setState(() {
-          _minMaxZoomPreference = _minMaxZoomPreference.minZoom == null ? const MFMinMaxZoom(12.0, 16.0) : MFMinMaxZoom.unbounded;
+          _minMaxZoomPreference = _minMaxZoomPreference.minZoom == null
+              ? const MFMinMaxZoom(12.0, 16.0)
+              : MFMinMaxZoom.unbounded;
         });
       },
     );
   }
 
   Widget _mapTypeToggler() {
-    var newType = _mapType == MFMapType.raster ? MFMapType.roadmap : MFMapType.raster;
+    var newType =
+        _mapType == MFMapType.raster ? MFMapType.roadmap : MFMapType.raster;
     return TextButton(
-      child: Text('Map Type: ${_mapType == MFMapType.raster ? 'RASTER' : 'ROADMAP'}'),
+      child: Text(
+          'Map Type: ${_mapType == MFMapType.raster ? 'RASTER' : 'ROADMAP'}'),
       onPressed: () {
         setState(() {
           _mapType = newType;

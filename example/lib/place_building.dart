@@ -4,7 +4,8 @@ import 'package:map4d_map/map4d_map.dart';
 import 'page.dart';
 
 class PlaceBuildingPage extends Map4dMapExampleAppPage {
-  PlaceBuildingPage() : super(const Icon(Icons.home_outlined), 'Place Building');
+  PlaceBuildingPage()
+      : super(const Icon(Icons.home_outlined), 'Place Building');
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +23,12 @@ class PlaceBuildingBody extends StatefulWidget {
 class PlaceBuildingBodyState extends State<PlaceBuildingBody> {
   PlaceBuildingBodyState();
 
-  static final MFLatLng _kInitPosition = MFLatLng(12.205748339991535, 109.21646118164062);
-  static final MFLatLng _kInitExtrudeBuildingPosition = MFLatLng(12.204364143802083, 109.21652555465698);
-  static final MFLatLng _kInitTextureBuildingPosition = MFLatLng(12.206755023585973, 109.21641826629639);
+  static final MFLatLng _kInitPosition =
+      MFLatLng(12.205748339991535, 109.21646118164062);
+  static final MFLatLng _kInitExtrudeBuildingPosition =
+      MFLatLng(12.204364143802083, 109.21652555465698);
+  static final MFLatLng _kInitTextureBuildingPosition =
+      MFLatLng(12.206755023585973, 109.21641826629639);
 
   late MFMapViewController controller;
   Map<MFBuildingId, MFBuilding> buildings = <MFBuildingId, MFBuilding>{};
@@ -52,8 +56,7 @@ class PlaceBuildingBodyState extends State<PlaceBuildingBody> {
       }
       if (id == _extrudeBuildingId) {
         _extrudeBuildingId = null;
-      }
-      else if (id == _textureBuildingId) {
+      } else if (id == _textureBuildingId) {
         _textureBuildingId = null;
       }
       if (id == selectedBuilding) {
@@ -68,10 +71,10 @@ class PlaceBuildingBodyState extends State<PlaceBuildingBody> {
 
     final List<MFLatLng> coordinates = <MFLatLng>[
       MFLatLng(12.204259280159668, 109.21635255217552),
-      MFLatLng(12.204259280159668,109.2167267203331),
+      MFLatLng(12.204259280159668, 109.2167267203331),
       MFLatLng(12.20450177726977, 109.2167267203331),
       MFLatLng(12.20450177726977, 109.21635255217552),
-      MFLatLng(12.204259280159668,109.21635255217552)
+      MFLatLng(12.204259280159668, 109.21635255217552)
     ];
     final MFBuildingId buildingId = MFBuildingId(buildingIdVal);
     final MFBuilding building = MFBuilding(
@@ -102,8 +105,10 @@ class PlaceBuildingBodyState extends State<PlaceBuildingBody> {
       consumeTapEvents: true,
       position: _kInitTextureBuildingPosition,
       name: 'Texture Building',
-      modelUrl: 'https://sw-hcm-1.vinadata.vn/v1/AUTH_d0ecabcbdcd74f6aa6ac9a5da528eb78/sdk/models/5b21d9a5cd18d02d045a5e99',
-      textureUrl: 'https://sw-hcm-1.vinadata.vn/v1/AUTH_d0ecabcbdcd74f6aa6ac9a5da528eb78/sdk/textures/0cb35e1610c34e55946a7839356d8f66.jpg',
+      modelUrl:
+          'https://sw-hcm-1.vinadata.vn/v1/AUTH_d0ecabcbdcd74f6aa6ac9a5da528eb78/sdk/models/5b21d9a5cd18d02d045a5e99',
+      textureUrl:
+          'https://sw-hcm-1.vinadata.vn/v1/AUTH_d0ecabcbdcd74f6aa6ac9a5da528eb78/sdk/textures/0cb35e1610c34e55946a7839356d8f66.jpg',
       onTap: () {
         _onBuildingTapped(buildingId);
       },
@@ -190,5 +195,4 @@ class PlaceBuildingBodyState extends State<PlaceBuildingBody> {
       ],
     );
   }
-  
 }

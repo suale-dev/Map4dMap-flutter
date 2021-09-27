@@ -102,14 +102,19 @@ class PlacePOIBodyState extends State<PlacePOIBody> {
     final MFPOI poi = pois[poiId]!;
     final Color color = _randomColor(poi.titleColor);
     setState(() {
-      pois[poiId] = poi.copyWith(
-        titleColorParam: color
-      );
+      pois[poiId] = poi.copyWith(titleColorParam: color);
     });
   }
 
   Color _randomColor(Color? ignore) {
-    final List<Color> colors = <Color>[Colors.red, Colors.green, Colors.blue, Colors.purple, Colors.pink, Colors.black];
+    final List<Color> colors = <Color>[
+      Colors.red,
+      Colors.green,
+      Colors.blue,
+      Colors.purple,
+      Colors.pink,
+      Colors.black
+    ];
     if (ignore != null) {
       colors.remove(ignore);
     }
@@ -118,7 +123,24 @@ class PlacePOIBodyState extends State<PlacePOIBody> {
   }
 
   String _randomType(String? ignore) {
-    final List<String> types = <String>['government', 'museum', 'motel', 'bank', 'supermarket', 'restaurant', 'cafe', 'school', 'stadium', 'pharmacy', 'university', 'police', 'bar', 'atm', 'hospital', 'park'];
+    final List<String> types = <String>[
+      'government',
+      'museum',
+      'motel',
+      'bank',
+      'supermarket',
+      'restaurant',
+      'cafe',
+      'school',
+      'stadium',
+      'pharmacy',
+      'university',
+      'police',
+      'bar',
+      'atm',
+      'hospital',
+      'park'
+    ];
     if (ignore != null) {
       types.remove(ignore);
     }
@@ -128,8 +150,10 @@ class PlacePOIBodyState extends State<PlacePOIBody> {
 
   Future<void> _createMarkerImageFromAsset(BuildContext context) async {
     if (_markerIcon == null) {
-      final ImageConfiguration imageConfiguration = createLocalImageConfiguration(context, size: Size.square(48));
-      _markerIcon = await MFBitmap.fromAssetImage(imageConfiguration, 'assets/ic_marker_tracking.png');
+      final ImageConfiguration imageConfiguration =
+          createLocalImageConfiguration(context, size: Size.square(48));
+      _markerIcon = await MFBitmap.fromAssetImage(
+          imageConfiguration, 'assets/ic_marker_tracking.png');
     }
   }
 
@@ -200,5 +224,4 @@ class PlacePOIBodyState extends State<PlacePOIBody> {
       ],
     );
   }
-  
 }

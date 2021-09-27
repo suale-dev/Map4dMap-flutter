@@ -143,8 +143,8 @@ class MFMapViewController {
 
   /// Return [MFLatLngBounds] defining the region that is visible in a map.
   Future<MFLatLngBounds?> getBounds() async {
-    final Map<String, dynamic> latLngBounds = (await _channel
-        .invokeMapMethod<String, dynamic>('map#getBounds'))!;
+    final Map<String, dynamic> latLngBounds =
+        (await _channel.invokeMapMethod<String, dynamic>('map#getBounds'))!;
     final MFLatLng? southwest = MFLatLng.fromJson(latLngBounds['southwest']);
     final MFLatLng? northeast = MFLatLng.fromJson(latLngBounds['northeast']);
     if (southwest == null || northeast == null) {

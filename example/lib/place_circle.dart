@@ -23,17 +23,16 @@ class PlaceCircleBodyState extends State<PlaceCircleBody> {
   PlaceCircleBodyState() {
     final MFCircleId circleId = MFCircleId('circle_id_0');
     final MFCircle circle = MFCircle(
-      circleId: circleId,
-      consumeTapEvents: true,
-      strokeColor: Colors.orange,
-      fillColor: Colors.green,
-      strokeWidth: 5,
-      center: MFLatLng(51.4816, -3.1791),
-      radius: 50000,
-      onTap: () {
-        _onCircleTapped(circleId);
-      }
-    );
+        circleId: circleId,
+        consumeTapEvents: true,
+        strokeColor: Colors.orange,
+        fillColor: Colors.green,
+        strokeWidth: 5,
+        center: MFLatLng(51.4816, -3.1791),
+        radius: 50000,
+        onTap: () {
+          _onCircleTapped(circleId);
+        });
     circles[circleId] = circle;
   }
 

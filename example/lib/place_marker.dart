@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:map4d_map/map4d_map.dart'; 
+import 'package:map4d_map/map4d_map.dart';
 import 'dart:math';
 import 'page.dart';
 
@@ -127,9 +127,7 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
     }
     final MFMarker marker = markers[markerId]!;
     setState(() {
-      markers[markerId] = marker.copyWith(
-        positionParam: newPosition
-      );
+      markers[markerId] = marker.copyWith(positionParam: newPosition);
     });
   }
 
@@ -363,8 +361,10 @@ class PlaceMarkerBodyState extends State<PlaceMarkerBody> {
 
   Future<void> _createMarkerImageFromAsset(BuildContext context) async {
     if (_markerIcon == null) {
-      final ImageConfiguration imageConfiguration = createLocalImageConfiguration(context, size: Size.square(48));
-      _markerIcon = await MFBitmap.fromAssetImage(imageConfiguration, 'assets/ic_marker_tracking.png');
+      final ImageConfiguration imageConfiguration =
+          createLocalImageConfiguration(context, size: Size.square(48));
+      _markerIcon = await MFBitmap.fromAssetImage(
+          imageConfiguration, 'assets/ic_marker_tracking.png');
     }
   }
 }
