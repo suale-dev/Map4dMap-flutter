@@ -145,7 +145,6 @@ class MFMapViewController {
   Future<MFLatLngBounds?> getBounds() async {
     final Map<String, dynamic> latLngBounds = (await _channel
         .invokeMapMethod<String, dynamic>('map#getBounds'))!;
-    print('bounds rs: $latLngBounds');
     final MFLatLng? southwest = MFLatLng.fromJson(latLngBounds['southwest']);
     final MFLatLng? northeast = MFLatLng.fromJson(latLngBounds['northeast']);
     if (southwest == null || northeast == null) {
