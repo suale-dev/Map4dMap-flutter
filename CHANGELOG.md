@@ -1,3 +1,7 @@
+## 2.0.1
+
+* Upgrade Map4dMap SDK dependencies to 2.0.x
+
 ## 2.0.0
 
 * Upgrade Map4dMap SDK dependencies to 2.0.0
