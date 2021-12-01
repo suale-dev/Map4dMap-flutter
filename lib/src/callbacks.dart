@@ -15,3 +15,5 @@ typedef void MFMapBuildingCallback(
     String buildingId, String name, MFLatLng location);
 
 typedef void MFMapPlaceCallback(String name, MFLatLng location);
+
+typedef void MFDirectionCallback(int routeIndex);

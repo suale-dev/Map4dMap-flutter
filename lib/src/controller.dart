@@ -68,6 +68,11 @@ class MFMapViewController {
         }
         _mapState.onMarkerDragEnd(markerId, position);
         break;
+      case 'directionsRenderer#onRouteTap':
+        final rendererId = MFDirectionsRendererId(call.arguments['rendererId']);
+        final routeIndex = call.arguments['routeIndex'];
+        _mapState.onDirectionTap(rendererId, routeIndex);
+        break;
       case 'map#didTapAtCoordinate':
         if (_mapState.widget.onTap != null) {
           final coordinate = MFLatLng.fromJson(call.arguments['coordinate']);

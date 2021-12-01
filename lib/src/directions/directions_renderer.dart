@@ -1,5 +1,4 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart' show VoidCallback;
 import 'package:flutter/material.dart' show Color, Colors;
 import 'package:meta/meta.dart' show immutable;
 
@@ -31,7 +30,7 @@ class MFDirectionsRenderer implements MapsObject {
     this.inactiveStrokeColor = Colors.blueGrey,
     this.inactiveOutlineWidth = 1,
     this.inactiveOutlineColor = const Color(0xFF263238),
-    this.onTap,
+    this.onRouteTap,
   });
 
   /// Uniquely identifies a [MFDirectionsRenderer].
@@ -55,6 +54,9 @@ class MFDirectionsRenderer implements MapsObject {
 
 
   /// The active route stroke width.
+  ///
+  /// The width is constant and independent of the camera's zoom level.
+  /// The default value is 8.
   final int activeStrokeWidth;
 
   /// The active route color.
@@ -63,6 +65,9 @@ class MFDirectionsRenderer implements MapsObject {
   final Color activeStrokeColor;
 
   /// The active route outline stroke width.
+  /// 
+  /// The width is constant and independent of the camera's zoom level.
+  /// The default value is 2.
   final int activeOutlineWidth;
 
   /// The active route outline color.
@@ -71,6 +76,9 @@ class MFDirectionsRenderer implements MapsObject {
   final Color activeOutlineColor;
 
   /// The inactive route stroke width.
+  /// 
+  /// The width is constant and independent of the camera's zoom level.
+  /// The default value is 8.
   final int inactiveStrokeWidth;
 
   /// The inactive route color.
@@ -79,6 +87,9 @@ class MFDirectionsRenderer implements MapsObject {
   final Color inactiveStrokeColor;
 
   /// The inactive route outline stroke width.
+  /// 
+  /// The width is constant and independent of the camera's zoom level.
+  /// The default value is 1.
   final int inactiveOutlineWidth;
 
   /// The inactive route outline color.
@@ -86,8 +97,8 @@ class MFDirectionsRenderer implements MapsObject {
   /// Color in ARGB format, the same format used by Color. The default value is blue grey shade 900 (0xff263238).
   final Color inactiveOutlineColor;
 
-  /// Callbacks to receive tap events for directions renderer placed on this map.
-  final VoidCallback? onTap;
+  /// Callbacks to receive tap events for direction route placed on this map.
+  final MFDirectionCallback? onRouteTap;
 
   /// Creates a new [MFDirectionsRenderer] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
@@ -104,12 +115,13 @@ class MFDirectionsRenderer implements MapsObject {
     int? inactiveOutlineWidthParam,
     Color? inactiveOutlineColorParam,
     //TODO: start, end
-    VoidCallback? onTapParam,
+    MFDirectionCallback? onRouteTapParam,
   }) {
     return MFDirectionsRenderer(
       rendererId: rendererId,
       routes: routesParam ?? routes,
       directions: directionsParam ?? directions,
+      activedIndex: activedIndexParam ?? activedIndex,
       activeStrokeWidth: activeStrokeWidthParam ?? activeStrokeWidth,
       activeStrokeColor: activeStrokeColorParam ?? activeStrokeColor,
       activeOutlineWidth: activeOutlineWidthParam ?? activeOutlineWidth,
@@ -119,7 +131,7 @@ class MFDirectionsRenderer implements MapsObject {
       inactiveOutlineWidth: inactiveOutlineWidthParam ?? inactiveOutlineWidth,
       inactiveOutlineColor: inactiveOutlineColorParam ?? inactiveOutlineColor,
       //TODO: start, end
-      onTap: onTapParam ?? onTap
+      onRouteTap: onRouteTapParam ?? onRouteTap
     );
   }
 
@@ -162,7 +174,6 @@ class MFDirectionsRenderer implements MapsObject {
     if (other.runtimeType != runtimeType) return false;
     final MFDirectionsRenderer typedOther = other as MFDirectionsRenderer;
     return rendererId == typedOther.rendererId &&
-        const DeepCollectionEquality().equals(routes, typedOther.routes) &&
         directions == typedOther.directions &&
         activedIndex == typedOther.activedIndex &&
         activeStrokeWidth == typedOther.activeStrokeWidth &&
@@ -172,7 +183,8 @@ class MFDirectionsRenderer implements MapsObject {
         inactiveStrokeWidth == typedOther.inactiveStrokeWidth &&
         inactiveStrokeColor == typedOther.inactiveStrokeColor &&
         inactiveOutlineWidth == typedOther.inactiveOutlineWidth &&
-        inactiveOutlineColor == typedOther.inactiveOutlineColor;
+        inactiveOutlineColor == typedOther.inactiveOutlineColor &&
+        const DeepCollectionEquality().equals(routes, typedOther.routes);
   }
 
   @override

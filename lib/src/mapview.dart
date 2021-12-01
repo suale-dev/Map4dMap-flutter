@@ -328,6 +328,17 @@ class _MFMapViewState extends State<MFMapView> {
     }
   }
 
+  void onDirectionTap(MFDirectionsRendererId rendererId, int routeIndex) {
+    final MFDirectionsRenderer? renderer = _directionsRenderers[rendererId];
+    if (renderer == null) {
+      throw UnknownMapObjectIdError('renderer', rendererId, 'onRouteTap');
+    }
+    final MFDirectionCallback? onRouteTap = renderer.onRouteTap;
+    if (onRouteTap != null) {
+      onRouteTap(routeIndex);
+    }
+  }
+
   void _updateOptions() async {
     final _MFMapViewOptions newOptions = _MFMapViewOptions.fromWidget(widget);
     final Map<String, dynamic> updates = _mapOptions.updatesMap(newOptions);

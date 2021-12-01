@@ -1,3 +1,4 @@
+export '../callbacks.dart';
 export '../location.dart';
 export '../maps_object_updates.dart';
 export '../maps_object.dart';
