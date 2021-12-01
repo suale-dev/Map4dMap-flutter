@@ -16,8 +16,10 @@ import 'src/camera.dart';
 import 'src/callbacks.dart';
 import 'src/annotations/annotations.dart';
 import 'src/overlays/overlays.dart';
+import 'src/directions/directions.dart';
 
 export 'src/ui.dart' show MFMapType, MFMinMaxZoom;
+
 export 'src/location.dart' show MFLatLng, MFLatLngBounds;
 
 export 'src/camera.dart' show MFCameraPosition, MFCameraUpdate;
@@ -50,6 +52,8 @@ export 'src/annotations/annotations.dart'
         MFBuildingId;
 
 export 'src/overlays/overlays.dart' show MFTileOverlay, MFTileOverlayId;
+
+export 'src/directions/directions.dart' show MFDirectionsRenderer, MFDirectionsRendererId;
 
 part 'src/mapview.dart';
 part 'src/controller.dart';
