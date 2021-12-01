@@ -4,7 +4,7 @@ import 'dart:math';
 import 'page.dart';
 
 class MarkerIconsPage extends Map4dMapExampleAppPage {
-  MarkerIconsPage() : super(const Icon(Icons.room), 'Place marker');
+  MarkerIconsPage() : super(const Icon(Icons.add_location_sharp), 'Place marker');
 
   @override
   Widget build(BuildContext context) {

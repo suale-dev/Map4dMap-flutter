@@ -4,7 +4,7 @@ import 'package:map4d_map/map4d_map.dart';
 import 'page.dart';
 
 class PlacePolygonPage extends Map4dMapExampleAppPage {
-  PlacePolygonPage() : super(const Icon(Icons.linear_scale), 'Place polygon');
+  PlacePolygonPage() : super(const Icon(Icons.auto_awesome_mosaic_sharp), 'Place polygon');
 
   @override
   Widget build(BuildContext context) {

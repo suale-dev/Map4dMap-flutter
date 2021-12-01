@@ -38,7 +38,7 @@ final List<Map4dMapExampleAppPage> _allPages = <Map4dMapExampleAppPage>[
   // SnapshotPage(),
   // LiteModePage(),
   TileOverlayPage(),
-  PlaceDirectionsRendererPage(),
+  DirectionsRendererPage(),
 ];
 
 class MapsDemo extends StatelessWidget {

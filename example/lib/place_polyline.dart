@@ -5,7 +5,7 @@ import 'package:map4d_map/map4d_map.dart';
 import 'page.dart';
 
 class PlacePolylinePage extends Map4dMapExampleAppPage {
-  PlacePolylinePage() : super(const Icon(Icons.linear_scale), 'Place polyline');
+  PlacePolylinePage() : super(const Icon(Icons.line_weight), 'Place polyline');
 
   @override
   Widget build(BuildContext context) {

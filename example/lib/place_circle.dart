@@ -4,7 +4,7 @@ import 'package:map4d_map/map4d_map.dart';
 import 'page.dart';
 
 class PlaceCirclePage extends Map4dMapExampleAppPage {
-  PlaceCirclePage() : super(const Icon(Icons.linear_scale), 'Place circle');
+  PlaceCirclePage() : super(const Icon(Icons.animation), 'Place circle');
 
   @override
   Widget build(BuildContext context) {
