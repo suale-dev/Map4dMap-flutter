@@ -66,6 +66,9 @@ typedef enum : NSUInteger {
   // markers#update
   FMFMethodMarkersUpdate,
   
+  // directionsRenderers#update
+  FMFMethodDirectionsRenderersUpdate,
+  
   // count - all method must add above this
   FMFMethodMaxItem
 

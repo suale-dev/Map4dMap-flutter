@@ -46,7 +46,9 @@
       @"building#update": @(FMFMethodBuildingUpdate),
       /* overlays **/
       @"tileOverlays#update": @(FMFMethodTileOverlaysUpdate),
-      @"tileOverlays#clearTileCache": @(FMFMethodTileOverlaysClearTileCache)
+      @"tileOverlays#clearTileCache": @(FMFMethodTileOverlaysClearTileCache),
+      /* directions renderer **/
+      @"directionsRenderers#update": @(FMFMethodDirectionsRenderersUpdate)
     };
 
     // +1 cause by FMFMethodUnknow

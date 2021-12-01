@@ -23,6 +23,8 @@
 + (UIColor*)toColor:(NSNumber*)data;
 + (NSArray<CLLocation*>*)toPoints:(NSArray*)data;
 + (NSArray<NSArray<CLLocation*>*>*)toHoles:(NSArray*)data;
++ (MFPath*)toPath:(NSArray*)data;
++ (NSArray<MFPath*>*)toPaths:(NSArray*)data;
 + (MFCoordinateBounds*) toCoordinateBounds:(NSArray*)data;
 + (MFCameraPosition*)toCameraPosition:(NSDictionary*)data;
 + (MFCameraUpdate*)toCameraUpdate:(NSArray*)data;

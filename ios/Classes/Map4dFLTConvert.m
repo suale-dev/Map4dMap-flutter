@@ -76,6 +76,25 @@
   return holes;
 }
 
++ (MFPath *)toPath:(NSArray *)data {
+  MFMutablePath* path = [[MFMutablePath alloc] init];
+  for (NSUInteger i = 0; i < [data count]; i++) {
+    double latitude = [Map4dFLTConvert toDouble:data[i][0]];
+    double longitude = [Map4dFLTConvert toDouble:data[i][1]];
+    [path addCoordinate:CLLocationCoordinate2DMake(latitude, longitude)];
+  }
+  return path;
+}
+
++ (NSArray<MFPath *> *)toPaths:(NSArray *)data {
+  NSMutableArray* paths = [NSMutableArray arrayWithCapacity:[data count]];
+  for (NSUInteger i = 0; i < data.count; i++) {
+    MFPath* path = [Map4dFLTConvert toPath:data[i]];
+    [paths addObject:path];
+  }
+  return paths;
+}
+
 + (MFCoordinateBounds*) toCoordinateBounds:(NSArray*)data {
   CLLocationCoordinate2D loc0 = [Map4dFLTConvert toLocation:data[0]];
   CLLocationCoordinate2D loc1 = [Map4dFLTConvert toLocation:data[1]];

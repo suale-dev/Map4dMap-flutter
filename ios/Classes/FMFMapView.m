@@ -11,6 +11,7 @@
 #import "Map4dFLTMethod.h"
 #import "Map4dAnnotationManager.h"
 #import "Map4dOverlayManager.h"
+#import "Map4dDirectionsRendererManager.h"
 
 #define kMFMinZoomLevel 2
 #define kMFMaxZoomLevel 22
@@ -64,6 +65,7 @@
 @interface FMFMapView()
 @property(nonatomic, strong) Map4dOverlayManager* overlayManager;
 @property(nonatomic, strong) Map4dAnnotationManager* annotationManager;
+@property(nonatomic, strong) Map4dDirectionsRendererManager* directionsRendererManager;
 @end
 
 @implementation FMFMapView {
@@ -104,6 +106,9 @@
     
     // setup annotation manger & init overlays
     [self setupOverlayWithArguments:args];
+    
+    // setup directions renderer & init
+    [self setupDirectionsRendererWithArguments:args];
   }
   return self;
 }
@@ -163,6 +168,17 @@
   id tileOverlaysToAdd = args[@"tileOverlaysToAdd"];
   if ([tileOverlaysToAdd isKindOfClass:[NSArray class]]) {
     [_overlayManager addTileOverlays:tileOverlaysToAdd];
+  }
+}
+
+- (void)setupDirectionsRendererWithArguments:(id _Nullable)args {
+  _directionsRendererManager = [[Map4dDirectionsRendererManager alloc] init:_channel
+                                                                    mapView:_mapView
+                                                                  registrar:_registrar];
+  
+  id directionsRenderersToAdd = args[@"directionsRenderersToAdd"];
+  if ([directionsRenderersToAdd isKindOfClass:[NSArray class]]) {
+    [_directionsRendererManager addDirectionsRenderers:directionsRenderersToAdd];
   }
 }
 
@@ -382,6 +398,24 @@
     case FMFMethodTileOverlaysClearTileCache: {
       id rawTileOverlayId = call.arguments[@"tileOverlayId"];
       [_overlayManager clearTileOverlayCache:rawTileOverlayId];
+      result(nil);
+      break;
+    }
+      
+    /* directions renderer # update **/
+    case FMFMethodDirectionsRenderersUpdate: {
+      id directionsRenderersToAdd = call.arguments[@"directionsRenderersToAdd"];
+      if ([directionsRenderersToAdd isKindOfClass:[NSArray class]]) {
+        [_directionsRendererManager addDirectionsRenderers:directionsRenderersToAdd];
+      }
+      id directionsRenderersToChange = call.arguments[@"directionsRenderersToChange"];
+      if ([directionsRenderersToChange isKindOfClass:[NSArray class]]) {
+        [_directionsRendererManager changeDirectionsRenderers:directionsRenderersToChange];
+      }
+      id directionsRendererIdsToRemove = call.arguments[@"directionsRendererIdsToRemove"];
+      if ([directionsRendererIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_directionsRendererManager removeDirectionsRendererIds:directionsRendererIdsToRemove];
+      }
       result(nil);
       break;
     }
@@ -657,6 +691,17 @@
     @"location": [Map4dFLTConvert locationToJson:location]
   };
   [_channel invokeMethod:@"map#onTapPlace" arguments:arguments];
+}
+
+- (void)mapView:(MFMapView *)mapView didTapDirectionsRenderer:(MFDirectionsRenderer *)renderer routeIndex:(NSUInteger)routeIndex {
+  NSString* rendererId = [_directionsRendererManager getDirectionsRendererId:renderer];
+  if (rendererId != nil) {
+    NSDictionary* arguments = @{
+      @"rendererId": rendererId,
+      @"routeIndex": @(routeIndex)
+    };
+    [_channel invokeMethod:@"directionsRenderer#onRouteTap" arguments:arguments];
+  }
 }
 
 //- (void)mapView: (MFMapView*)  mapView didTapMyLocation: (CLLocationCoordinate2D) location;
