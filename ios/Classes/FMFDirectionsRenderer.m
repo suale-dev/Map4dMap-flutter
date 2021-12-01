@@ -98,6 +98,62 @@
   if (inactiveOutlineColor != nil) {
     self.inactiveOutlineColor = [Map4dFLTConvert toColor:inactiveOutlineColor];
   }
+  
+  NSDictionary* originPOIOptions = data[@"originPOIOptions"];
+  if (originPOIOptions != nil) {
+    NSArray* position = originPOIOptions[@"position"];
+    if (position) {
+      self.originPosition = [Map4dFLTConvert toLocation:position];
+    }
+    
+    NSArray* icon = originPOIOptions[@"icon"];
+    if (icon) {
+      self.originIcon = [Map4dFLTConvert extractIcon:icon registrar:registrar];
+    }
+    
+    NSString* title = originPOIOptions[@"title"];
+    if (title != nil) {
+      self.originTitle = title;
+    }
+    
+    NSNumber* titleColor = originPOIOptions[@"titleColor"];
+    if (titleColor != nil) {
+      self.originTitleColor = [Map4dFLTConvert toColor:titleColor];
+    }
+    
+    NSNumber* visible = originPOIOptions[@"visible"];
+    if (visible != nil) {
+      self.hideOriginPOI = ![Map4dFLTConvert toBool:visible];
+    }
+  }
+  
+  NSDictionary* destinationPOIOptions = data[@"destinationPOIOptions"];
+  if (destinationPOIOptions != nil) {
+    NSArray* position = destinationPOIOptions[@"position"];
+    if (position) {
+      self.destinationPosition = [Map4dFLTConvert toLocation:position];
+    }
+    
+    NSArray* icon = destinationPOIOptions[@"icon"];
+    if (icon) {
+      self.destinationIcon = [Map4dFLTConvert extractIcon:icon registrar:registrar];
+    }
+    
+    NSString* title = destinationPOIOptions[@"title"];
+    if (title != nil) {
+      self.destinationTitle = title;
+    }
+    
+    NSNumber* titleColor = destinationPOIOptions[@"titleColor"];
+    if (titleColor != nil) {
+      self.destinationTitleColor = [Map4dFLTConvert toColor:titleColor];
+    }
+    
+    NSNumber* visible = destinationPOIOptions[@"visible"];
+    if (visible != nil) {
+      self.hideDestinationPOI = ![Map4dFLTConvert toBool:visible];
+    }
+  }
 }
 
 @end
