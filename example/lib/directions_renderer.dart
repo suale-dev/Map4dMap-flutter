@@ -21,6 +21,8 @@ class DirectionsRendererBody extends StatefulWidget {
 class DirectionsRendererBodyState extends State<DirectionsRendererBody> {
   MFMapViewController? _controller;
   MFDirectionsRenderer? _directionsRenderer;
+  MFBitmap? _originIcon;
+  MFBitmap? _destinationIcon;
 
   DirectionsRendererBodyState() {
     final MFDirectionsRendererId rendererId = MFDirectionsRendererId('renderer_id_0');
@@ -28,10 +30,18 @@ class DirectionsRendererBodyState extends State<DirectionsRendererBody> {
       rendererId: rendererId,
       routes: _createRoutes(),
       activedIndex: 1,
-      originPOIOptions: MFDirectionsPOIOptions(title: 'Begin'),
-      destinationPOIOptions: MFDirectionsPOIOptions(title: 'End'),
+      originPOIOptions: MFDirectionsPOIOptions(visible: false),
+      destinationPOIOptions: MFDirectionsPOIOptions(visible: false),
       onRouteTap: _onTapped
     );
+  }
+
+  Future<void> _createIconFromAsset(BuildContext context) async {
+    if (_originIcon == null && _destinationIcon == null) {
+      final ImageConfiguration imageConfiguration = createLocalImageConfiguration(context);
+      _originIcon = await MFBitmap.fromAssetImage(imageConfiguration, 'assets/map-marker-1.png');
+      _destinationIcon = await MFBitmap.fromAssetImage(imageConfiguration, 'assets/map-marker-2.png');
+    }
   }
 
   void _onMapCreated(MFMapViewController controller) {
@@ -63,6 +73,18 @@ class DirectionsRendererBodyState extends State<DirectionsRendererBody> {
       inactiveStrokeColor: Colors.brown,
       inactiveOutlineWidth: 4,
       inactiveOutlineColor: Colors.brown.shade900,
+      originPOIOptions: MFDirectionsPOIOptions(
+        position: MFLatLng(16.079774, 108.220534),
+        icon: _originIcon,
+        title: 'Begin',
+        titleColor: Colors.red,
+      ),
+      destinationPOIOptions: MFDirectionsPOIOptions(
+        position: MFLatLng(16.073885, 108.224184),
+        icon: _destinationIcon,
+        title: 'End',
+        titleColor: Colors.green,
+      ),
       onRouteTap: (int routeIndex) => _onTapped(routeIndex),
     );
     
@@ -88,6 +110,7 @@ class DirectionsRendererBodyState extends State<DirectionsRendererBody> {
 
   @override
   Widget build(BuildContext context) {
+    _createIconFromAsset(context);
     Set<MFDirectionsRenderer> renderers = <MFDirectionsRenderer>{
       if (_directionsRenderer != null) _directionsRenderer!
     };
