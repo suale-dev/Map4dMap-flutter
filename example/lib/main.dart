@@ -17,7 +17,7 @@ import 'place_polyline.dart';
 // import 'scrolling_map.dart';
 // import 'snapshot.dart';
 import 'tile_overlay.dart';
-import 'direction_renderer.dart';
+import 'directions_renderer.dart';
 
 final List<Map4dMapExampleAppPage> _allPages = <Map4dMapExampleAppPage>[
   Map4dApp(),

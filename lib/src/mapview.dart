@@ -333,7 +333,7 @@ class _MFMapViewState extends State<MFMapView> {
     if (renderer == null) {
       throw UnknownMapObjectIdError('renderer', rendererId, 'onRouteTap');
     }
-    final MFDirectionCallback? onRouteTap = renderer.onRouteTap;
+    final MFDirectionsCallback? onRouteTap = renderer.onRouteTap;
     if (onRouteTap != null) {
       onRouteTap(routeIndex);
     }

@@ -30,6 +30,8 @@ class MFDirectionsRenderer implements MapsObject {
     this.inactiveStrokeColor = Colors.blueGrey,
     this.inactiveOutlineWidth = 1,
     this.inactiveOutlineColor = const Color(0xFF263238),
+    this.originPOIOptions = const MFDirectionsPOIOptions(),
+    this.destinationPOIOptions = const MFDirectionsPOIOptions(),
     this.onRouteTap,
   });
 
@@ -97,8 +99,14 @@ class MFDirectionsRenderer implements MapsObject {
   /// Color in ARGB format, the same format used by Color. The default value is blue grey shade 900 (0xff263238).
   final Color inactiveOutlineColor;
 
+  /// The options for origin poi placed on the map.
+  final MFDirectionsPOIOptions originPOIOptions;
+
+  /// The options for destination poi placed on the map.
+  final MFDirectionsPOIOptions destinationPOIOptions;
+
   /// Callbacks to receive tap events for direction route placed on this map.
-  final MFDirectionCallback? onRouteTap;
+  final MFDirectionsCallback? onRouteTap;
 
   /// Creates a new [MFDirectionsRenderer] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
@@ -114,8 +122,9 @@ class MFDirectionsRenderer implements MapsObject {
     Color? inactiveStrokeColorParam,
     int? inactiveOutlineWidthParam,
     Color? inactiveOutlineColorParam,
-    //TODO: start, end
-    MFDirectionCallback? onRouteTapParam,
+    MFDirectionsPOIOptions? originPOIOptionsParam,
+    MFDirectionsPOIOptions? destinationPOIOptionsParam,
+    MFDirectionsCallback? onRouteTapParam,
   }) {
     return MFDirectionsRenderer(
       rendererId: rendererId,
@@ -130,7 +139,8 @@ class MFDirectionsRenderer implements MapsObject {
       inactiveStrokeColor: inactiveStrokeColorParam ?? inactiveStrokeColor,
       inactiveOutlineWidth: inactiveOutlineWidthParam ?? inactiveOutlineWidth,
       inactiveOutlineColor: inactiveOutlineColorParam ?? inactiveOutlineColor,
-      //TODO: start, end
+      originPOIOptions: originPOIOptionsParam ?? originPOIOptions,
+      destinationPOIOptions: destinationPOIOptionsParam ?? destinationPOIOptions,
       onRouteTap: onRouteTapParam ?? onRouteTap
     );
   }
@@ -138,7 +148,6 @@ class MFDirectionsRenderer implements MapsObject {
   /// Creates a new [MFDirectionsRenderer] object whose values are the same as this instance.
   MFDirectionsRenderer clone() => copyWith();
 
-  /// Converts this object to something serializable in JSON.
   /// Converts this object to something serializable in JSON.
   Object toJson() {
     final Map<String, Object> json = <String, Object>{};
@@ -160,6 +169,8 @@ class MFDirectionsRenderer implements MapsObject {
     addIfPresent('inactiveStrokeColor', inactiveStrokeColor.value);
     addIfPresent('inactiveOutlineWidth', inactiveOutlineWidth);
     addIfPresent('inactiveOutlineColor', inactiveOutlineColor.value);
+    addIfPresent('originPOIOptions', originPOIOptions.toJson());
+    addIfPresent('destinationPOIOptions', destinationPOIOptions.toJson());
 
     if (routes != null && routes.length > 0) {
       json['routes'] = _routesToJson();

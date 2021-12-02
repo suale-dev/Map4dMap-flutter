@@ -28,6 +28,8 @@ class DirectionsRendererBodyState extends State<DirectionsRendererBody> {
       rendererId: rendererId,
       routes: _createRoutes(),
       activedIndex: 1,
+      originPOIOptions: MFDirectionsPOIOptions(title: 'Begin'),
+      destinationPOIOptions: MFDirectionsPOIOptions(title: 'End'),
       onRouteTap: _onTapped
     );
   }
