@@ -285,7 +285,8 @@ class MFMapViewController {
   /// platform side.
   ///
   /// The returned [Future] completes after listeners have been notified.
-  Future<void> _updateDirectionsRenderers(DirectionsRendererUpdates rendererUpdates) {
+  Future<void> _updateDirectionsRenderers(
+      DirectionsRendererUpdates rendererUpdates) {
     assert(rendererUpdates != null);
     return _channel.invokeMethod<void>(
         'directionsRenderers#update', rendererUpdates.toJson());

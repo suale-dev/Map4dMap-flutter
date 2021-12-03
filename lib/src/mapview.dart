@@ -159,7 +159,8 @@ class _MFMapViewState extends State<MFMapView> {
   Map<MFPolygonId, MFPolygon> _polygons = <MFPolygonId, MFPolygon>{};
   Map<MFCircleId, MFCircle> _circles = <MFCircleId, MFCircle>{};
   Map<MFMarkerId, MFMarker> _markers = <MFMarkerId, MFMarker>{};
-  Map<MFDirectionsRendererId, MFDirectionsRenderer> _directionsRenderers = <MFDirectionsRendererId, MFDirectionsRenderer>{};
+  Map<MFDirectionsRendererId, MFDirectionsRenderer> _directionsRenderers =
+      <MFDirectionsRendererId, MFDirectionsRenderer>{};
 
   @override
   Widget build(BuildContext context) {
@@ -176,7 +177,8 @@ class _MFMapViewState extends State<MFMapView> {
       'polygonsToAdd': serializePolygonSet(widget.polygons),
       'circlesToAdd': serializeCircleSet(widget.circles),
       'markersToAdd': serializeMarkerSet(widget.markers),
-      'directionsRenderersToAdd': serializeDirectionsRendererSet(widget.directionsRenderers),
+      'directionsRenderersToAdd':
+          serializeDirectionsRendererSet(widget.directionsRenderers),
     };
 
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -209,7 +211,8 @@ class _MFMapViewState extends State<MFMapView> {
     _polygons = keyByPolygonId(widget.polygons);
     _circles = keyByCircleId(widget.circles);
     _markers = keyByMarkerId(widget.markers);
-    _directionsRenderers = keyByDirectionsRendererId(widget.directionsRenderers);
+    _directionsRenderers =
+        keyByDirectionsRendererId(widget.directionsRenderers);
   }
 
   @override
@@ -409,9 +412,10 @@ class _MFMapViewState extends State<MFMapView> {
   void _updateDirectionsRenderers() async {
     final MFMapViewController controller = await _controller.future;
     // ignore: unawaited_futures
-    controller._updateDirectionsRenderers(
-        DirectionsRendererUpdates.from(_directionsRenderers.values.toSet(), widget.directionsRenderers));
-    _directionsRenderers = keyByDirectionsRendererId(widget.directionsRenderers);
+    controller._updateDirectionsRenderers(DirectionsRendererUpdates.from(
+        _directionsRenderers.values.toSet(), widget.directionsRenderers));
+    _directionsRenderers =
+        keyByDirectionsRendererId(widget.directionsRenderers);
   }
 }
 

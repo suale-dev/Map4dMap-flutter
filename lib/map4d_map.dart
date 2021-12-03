@@ -54,10 +54,7 @@ export 'src/annotations/annotations.dart'
 export 'src/overlays/overlays.dart' show MFTileOverlay, MFTileOverlayId;
 
 export 'src/directions/directions.dart'
-    show
-        MFDirectionsRenderer,
-        MFDirectionsRendererId,
-        MFDirectionsPOIOptions;
+    show MFDirectionsRenderer, MFDirectionsRendererId, MFDirectionsPOIOptions;
 
 part 'src/mapview.dart';
 part 'src/controller.dart';

@@ -3,7 +3,6 @@ import '../location.dart';
 import '../utils/bitmap.dart';
 
 class MFDirectionsPOIOptions {
-
   const MFDirectionsPOIOptions({
     this.position,
     this.icon,
@@ -38,7 +37,7 @@ class MFDirectionsPOIOptions {
     if (icon != null) {
       json['icon'] = icon!.toJson();
     }
-    
+
     if (title != null) {
       json['title'] = title!;
     }

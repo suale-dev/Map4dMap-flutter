@@ -3,7 +3,8 @@ import 'package:map4d_map/map4d_map.dart';
 import 'page.dart';
 
 class DirectionsRendererPage extends Map4dMapExampleAppPage {
-  DirectionsRendererPage() : super(const Icon(Icons.account_tree), 'Directions Renderer');
+  DirectionsRendererPage()
+      : super(const Icon(Icons.account_tree), 'Directions Renderer');
 
   @override
   Widget build(BuildContext context) {
@@ -25,22 +26,25 @@ class DirectionsRendererBodyState extends State<DirectionsRendererBody> {
   MFBitmap? _destinationIcon;
 
   DirectionsRendererBodyState() {
-    final MFDirectionsRendererId rendererId = MFDirectionsRendererId('renderer_id_0');
+    final MFDirectionsRendererId rendererId =
+        MFDirectionsRendererId('renderer_id_0');
     _directionsRenderer = MFDirectionsRenderer(
-      rendererId: rendererId,
-      routes: _createRoutes(),
-      activedIndex: 1,
-      originPOIOptions: MFDirectionsPOIOptions(visible: false),
-      destinationPOIOptions: MFDirectionsPOIOptions(visible: false),
-      onRouteTap: _onTapped
-    );
+        rendererId: rendererId,
+        routes: _createRoutes(),
+        activedIndex: 1,
+        originPOIOptions: MFDirectionsPOIOptions(visible: false),
+        destinationPOIOptions: MFDirectionsPOIOptions(visible: false),
+        onRouteTap: _onTapped);
   }
 
   Future<void> _createIconFromAsset(BuildContext context) async {
     if (_originIcon == null && _destinationIcon == null) {
-      final ImageConfiguration imageConfiguration = createLocalImageConfiguration(context);
-      _originIcon = await MFBitmap.fromAssetImage(imageConfiguration, 'assets/map-marker-1.png');
-      _destinationIcon = await MFBitmap.fromAssetImage(imageConfiguration, 'assets/map-marker-2.png');
+      final ImageConfiguration imageConfiguration =
+          createLocalImageConfiguration(context);
+      _originIcon = await MFBitmap.fromAssetImage(
+          imageConfiguration, 'assets/map-marker-1.png');
+      _destinationIcon = await MFBitmap.fromAssetImage(
+          imageConfiguration, 'assets/map-marker-2.png');
     }
   }
 
@@ -61,7 +65,8 @@ class DirectionsRendererBodyState extends State<DirectionsRendererBody> {
       return;
     }
 
-    final MFDirectionsRendererId rendererId = MFDirectionsRendererId('renderer_id_1');
+    final MFDirectionsRendererId rendererId =
+        MFDirectionsRendererId('renderer_id_1');
     MFDirectionsRenderer renderer = MFDirectionsRenderer(
       rendererId: rendererId,
       routes: _createRoutes(),
@@ -87,7 +92,7 @@ class DirectionsRendererBodyState extends State<DirectionsRendererBody> {
       ),
       onRouteTap: (int routeIndex) => _onTapped(routeIndex),
     );
-    
+
     setState(() {
       _directionsRenderer = renderer;
     });

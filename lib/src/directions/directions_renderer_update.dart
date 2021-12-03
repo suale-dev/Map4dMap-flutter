@@ -4,9 +4,11 @@ import 'directions.dart';
 ///
 /// Used in [MFMapViewController] when the map is updated.
 // (Do not re-export)
-class DirectionsRendererUpdates extends MapsObjectUpdates<MFDirectionsRenderer> {
+class DirectionsRendererUpdates
+    extends MapsObjectUpdates<MFDirectionsRenderer> {
   /// Computes [DirectionsRendererUpdates] given previous and current [MFDirectionsRenderer]s.
-  DirectionsRendererUpdates.from(Set<MFDirectionsRenderer> previous, Set<MFDirectionsRenderer> current)
+  DirectionsRendererUpdates.from(
+      Set<MFDirectionsRenderer> previous, Set<MFDirectionsRenderer> current)
       : super.from(previous, current, objectName: 'directionsRenderer');
 
   /// Set of DirectionsRenderers to be added in this update.

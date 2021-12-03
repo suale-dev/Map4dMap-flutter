@@ -54,7 +54,6 @@ class MFDirectionsRenderer implements MapsObject {
   /// The index of the main route, default value is 0.
   final int activedIndex;
 
-
   /// The active route stroke width.
   ///
   /// The width is constant and independent of the camera's zoom level.
@@ -62,40 +61,40 @@ class MFDirectionsRenderer implements MapsObject {
   final int activeStrokeWidth;
 
   /// The active route color.
-  /// 
+  ///
   /// Color in ARGB format, the same format used by Color. The default value is blue (0xff2196f3).
   final Color activeStrokeColor;
 
   /// The active route outline stroke width.
-  /// 
+  ///
   /// The width is constant and independent of the camera's zoom level.
   /// The default value is 2.
   final int activeOutlineWidth;
 
   /// The active route outline color.
-  /// 
+  ///
   /// Color in ARGB format, the same format used by Color. The default value is blue shade 900 (0xff0d47a1).
   final Color activeOutlineColor;
 
   /// The inactive route stroke width.
-  /// 
+  ///
   /// The width is constant and independent of the camera's zoom level.
   /// The default value is 8.
   final int inactiveStrokeWidth;
 
   /// The inactive route color.
-  /// 
+  ///
   /// Color in ARGB format, the same format used by Color. The default value is blue grey (0xff607d8b).
   final Color inactiveStrokeColor;
 
   /// The inactive route outline stroke width.
-  /// 
+  ///
   /// The width is constant and independent of the camera's zoom level.
   /// The default value is 1.
   final int inactiveOutlineWidth;
 
   /// The inactive route outline color.
-  /// 
+  ///
   /// Color in ARGB format, the same format used by Color. The default value is blue grey shade 900 (0xff263238).
   final Color inactiveOutlineColor;
 
@@ -127,22 +126,22 @@ class MFDirectionsRenderer implements MapsObject {
     MFDirectionsCallback? onRouteTapParam,
   }) {
     return MFDirectionsRenderer(
-      rendererId: rendererId,
-      routes: routesParam ?? routes,
-      directions: directionsParam ?? directions,
-      activedIndex: activedIndexParam ?? activedIndex,
-      activeStrokeWidth: activeStrokeWidthParam ?? activeStrokeWidth,
-      activeStrokeColor: activeStrokeColorParam ?? activeStrokeColor,
-      activeOutlineWidth: activeOutlineWidthParam ?? activeOutlineWidth,
-      activeOutlineColor: activeOutlineColorParam ?? activeOutlineColor,
-      inactiveStrokeWidth: inactiveStrokeWidthParam ?? inactiveStrokeWidth,
-      inactiveStrokeColor: inactiveStrokeColorParam ?? inactiveStrokeColor,
-      inactiveOutlineWidth: inactiveOutlineWidthParam ?? inactiveOutlineWidth,
-      inactiveOutlineColor: inactiveOutlineColorParam ?? inactiveOutlineColor,
-      originPOIOptions: originPOIOptionsParam ?? originPOIOptions,
-      destinationPOIOptions: destinationPOIOptionsParam ?? destinationPOIOptions,
-      onRouteTap: onRouteTapParam ?? onRouteTap
-    );
+        rendererId: rendererId,
+        routes: routesParam ?? routes,
+        directions: directionsParam ?? directions,
+        activedIndex: activedIndexParam ?? activedIndex,
+        activeStrokeWidth: activeStrokeWidthParam ?? activeStrokeWidth,
+        activeStrokeColor: activeStrokeColorParam ?? activeStrokeColor,
+        activeOutlineWidth: activeOutlineWidthParam ?? activeOutlineWidth,
+        activeOutlineColor: activeOutlineColorParam ?? activeOutlineColor,
+        inactiveStrokeWidth: inactiveStrokeWidthParam ?? inactiveStrokeWidth,
+        inactiveStrokeColor: inactiveStrokeColorParam ?? inactiveStrokeColor,
+        inactiveOutlineWidth: inactiveOutlineWidthParam ?? inactiveOutlineWidth,
+        inactiveOutlineColor: inactiveOutlineColorParam ?? inactiveOutlineColor,
+        originPOIOptions: originPOIOptionsParam ?? originPOIOptions,
+        destinationPOIOptions:
+            destinationPOIOptionsParam ?? destinationPOIOptions,
+        onRouteTap: onRouteTapParam ?? onRouteTap);
   }
 
   /// Creates a new [MFDirectionsRenderer] object whose values are the same as this instance.
