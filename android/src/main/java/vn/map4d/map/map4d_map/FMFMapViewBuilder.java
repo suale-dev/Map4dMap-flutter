@@ -9,7 +9,7 @@ import io.flutter.plugin.common.BinaryMessenger;
 import vn.map4d.map.camera.MFCameraPosition;
 import vn.map4d.map.core.MFMapType;
 
-public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
+class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   private Float minZoomPreference = 2.f;
   private Float maxZoomPreference = 22.f;
   private boolean trackCameraPosition = false;
@@ -29,6 +29,7 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   private Object initialMarkers;
   private Object initialPOIs;
   private Object initialBuildings;
+  private Object initialDirectionsRenderers;
   private List<Map<String, ?>> initialTileOverlays;
 
   FMFMapViewController build(
@@ -54,6 +55,7 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
     controller.setInitialPOIs(initialPOIs);
     controller.setInitialBuildings(initialBuildings);
     controller.setInitialTileOverlays(initialTileOverlays);
+    controller.setInitialDirectionsRenderers(initialDirectionsRenderers);
     controller.setTrackCameraPosition(trackCameraPosition);
     return controller;
   }
@@ -151,5 +153,10 @@ public class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   @Override
   public void setInitialTileOverlays(List<Map<String, ?>> initialTileOverlays) {
     this.initialTileOverlays = initialTileOverlays;
+  }
+
+  @Override
+  public void setInitialDirectionsRenderers(Object initialDirectionsRenderers) {
+    this.initialDirectionsRenderers = initialDirectionsRenderers;
   }
 }

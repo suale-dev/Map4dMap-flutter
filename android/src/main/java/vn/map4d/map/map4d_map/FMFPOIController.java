@@ -6,7 +6,7 @@ import vn.map4d.map.annotations.MFBitmapDescriptor;
 import vn.map4d.map.annotations.MFPOI;
 import vn.map4d.types.MFLocationCoordinate;
 
-public class FMFPOIController implements FMFPOIOptionsSink {
+class FMFPOIController implements FMFPOIOptionsSink {
 
   private final MFPOI poi;
   private final long mfPOIId;

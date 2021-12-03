@@ -9,7 +9,7 @@ import vn.map4d.map.annotations.MFCircle;
 import vn.map4d.map.annotations.MFCircleOptions;
 import vn.map4d.map.core.Map4D;
 
-public class FMFCirclesController {
+class FMFCirclesController {
 
   private final Map<String, FMFCircleController> circleIdToController;
   private final Map<Long, String> mfCircleIdToDartCircleId;

@@ -14,7 +14,7 @@ import vn.map4d.map.annotations.MFMarkerOptions;
 import vn.map4d.map.core.Map4D;
 import vn.map4d.types.MFLocationCoordinate;
 
-public class FMFMarkersController {
+class FMFMarkersController {
   private final Map<String, FMFMarkerController> markerIdToController;
   private final Map<Long, String> mfMarkerIdToDartMarkerId;
   private final MethodChannel methodChannel;

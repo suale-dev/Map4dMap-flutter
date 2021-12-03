@@ -9,7 +9,7 @@ import vn.map4d.map.annotations.MFBuilding;
 import vn.map4d.map.annotations.MFBuildingOptions;
 import vn.map4d.map.core.Map4D;
 
-public class FMFBuildingsController {
+class FMFBuildingsController {
   private final Map<String, FMFBuildingController> buildingIdToController;
   private final Map<Long, String> mfBuildingIdToDartBuildingId;
   private final MethodChannel methodChannel;

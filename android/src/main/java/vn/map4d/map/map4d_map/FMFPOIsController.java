@@ -13,7 +13,7 @@ import vn.map4d.map.annotations.MFPOI;
 import vn.map4d.map.annotations.MFPOIOptions;
 import vn.map4d.map.core.Map4D;
 
-public class FMFPOIsController {
+class FMFPOIsController {
   private final Map<String, FMFPOIController> poiIdToController;
   private final Map<Long, String> mfPOIIdToDartPOIId;
   private final MethodChannel methodChannel;

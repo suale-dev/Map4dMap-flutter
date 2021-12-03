@@ -7,7 +7,7 @@ import vn.map4d.map.core.MFPolylineStyle;
 import vn.map4d.types.MFLocationCoordinate;
 
 /** Controller of a single Polyline on the map. */
-public class FMFPolylineController implements FMFPolylineOptionsSink {
+class FMFPolylineController implements FMFPolylineOptionsSink {
 
   private final MFPolyline polyline;
   private final long mfPolylineId;

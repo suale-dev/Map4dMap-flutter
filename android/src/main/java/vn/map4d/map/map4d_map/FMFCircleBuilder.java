@@ -3,7 +3,7 @@ package vn.map4d.map.map4d_map;
 import vn.map4d.map.annotations.MFCircleOptions;
 import vn.map4d.types.MFLocationCoordinate;
 
-public class FMFCircleBuilder implements FMFCircleOptionsSink {
+class FMFCircleBuilder implements FMFCircleOptionsSink {
 
   private final MFCircleOptions circleOptions;
   private final float density;

@@ -6,7 +6,7 @@ import vn.map4d.map.annotations.MFBuilding;
 import vn.map4d.types.MFLocationCoordinate;
 
 /** Controller of a single Polyline on the map. */
-public class FMFBuildingController implements FMFBuildingOptionsSink {
+class FMFBuildingController implements FMFBuildingOptionsSink {
 
   private final MFBuilding building;
   private final long mfBuildingId;

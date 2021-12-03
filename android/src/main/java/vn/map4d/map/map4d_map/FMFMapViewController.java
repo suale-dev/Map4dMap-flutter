@@ -22,6 +22,7 @@ import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.platform.PlatformView;
 import vn.map4d.map.annotations.MFBuilding;
 import vn.map4d.map.annotations.MFCircle;
+import vn.map4d.map.annotations.MFDirectionsRenderer;
 import vn.map4d.map.annotations.MFMarker;
 import vn.map4d.map.annotations.MFPOI;
 import vn.map4d.map.annotations.MFPolygon;
@@ -36,7 +37,7 @@ import vn.map4d.map.core.Map4D;
 import vn.map4d.map.core.OnMapReadyCallback;
 import vn.map4d.types.MFLocationCoordinate;
 
-public class FMFMapViewController implements
+final class FMFMapViewController implements
   PlatformView,
   OnMapReadyCallback,
   FMFMapViewOptionsSink,
@@ -75,6 +76,7 @@ public class FMFMapViewController implements
   private final FMFPOIsController poisController;
   private final FMFBuildingsController buildingsController;
   private final FMFTileOverlaysController tileOverlaysController;
+  private final FMFDirectionsRenderersController directionsRenderersController;
 
   private List<Object> initialCircles;
   private List<Object> initialPolylines;
@@ -82,6 +84,7 @@ public class FMFMapViewController implements
   private List<Object> initialMarkers;
   private List<Object> initialPOIs;
   private List<Object> initialBuildings;
+  private List<Object> initialDirectionsRenderers;
   private List<Map<String, ?>> initialTileOverlays;
 
   FMFMapViewController(@NonNull Context context, int id, BinaryMessenger binaryMessenger, @Nullable MFCameraPosition initialCameraPosition) {
@@ -99,6 +102,7 @@ public class FMFMapViewController implements
     this.poisController = new FMFPOIsController(context, methodChannel, density);
     this.buildingsController = new FMFBuildingsController(methodChannel, density);
     this.tileOverlaysController = new FMFTileOverlaysController(methodChannel);
+    this.directionsRenderersController = new FMFDirectionsRenderersController(methodChannel, density);
   }
 
   void init() {
@@ -133,6 +137,7 @@ public class FMFMapViewController implements
     poisController.setMap(map4D);
     buildingsController.setMap(map4D);
     tileOverlaysController.setMap(map4D);
+    directionsRenderersController.setMap(map4D);
     updateInitialCircles();
     updateInitialPolylines();
     updateInitialPolygons();
@@ -140,6 +145,7 @@ public class FMFMapViewController implements
     updateInitialPOIs();
     updateInitialBuildings();
     updateInitialTileOverlays();
+    updateInitialDirectionsRenderers();
 
     this.map4D.setOnMapModeChange(new Map4D.OnMapModeChangeListener() {
       @Override
@@ -189,6 +195,7 @@ public class FMFMapViewController implements
     map4D.setOnUserBuildingClickListener(listener);
     map4D.setOnMapClickListener(listener);
     map4D.setOnPlaceClickListener(listener);
+    map4D.setOnDirectionsClickListener(listener);
   }
 
   @Override
@@ -389,6 +396,16 @@ public class FMFMapViewController implements
       case "tileOverlays#clearTileCache": {
         String tileOverlayId = call.argument("tileOverlayId");
         tileOverlaysController.clearTileCache(tileOverlayId);
+        result.success(null);
+        break;
+      }
+      case "directionsRenderers#update": {
+        List<Object> directionsRenderersToAdd = call.argument("directionsRenderersToAdd");
+        directionsRenderersController.addDirectionsRenderers(directionsRenderersToAdd);
+        List<Object> directionsRenderersToChange = call.argument("directionsRenderersToChange");
+        directionsRenderersController.changeDirectionsRenderers(directionsRenderersToChange);
+        List<Object> directionsRendererIdsToRemove = call.argument("directionsRendererIdsToRemove");
+        directionsRenderersController.removeDirectionsRenderers(directionsRendererIdsToRemove);
         result.success(null);
         break;
       }
@@ -635,6 +652,19 @@ public class FMFMapViewController implements
   }
 
   @Override
+  public void setInitialDirectionsRenderers(Object initialDirectionsRenderers) {
+    ArrayList<?> directionsRenderers = (ArrayList<?>) initialDirectionsRenderers;
+    this.initialDirectionsRenderers = directionsRenderers != null ? new ArrayList<>(directionsRenderers) : null;
+    if (map4D != null) {
+      updateInitialDirectionsRenderers();
+    }
+  }
+
+  private void updateInitialDirectionsRenderers() {
+    directionsRenderersController.addDirectionsRenderers(initialDirectionsRenderers);
+  }
+
+  @Override
   public void setInitialTileOverlays(List<Map<String, ?>> initialTileOverlays) {
     this.initialTileOverlays = initialTileOverlays;
     if (map4D != null) {
@@ -721,6 +751,11 @@ public class FMFMapViewController implements
   @Override
   public void onUserBuildingClick(MFBuilding mfBuilding) {
     buildingsController.onBuildingTap(mfBuilding.getId());
+  }
+
+  @Override
+  public void onDirectionsClick(MFDirectionsRenderer mfDirectionsRenderer, int index) {
+    directionsRenderersController.onDirectionsRendererTap(mfDirectionsRenderer.getId(), index);
   }
 
   @Override

@@ -5,7 +5,7 @@ import java.util.List;
 import vn.map4d.map.annotations.MFBuildingOptions;
 import vn.map4d.types.MFLocationCoordinate;
 
-public class FMFBuildingBuilder implements FMFBuildingOptionsSink {
+class FMFBuildingBuilder implements FMFBuildingOptionsSink {
 
   private final MFBuildingOptions buildingOptions;
   private final float density;

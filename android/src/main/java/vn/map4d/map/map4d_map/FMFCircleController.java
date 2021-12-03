@@ -4,7 +4,7 @@ import vn.map4d.map.annotations.MFCircle;
 import vn.map4d.types.MFLocationCoordinate;
 
 /** Controller of a single Circle on the map. */
-public class FMFCircleController implements FMFCircleOptionsSink {
+class FMFCircleController implements FMFCircleOptionsSink {
 
   private final MFCircle circle;
   private final long mfCircleId;

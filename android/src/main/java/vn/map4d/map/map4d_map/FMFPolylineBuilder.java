@@ -6,7 +6,7 @@ import vn.map4d.map.annotations.MFPolylineOptions;
 import vn.map4d.map.core.MFPolylineStyle;
 import vn.map4d.types.MFLocationCoordinate;
 
-public class FMFPolylineBuilder implements FMFPolylineOptionsSink {
+class FMFPolylineBuilder implements FMFPolylineOptionsSink {
 
   private final MFPolylineOptions polylineOptions;
   private boolean consumeTapEvents;

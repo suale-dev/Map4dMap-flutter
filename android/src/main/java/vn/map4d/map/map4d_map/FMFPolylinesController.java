@@ -9,7 +9,7 @@ import vn.map4d.map.annotations.MFPolyline;
 import vn.map4d.map.annotations.MFPolylineOptions;
 import vn.map4d.map.core.Map4D;
 
-public class FMFPolylinesController {
+class FMFPolylinesController {
 
   private final Map<String, FMFPolylineController> polylineIdToController;
   private final Map<Long, String> mfPolylineIdToDartPolylineId;

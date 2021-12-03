@@ -1,12 +1,8 @@
 package vn.map4d.map.map4d_map;
 
-import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,7 +21,7 @@ import vn.map4d.map.core.MFPolylineStyle;
 import vn.map4d.types.MFLocationCoordinate;
 
 /** Conversions between JSON-like values and Map4D data types. **/
-public class Convert {
+class Convert {
 
   // TODO : FlutterMain has been deprecated and should be replaced with FlutterLoader
   //  when it's available in Stable channel: https://github.com/flutter/flutter/issues/70923.
@@ -311,6 +307,113 @@ public class Convert {
     final Map<String, Object> data = new HashMap<>(1);
     data.put("buildingId", buildingId);
     return data;
+  }
+
+  static Object directionsRendererIdAndActiveIndexToJson(String directionsRendererId, int index) {
+    if (directionsRendererId == null) {
+      return null;
+    }
+    final Map<String, Object> data = new HashMap<>(2);
+    data.put("rendererId", directionsRendererId);
+    data.put("routeIndex", index);
+    return data;
+  }
+
+  static String interpretDirectionsRendererOptions(Object o, FMFDirectionsRendererOptionsSink sink) {
+    final Map<?, ?> data = toMap(o);
+    final Object originPOIOptions = data.get("originPOIOptions");
+    if (originPOIOptions != null) {
+      final Map<?, ?> originPOIData = toMap(originPOIOptions);
+      final Object position = originPOIData.get("position");
+      if (position != null) {
+        sink.setStartLocation(toCoordinate(position));
+      }
+      final Object icon = originPOIData.get("icon");
+      if (icon != null) {
+        sink.setStartIcon(toBitmapDescriptor(icon));
+      }
+      final Object title = originPOIData.get("title");
+      if (title != null) {
+        sink.setStartLabel(toString(title));
+      }
+      final Object titleColor = originPOIData.get("titleColor");
+      if (titleColor != null) {
+        sink.setTitleColor(toInt(titleColor));
+      }
+      final Object visible = originPOIData.get("visible");
+      if (visible != null) {
+        sink.setOriginPOIVisible(toBoolean(visible));
+      }
+    }
+    final Object destinationPOIOptions = data.get("destinationPOIOptions");
+    if (destinationPOIOptions != null) {
+      final Map<?, ?> destinationPOIData = toMap(destinationPOIOptions);
+      final Object position = destinationPOIData.get("position");
+      if (position != null) {
+        sink.setEndLocation(toCoordinate(position));
+      }
+      final Object icon = destinationPOIData.get("icon");
+      if (icon != null) {
+        sink.setEndIcon(toBitmapDescriptor(icon));
+      }
+      final Object title = destinationPOIData.get("title");
+      if (title != null) {
+        sink.setEndLabel(toString(title));
+      }
+      final Object titleColor = destinationPOIData.get("titleColor");
+      if (titleColor != null) {
+        // Update late when update Map SDK
+      }
+      final Object visible = destinationPOIData.get("visible");
+      if (visible != null) {
+        sink.setDestinationPOIVisible(toBoolean(visible));
+      }
+    }
+    final Object consumeTapEvents = data.get("consumeTapEvents");
+    if (consumeTapEvents != null) {
+      sink.setConsumeTapEvents(toBoolean(consumeTapEvents));
+    }
+    final Object directions = data.get("directions");
+    if (directions != null) {
+      final String jsonData = toString(directions);
+      if (!jsonData.isEmpty()) {
+        sink.setJsonData(jsonData);
+      }
+    }
+    final Object activedIndex = data.get("activedIndex");
+    if (activedIndex != null) {
+      sink.setActivedIndex(toInt(activedIndex));
+    }
+    final Object activeStrokeColor = data.get("activeStrokeColor");
+    if (activeStrokeColor != null) {
+      sink.setActiveStrokeColor(toInt(activeStrokeColor));
+    }
+    final Object activeOutlineColor = data.get("activeOutlineColor");
+    if (activeOutlineColor != null) {
+      sink.setActiveOutlineColor(toInt(activeOutlineColor));
+    }
+    final Object inactiveStrokeColor = data.get("inactiveStrokeColor");
+    if (inactiveStrokeColor != null) {
+      sink.setInactiveStrokeColor(toInt(inactiveStrokeColor));
+    }
+    final Object inactiveOutlineColor = data.get("inactiveOutlineColor");
+    if (inactiveOutlineColor != null) {
+      sink.setInactiveOutlineColor(toInt(inactiveOutlineColor));
+    }
+    final Object width = data.get("activeStrokeWidth");
+    if (width != null) {
+      sink.setWidth(toInt(width));
+    }
+    final Object paths = data.get("routes");
+    if (paths != null) {
+      sink.setPaths(toHoles(paths));
+    }
+    final String directionsRendererId = (String) data.get("rendererId");
+    if (directionsRendererId == null) {
+      throw new IllegalArgumentException("directionsRendererId was null");
+    } else {
+      return directionsRendererId;
+    }
   }
 
   static String interpretPolylineOptions(Object o, FMFPolylineOptionsSink sink) {

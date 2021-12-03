@@ -43,4 +43,6 @@ interface FMFMapViewOptionsSink {
   void setInitialBuildings(Object initialBuildings);
 
   void setInitialTileOverlays(List<Map<String, ?>> initialTileOverlays);
+
+  void setInitialDirectionsRenderers(Object initialDirectionsRenderers);
 }

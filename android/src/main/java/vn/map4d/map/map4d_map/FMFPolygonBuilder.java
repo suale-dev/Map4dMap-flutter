@@ -1,6 +1,5 @@
 package vn.map4d.map.map4d_map;
 
-import java.util.Arrays;
 import java.util.List;
 
 import vn.map4d.map.annotations.MFPolygonOptions;
