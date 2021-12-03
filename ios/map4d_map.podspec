@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'map4d_map'
-  s.version          = '2.0.1'
+  s.version          = '2.1.0'
   s.summary          = 'Map4dMap SDK for Flutter'
   s.description      = <<-DESC
   A Flutter plugin that provides a MFMapView widget.
@@ -12,7 +12,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/**/*'
   s.public_header_files = 'Classes/**/*.h'
   s.dependency 'Flutter'
-  s.dependency 'Map4dMap', '~> 2.0.0'
+  s.dependency 'Map4dMap', '~> 2.0.5'
   s.static_framework = true
   s.platform = :ios, '9.0'
 
