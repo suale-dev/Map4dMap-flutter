@@ -6,7 +6,7 @@ import java.util.Map;
 import vn.map4d.map.core.MFMapType;
 
 /** Receiver of Map4D configuration options. */
-interface FMFMapViewOptionsSink {
+public interface FMFMapViewOptionsSink {
 
   void setMapType(MFMapType mapType);
 

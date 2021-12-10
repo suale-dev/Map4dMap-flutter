@@ -2,6 +2,7 @@ package vn.map4d.map.map4d_map;
 
 import android.content.Context;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,14 @@ import vn.map4d.map.camera.MFCameraPosition;
 public class FMFMapViewFactory extends PlatformViewFactory {
 
   private final BinaryMessenger binaryMessenger;
+
+  public static Map<Integer, FMFMapViewController> mapViewControllerMap;
+
+  static {
+    if (mapViewControllerMap == null) {
+      mapViewControllerMap = new HashMap<>();
+    }
+  }
 
   public FMFMapViewFactory(BinaryMessenger binaryMessenger) {
     super(StandardMessageCodec.INSTANCE);
@@ -55,6 +64,9 @@ public class FMFMapViewFactory extends PlatformViewFactory {
       builder.setInitialDirectionsRenderers(creationParams.get("directionsRenderersToAdd"));
     }
 
-    return builder.build(viewId, context, binaryMessenger);
+    FMFMapViewController controller = builder.build(viewId, context, binaryMessenger);
+    mapViewControllerMap.put(viewId, controller);
+
+    return controller;
   }
 }

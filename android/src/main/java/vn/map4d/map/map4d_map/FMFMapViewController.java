@@ -37,7 +37,7 @@ import vn.map4d.map.core.Map4D;
 import vn.map4d.map.core.OnMapReadyCallback;
 import vn.map4d.types.MFLocationCoordinate;
 
-final class FMFMapViewController implements
+public final class FMFMapViewController implements
   PlatformView,
   OnMapReadyCallback,
   FMFMapViewOptionsSink,
@@ -114,6 +114,14 @@ final class FMFMapViewController implements
     return mapView;
   }
 
+  public Map4D getMap() {
+    return map4D;
+  }
+
+  public Context getContext() {
+    return context;
+  }
+
   @Override
   public void dispose() {
     if (disposed) {
@@ -155,6 +163,8 @@ final class FMFMapViewController implements
         methodChannel.invokeMethod("map#onModeChange", arguments);
       }
     });
+
+    methodChannel.invokeMethod("map#onMapReady", Collections.singletonMap("map", id));
   }
 
   private void initialMapSettings() {

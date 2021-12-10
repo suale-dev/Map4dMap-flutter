@@ -23,6 +23,14 @@ class MFMapViewController {
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
+      case 'map#onMapReady':
+        if (_mapState.widget.onMapCreated != null) {
+          final MFMapCreatedCallback? onMapCreated = _mapState.widget.onMapCreated;
+          if (onMapCreated != null) {
+            onMapCreated(this);
+          }
+        }
+        break;
       case 'camera#onMoveStarted':
         if (_mapState.widget.onCameraMoveStarted != null) {
           _mapState.widget.onCameraMoveStarted!();

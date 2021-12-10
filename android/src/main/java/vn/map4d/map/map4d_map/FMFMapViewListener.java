@@ -2,7 +2,7 @@ package vn.map4d.map.map4d_map;
 
 import vn.map4d.map.core.Map4D;
 
-interface FMFMapViewListener
+public interface FMFMapViewListener
   extends Map4D.OnCameraIdleListener,
     Map4D.OnCameraMoveListener,
     Map4D.OnCameraMoveStartedListener,

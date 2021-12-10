@@ -106,6 +106,14 @@ class Convert {
     return (Map<?, ?>) o;
   }
 
+  private static float toFractionalPixels(Object o, float density) {
+    return toFloat(o) * density;
+  }
+
+  private static int toPixels(Object o, float density) {
+    return (int) toFractionalPixels(o, density);
+  }
+
   private static Map<String, Object> toObjectMap(Object o) {
     Map<String, Object> hashMap = new HashMap<>();
     Map<?, ?> map = (Map<?, ?>) o;
@@ -218,8 +226,21 @@ class Convert {
   static MFCameraUpdate toCameraUpdate(Object o, float density) {
     final List<?> data = toList(o);
     switch (toString(data.get(0))) {
+      case "newCameraPosition":
+        return MFCameraUpdateFactory.newCameraPosition(toCameraPosition(data.get(1)));
+      case "newLatLngBounds":
+        return MFCameraUpdateFactory.newCoordinateBounds(
+          toCoordinateBounds(data.get(1)), toPixels(data.get(2), density));
+      case "newLatLngZoom":
+        return MFCameraUpdateFactory.newCoordinateZoom(toCoordinate(data.get(1)), toFloat(data.get(2)));
       case "newLatLng":
         return MFCameraUpdateFactory.newCoordinate(toCoordinate(data.get(1)));
+      case "zoomIn":
+        return MFCameraUpdateFactory.zoomIn();
+      case "zoomOut":
+        return MFCameraUpdateFactory.zoomOut();
+      case "zoomTo":
+        return MFCameraUpdateFactory.zoomTo(toFloat(data.get(1)));
       default:
         throw new IllegalArgumentException("Cannot interpret " + o + " as CameraUpdate");
     }
