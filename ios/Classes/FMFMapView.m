@@ -16,18 +16,37 @@
 #define kMFMinZoomLevel 2
 #define kMFMaxZoomLevel 22
 
+#pragma mark - FMFMapView Extension
+
+@interface FMFMapView()
+@property(nonatomic, strong) Map4dOverlayManager* overlayManager;
+@property(nonatomic, strong) Map4dAnnotationManager* annotationManager;
+@property(nonatomic, strong) Map4dDirectionsRendererManager* directionsRendererManager;
+@property(nonatomic, assign) int64_t viewId;
+@end
+
 #pragma mark - FMFMapViewFactory
 
 @implementation FMFMapViewFactory {
   NSObject<FlutterPluginRegistrar>* _registrar;
+  NSMutableArray<FMFMapView*>* _flutterMapViews;
 }
 
 - (instancetype)initWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-  self = [super init];
-  if (self) {
+  if (self = [super init]) {
     _registrar = registrar;
+    _flutterMapViews = [NSMutableArray arrayWithCapacity:1];
   }
   return self;
+}
+
+- (id<FlutterPlatformView>)getFlutterMapViewById:(int64_t)viewId {
+  for (FMFMapView* view in _flutterMapViews) {
+    if (view.viewId == viewId) {
+      return view;
+    }
+  }
+  return  nil;
 }
 
 - (NSObject<FlutterMessageCodec>*)createArgsCodec {
@@ -37,10 +56,12 @@
 - (NSObject<FlutterPlatformView>*)createWithFrame:(CGRect)frame
                                    viewIdentifier:(int64_t)viewId
                                         arguments:(id _Nullable)args {
-  return [[FMFMapView alloc] initWithFrame:frame
-                            viewIdentifier:viewId
-                                 arguments:args
-                                 registrar:_registrar];
+  FMFMapView* view = [[FMFMapView alloc] initWithFrame:frame
+                                        viewIdentifier:viewId
+                                             arguments:args
+                                             registrar:_registrar];
+  [_flutterMapViews addObject:view];
+  return view;
 }
 @end
 
@@ -62,15 +83,8 @@
 
 #pragma mark - FMFMapView
 
-@interface FMFMapView()
-@property(nonatomic, strong) Map4dOverlayManager* overlayManager;
-@property(nonatomic, strong) Map4dAnnotationManager* annotationManager;
-@property(nonatomic, strong) Map4dDirectionsRendererManager* directionsRendererManager;
-@end
-
 @implementation FMFMapView {
   MFMapView* _mapView;
-  int64_t _viewId;
   FlutterMethodChannel* _channel;
   NSObject<FlutterPluginRegistrar>* _registrar;
   FMFEventTracking* _track;
@@ -567,10 +581,12 @@
 #pragma mark - MFMapViewDelegate
 
 - (BOOL)mapview: (MFMapView*) mapView didTapMarker: (MFMarker*) marker {
-  NSArray* userData = (NSArray*) marker.userData;
-  NSString* markerId = userData[0];
-  if ([_annotationManager hasMarker:markerId]) {
-    [_channel invokeMethod:@"marker#onTap" arguments:@{@"markerId" : markerId}];
+  if ([marker.userData isKindOfClass:[NSArray class]]) {
+    NSArray* userData = (NSArray*) marker.userData;
+    NSString* markerId = userData[0];
+    if ([_annotationManager hasMarker:markerId]) {
+      [_channel invokeMethod:@"marker#onTap" arguments:@{@"markerId" : markerId}];
+    }
   }
   return false;
 }
@@ -578,46 +594,56 @@
 //- (void)mapview: (MFMapView*)  mapView didBeginDraggingMarker: (MFMarker*) marker;
 
 - (void)mapview: (MFMapView*) mapView didEndDraggingMarker: (MFMarker*) marker {
-  NSArray* userData = (NSArray*) marker.userData;
-  NSString* markerId = userData[0];
-  if ([_annotationManager hasMarker:markerId]) {
-    NSArray* position = [Map4dFLTConvert locationToJson:marker.position];
-    [_channel invokeMethod:@"marker#onDragEnd"
-                 arguments:@{@"markerId": markerId, @"position": position}];
+  if ([marker.userData isKindOfClass:[NSArray class]]) {
+    NSArray* userData = (NSArray*) marker.userData;
+    NSString* markerId = userData[0];
+    if ([_annotationManager hasMarker:markerId]) {
+      NSArray* position = [Map4dFLTConvert locationToJson:marker.position];
+      [_channel invokeMethod:@"marker#onDragEnd"
+                   arguments:@{@"markerId": markerId, @"position": position}];
+    }
   }
 }
 
 //- (void)mapview: (MFMapView*)  mapView didDragMarker: (MFMarker*) marker;
 
 - (void)mapview: (MFMapView*) mapView didTapInfoWindowOfMarker: (MFMarker*) marker{
-  NSArray* userData = (NSArray*) marker.userData;
-  NSString* markerId = userData[0];
-  if ([_annotationManager hasMarker:markerId]) {
-    [_channel invokeMethod:@"infoWindow#onTap" arguments:@{@"markerId" : markerId}];
+  if ([marker.userData isKindOfClass:[NSArray class]]) {
+    NSArray* userData = (NSArray*) marker.userData;
+    NSString* markerId = userData[0];
+    if ([_annotationManager hasMarker:markerId]) {
+      [_channel invokeMethod:@"infoWindow#onTap" arguments:@{@"markerId" : markerId}];
+    }
   }
 }
 
 - (void)mapview: (MFMapView*)  mapView didTapPolyline: (MFPolyline*) polyline {
-  NSArray* userData = (NSArray*) polyline.userData;
-  NSString* polylineId = userData[0];
-  if ([_annotationManager hasPolyline:polylineId]) {
-    [_channel invokeMethod:@"polyline#onTap" arguments:@{@"polylineId" : polylineId}];
+  if ([polyline.userData isKindOfClass:[NSArray class]]) {
+    NSArray* userData = (NSArray*) polyline.userData;
+    NSString* polylineId = userData[0];
+    if ([_annotationManager hasPolyline:polylineId]) {
+      [_channel invokeMethod:@"polyline#onTap" arguments:@{@"polylineId" : polylineId}];
+    }
   }
 }
 
 - (void)mapview: (MFMapView*)  mapView didTapPolygon: (MFPolygon*) polygon {
-  NSArray* userData = (NSArray*) polygon.userData;
-  NSString* polygonId = userData[0];
-  if ([_annotationManager hasPolygon:polygonId]) {
-    [_channel invokeMethod:@"polygon#onTap" arguments:@{@"polygonId" : polygonId}];
+  if ([polygon.userData isKindOfClass:[NSArray class]]) {
+    NSArray* userData = (NSArray*) polygon.userData;
+    NSString* polygonId = userData[0];
+    if ([_annotationManager hasPolygon:polygonId]) {
+      [_channel invokeMethod:@"polygon#onTap" arguments:@{@"polygonId" : polygonId}];
+    }
   }
 }
 
 - (void)mapview: (MFMapView*)  mapView didTapCircle: (MFCircle*) circle {
-  NSArray* userData = (NSArray*) circle.userData;
-  NSString* circleId = userData[0];
-  if ([_annotationManager hasCircle:circleId]) {
-    [_channel invokeMethod:@"circle#onTap" arguments:@{@"circleId" : circleId}];
+  if ([circle.userData isKindOfClass:[NSArray class]]) {
+    NSArray* userData = (NSArray*) circle.userData;
+    NSString* circleId = userData[0];
+    if ([_annotationManager hasCircle:circleId]) {
+      [_channel invokeMethod:@"circle#onTap" arguments:@{@"circleId" : circleId}];
+    }
   }
 }
 
@@ -649,10 +675,12 @@
 
 ///* Called after a building annotation has been tapped */
 - (void)mapView: (MFMapView*)  mapView didTapBuilding: (MFBuilding*) building {
-  NSArray* userData = (NSArray*) building.userData;
-  NSString* buildingId = userData[0];
-  if ([_annotationManager hasBuilding:buildingId]) {
-    [_channel invokeMethod:@"building#onTap" arguments:@{@"buildingId" : buildingId}];
+  if ([building.userData isKindOfClass:[NSArray class]]) {
+    NSArray* userData = (NSArray*) building.userData;
+    NSString* buildingId = userData[0];
+    if ([_annotationManager hasBuilding:buildingId]) {
+      [_channel invokeMethod:@"building#onTap" arguments:@{@"buildingId" : buildingId}];
+    }
   }
 }
 
@@ -667,10 +695,12 @@
 }
 
 - (void)mapView: (MFMapView*)  mapView didTapPOI: (MFPOI*) poi {
-  NSArray* userData = (NSArray*) poi.userData;
-  NSString* poiId = userData[0];
-  if ([_annotationManager hasPOI:poiId]) {
-    [_channel invokeMethod:@"poi#onTap" arguments:@{@"poiId" : poiId}];
+  if ([poi.userData isKindOfClass:[NSArray class]]) {
+    NSArray* userData = (NSArray*) poi.userData;
+    NSString* poiId = userData[0];
+    if ([_annotationManager hasPOI:poiId]) {
+      [_channel invokeMethod:@"poi#onTap" arguments:@{@"poiId" : poiId}];
+    }
   }
 }
 

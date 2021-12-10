@@ -45,6 +45,7 @@ NS_ASSUME_NONNULL_BEGIN
 // Allows the engine to create new Map4d map instances.
 @interface FMFMapViewFactory : NSObject <FlutterPlatformViewFactory>
 - (instancetype)initWithRegistrar:(NSObject<FlutterPluginRegistrar> *)registrar;
+- (id<FlutterPlatformView> _Nullable)getFlutterMapViewById:(int64_t)viewId;
 @end
 
 NS_ASSUME_NONNULL_END
