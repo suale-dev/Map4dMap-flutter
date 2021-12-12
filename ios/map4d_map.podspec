@@ -14,7 +14,7 @@ Pod::Spec.new do |s|
   s.dependency 'Flutter'
   s.dependency 'Map4dMap', '~> 2.0.6'
   s.static_framework = true
-  s.platform = :ios, '9.0'
+  s.platform = :ios, '9.3'
 
   # Flutter.framework does not contain a i386 slice.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }

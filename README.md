@@ -33,7 +33,7 @@ android {
 
 ### iOS
 
-Required iOS 9.0 or higher
+Required iOS 9.3 or higher
 
 ## Setup API key
 
