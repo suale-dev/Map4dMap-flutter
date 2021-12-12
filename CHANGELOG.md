@@ -1,3 +1,7 @@
+## 2.1.1
+
+* Fixed bug onMapCreated event not working properly on android
+
 ## 2.1.0
 
 * Support render directions with MFDirectionsRenderer

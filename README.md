@@ -12,7 +12,7 @@ To use this plugin, add `map4d_map` as a dependency in your `pubspec.yaml` file.
 
 ```yaml
 dependencies:
-  map4d_map: ^2.1.0
+  map4d_map: ^2.1.1
 ```
 
 ## Minium Android/iOS SDK version support

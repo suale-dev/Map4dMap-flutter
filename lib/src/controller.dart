@@ -25,7 +25,8 @@ class MFMapViewController {
     switch (call.method) {
       case 'map#onMapReady':
         if (_mapState.widget.onMapCreated != null) {
-          final MFMapCreatedCallback? onMapCreated = _mapState.widget.onMapCreated;
+          final MFMapCreatedCallback? onMapCreated =
+              _mapState.widget.onMapCreated;
           if (onMapCreated != null) {
             onMapCreated(this);
           }
