@@ -1,3 +1,7 @@
+## 2.1.2
+
+* Update Map4dMap SDK dependencies to 2.0.9 and Map4dTypes to 1.1.0
+
 ## 2.1.1
 
 * Fixed bug onMapCreated event not working properly on android
