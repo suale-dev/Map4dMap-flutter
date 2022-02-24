@@ -267,6 +267,11 @@
       result(nil);
       break;
     }
+      
+    /* map # waitForMap */
+    case FMFMethodWaitForMap: {
+      result(nil);
+    }
 
     /* camera # move **/
     case FMFMethodMoveCamera: {

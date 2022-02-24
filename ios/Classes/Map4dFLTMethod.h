@@ -36,6 +36,9 @@ typedef enum : NSUInteger {
   // map#enable3DMode
   FMFMethodEnable3DMode,
   
+  // map#waitForMap
+  FMFMethodWaitForMap,
+  
   // camera#move
   FMFMethodMoveCamera,
   

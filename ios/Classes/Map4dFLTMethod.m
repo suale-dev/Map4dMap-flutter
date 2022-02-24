@@ -34,6 +34,7 @@
       @"map#getCameraPosition" : @(FMFMethodGetCameraPosition),
       @"map#getBounds": @(FMFMethodGetBounds),
       @"map#enable3DMode": @(FMFMethodEnable3DMode),
+      @"map#waitForMap": @(FMFMethodWaitForMap),
       /* camera **/
       @"camera#move": @(FMFMethodMoveCamera),
       @"camera#animate": @(FMFMethodAnimateCamera),
