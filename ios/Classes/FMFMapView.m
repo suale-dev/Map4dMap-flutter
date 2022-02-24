@@ -271,6 +271,7 @@
     /* map # waitForMap */
     case FMFMethodWaitForMap: {
       result(nil);
+      break;
     }
 
     /* camera # move **/
