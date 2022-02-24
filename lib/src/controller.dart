@@ -18,20 +18,16 @@ class MFMapViewController {
     _MFMapViewState mapState,
   ) async {
     final channel = MethodChannel('plugin:map4d-map-view-type_$mapId');
+    await _init(channel);
     return MFMapViewController._(mapId, mapState, channel);
+  }
+
+  static Future<void> _init(MethodChannel channel) {
+    return channel.invokeMethod<void>('map#waitForMap');
   }
 
   Future<dynamic> _handleMethodCall(MethodCall call) async {
     switch (call.method) {
-      case 'map#onMapReady':
-        if (_mapState.widget.onMapCreated != null) {
-          final MFMapCreatedCallback? onMapCreated =
-              _mapState.widget.onMapCreated;
-          if (onMapCreated != null) {
-            onMapCreated(this);
-          }
-        }
-        break;
       case 'camera#onMoveStarted':
         if (_mapState.widget.onCameraMoveStarted != null) {
           _mapState.widget.onCameraMoveStarted!();

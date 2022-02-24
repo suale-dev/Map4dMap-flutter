@@ -61,6 +61,7 @@ public final class FMFMapViewController implements
   private boolean poisEnabled = true;
   private boolean disposed = false;
   private final float density;
+  private MethodChannel.Result mapReadyResult;
 
   private Float minZoomPreference = null;
   private Float maxZoomPreference = null;
@@ -137,6 +138,10 @@ public final class FMFMapViewController implements
   public void onMapReady(Map4D map4D) {
     this.map4D = map4D;
     initialMapSettings();
+    if (mapReadyResult != null) {
+      mapReadyResult.success(null);
+      mapReadyResult = null;
+    }
     setMap4dListener(this);
     circlesController.setMap(map4D);
     polylinesController.setMap(map4D);
@@ -163,8 +168,6 @@ public final class FMFMapViewController implements
         methodChannel.invokeMethod("map#onModeChange", arguments);
       }
     });
-
-    methodChannel.invokeMethod("map#onMapReady", Collections.singletonMap("map", id));
   }
 
   private void initialMapSettings() {
@@ -211,6 +214,13 @@ public final class FMFMapViewController implements
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
     switch (call.method) {
+      case "map#waitForMap":
+        if (map4D != null) {
+          result.success(null);
+          return;
+        }
+        mapReadyResult = result;
+        break;
       case "camera#move": {
         final MFCameraUpdate cameraUpdate =
           Convert.toCameraUpdate(call.argument("cameraUpdate"), density);

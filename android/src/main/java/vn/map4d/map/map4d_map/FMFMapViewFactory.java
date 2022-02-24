@@ -16,6 +16,7 @@ public class FMFMapViewFactory extends PlatformViewFactory {
 
   private final BinaryMessenger binaryMessenger;
 
+  /** Store all mapViewController to use in map4d_map_utils flutter **/
   public static Map<Integer, FMFMapViewController> mapViewControllerMap;
 
   static {

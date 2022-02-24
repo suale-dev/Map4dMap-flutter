@@ -232,11 +232,9 @@ class _MFMapViewState extends State<MFMapView> {
   Future<void> onPlatformViewCreated(int id) async {
     final controller = await MFMapViewController.init(id, this);
     _controller.complete(controller);
-    if (defaultTargetPlatform == TargetPlatform.iOS) {
-      final MFMapCreatedCallback? onMapCreated = widget.onMapCreated;
-      if (onMapCreated != null) {
-        onMapCreated(controller);
-      }
+    final MFMapCreatedCallback? onMapCreated = widget.onMapCreated;
+    if (onMapCreated != null) {
+      onMapCreated(controller);
     }
   }
 
