@@ -46,6 +46,7 @@ class _Map4dSampleState extends State<Map4dSample> {
               onMapCreated: (MFMapViewController controller) {
                 _controller.complete(controller);
               },
+              mapType: MFMapType.raster,
               markers: Set<MFMarker>.of(markers.values),
               onPOITap: _onPOITap,
             ),
@@ -91,10 +92,12 @@ class _Map4dSampleState extends State<Map4dSample> {
 
   Future<void> _createMarkerImageFromAsset(BuildContext context) async {
     if (_markerIcon == null) {
-      final ImageConfiguration imageConfiguration =
-      createLocalImageConfiguration(context, size: Size.square(48));
-      _markerIcon = await MFBitmap.fromAssetImage(
-          imageConfiguration, 'assets/ic_marker_tracking.png');
+      final ImageConfiguration imageConfiguration = createLocalImageConfiguration(context, size: Size(100, 100));
+      MFBitmap bitmap = await MFBitmap.fromAssetImage(ImageConfiguration(size: Size(100, 100)), 'assets/ic_marker_tracking.png');
+      final markerIcon = await MFBitmap.fromAssetImage(imageConfiguration, 'assets/ic_marker_tracking.png');
+      print('bitmap: ${bitmap.toJson()}');
+      print('markerIcon: ${markerIcon.toJson()}');
+      _markerIcon = bitmap;
     }
     if (_markerIcon != null) {
       _add();

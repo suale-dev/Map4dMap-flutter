@@ -43,5 +43,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>Map4dMapAccessKey</key>
+	<string>21cd52290058ceabc0933df3353a298e</string>
 </dict>
 </plist>
