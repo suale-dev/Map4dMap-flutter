@@ -27,7 +27,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setMyLocationButtonEnabled:(BOOL)enabled;
 //TODO
 //- (nullable NSString *)setMapStyle:(NSString *)mapStyle;
-- (void)set3DModeEnabled:(BOOL)enabled;
 - (void)setWaterEffectEnabled:(BOOL)enabled;
 // Track
 - (void)setTrackCameraPosition:(BOOL)enabled;

@@ -263,7 +263,12 @@
     /* map # set 3D mode **/
     case FMFMethodEnable3DMode: {
       BOOL isEnable = [Map4dFLTConvert toBool:call.arguments[@"enable3DMode"]];
-      [_mapView enable3DMode: isEnable];
+      if (isEnable) {
+        _mapView.mapType = MFMapTypeMap3D;
+      }
+      else if (_mapView.mapType == MFMapTypeMap3D) {
+        _mapView.mapType = MFMapTypeRoadmap;
+      }
       result(nil);
       break;
     }
@@ -458,11 +463,19 @@
   id mapType = data[@"mapType"];
   if (mapType) {
     int type = [Map4dFLTConvert toInt:mapType];
-    if (type == 1) {
-      [self setMapType:MFMapTypeRaster];
-    }
-    else {
-      [self setMapType:MFMapTypeRoadmap];
+    switch (type) {
+      case 1:
+        [self setMapType:MFMapTypeRaster];
+        break;
+      case 2:
+        [self setMapType:MFMapTypeSatellite];
+        break;
+      case 3:
+        [self setMapType:MFMapTypeMap3D];
+        break;
+      default:
+        [self setMapType:MFMapTypeRoadmap];
+        break;
     }
   }
   
@@ -510,10 +523,6 @@
   NSNumber* myLocationButtonEnabled = data[@"myLocationButtonEnabled"];
   if (myLocationButtonEnabled != nil) {
     [self setMyLocationButtonEnabled:[Map4dFLTConvert toBool:myLocationButtonEnabled]];
-  }
-  NSNumber* mode3dEnabled = data[@"mode3dEnabled"];
-  if (mode3dEnabled != nil) {
-    [self set3DModeEnabled:[Map4dFLTConvert toBool:mode3dEnabled]];
   }
   NSNumber* waterEffectEnabled = data[@"waterEffectEnabled"];
   if (waterEffectEnabled != nil) {
@@ -570,10 +579,6 @@
 
 - (void)setMyLocationButtonEnabled:(BOOL)enabled {
   _mapView.settings.myLocationButton = enabled;
-}
-
-- (void)set3DModeEnabled:(BOOL)enabled {
-  [_mapView enable3DMode:enabled];
 }
 
 - (void)setWaterEffectEnabled:(BOOL)enabled {
@@ -675,10 +680,6 @@
   [_channel invokeMethod:@"map#didTapAtCoordinate" arguments:@{@"coordinate": response}];
 }
 
-- (void)mapView: (MFMapView*) mapView onModeChange: (bool) is3DMode {
-  [_channel invokeMethod:@"map#onModeChange" arguments:@{@"is3DMode": @(is3DMode)}];
-}
-
 ///* Called after a building annotation has been tapped */
 - (void)mapView: (MFMapView*)  mapView didTapBuilding: (MFBuilding*) building {
   if ([building.userData isKindOfClass:[NSArray class]]) {
@@ -741,8 +742,6 @@
 }
 
 //- (void)mapView: (MFMapView*)  mapView didTapMyLocation: (CLLocationCoordinate2D) location;
-//
-//- (BOOL)shouldChangeMapModeForMapView: (MFMapView*)  mapView;
 //- (BOOL)didTapMyLocationButtonForMapView: (MFMapView*) mapView;
 //- (UIView *) mapView: (MFMapView *) mapView markerInfoWindow: (MFMarker *) marker;
 
