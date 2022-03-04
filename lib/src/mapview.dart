@@ -44,6 +44,7 @@ class MFMapView extends StatefulWidget {
     this.onCameraMove,
     this.onCameraIdle,
     this.onTap,
+    @Deprecated('This method is no longer support, which is subject to removal in a future versions.')
     this.onModeChange,
     this.onPOITap,
     this.onBuildingTap,
@@ -135,6 +136,7 @@ class MFMapView extends StatefulWidget {
   final MFLatLngCallback? onTap;
 
   /// Called when map mode change from 2D -> 3D & 3D -> 2D
+  @Deprecated('This method is no longer support, which is subject to removal in a future versions.')
   final MFModeChangedCallback? onModeChange;
 
   /// Called after a base map POI has been tapped

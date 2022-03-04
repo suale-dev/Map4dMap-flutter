@@ -113,10 +113,6 @@ class MFMapViewController {
           onPlaceTap(name, location);
         }
         break;
-      case 'map#onModeChange':
-        final is3DMode = call.arguments['is3DMode'];
-        _mapState.widget.onModeChange!(is3DMode);
-        break;
       default:
         print('Unknow callback method: ${call.method}');
     }
@@ -169,6 +165,7 @@ class MFMapViewController {
         <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding});
   }
 
+  @Deprecated('This method was intended to set map type map 3D. It has been superseded by `MFMapView.mapType` property. This method is subject to removal in a future versions.')
   Future<void> enable3DMode(bool isEnable) {
     return _channel.invokeMethod<bool>(
         'map#enable3DMode', <String, Object>{'enable3DMode': isEnable});

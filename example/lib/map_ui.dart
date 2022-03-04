@@ -78,11 +78,29 @@ class MapUiBodyState extends State<MapUiBody> {
   }
 
   Widget _mapTypeToggler() {
-    var newType =
-        _mapType == MFMapType.raster ? MFMapType.roadmap : MFMapType.raster;
+    var newType = MFMapType.roadmap;
+    var text = '';
+    switch (_mapType) {
+      case MFMapType.roadmap:
+        text = 'Roadmap';
+        newType = MFMapType.raster;
+        break;
+      case MFMapType.raster:
+        text = 'Raster';
+        newType = MFMapType.satellite;
+        break;
+      case MFMapType.satellite:
+        text = 'Satellite';
+        newType = MFMapType.map3D;
+        break;
+      case MFMapType.map3D:
+        text = 'Map 3D';
+        newType = MFMapType.roadmap;
+        break;
+    }
     return TextButton(
       child: Text(
-          'Map Type: ${_mapType == MFMapType.raster ? 'RASTER' : 'ROADMAP'}'),
+          'Map Type: $text'),
       onPressed: () {
         setState(() {
           _mapType = newType;

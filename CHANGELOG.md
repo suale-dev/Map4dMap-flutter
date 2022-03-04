@@ -1,3 +1,10 @@
+## 2.2.0
+
+* Upgrade Map4dMap SDK dependencies to 2.1.0
+* Add 2 map type: satellite, map 3D
+* Deprecated MFMapViewController.enable3DMode and MFMapView.onModeChange
+* Fixed bugs & improve performance
+
 ## 2.1.3
 
 * Wait for map ready on android

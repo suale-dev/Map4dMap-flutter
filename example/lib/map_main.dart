@@ -95,11 +95,11 @@ class _MyAppState extends State<MyApp> {
             )
           ],
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: enable3Dmode,
-          tooltip: "MODE",
-          child: const Icon(Icons.mode_rounded),
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: enable3Dmode,
+        //   tooltip: "MODE",
+        //   child: const Icon(Icons.mode_rounded),
+        // ),
       ),
     );
   }
