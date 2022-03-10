@@ -159,15 +159,6 @@ public final class FMFMapViewController implements
     updateInitialBuildings();
     updateInitialTileOverlays();
     updateInitialDirectionsRenderers();
-
-    this.map4D.setOnMapModeChange(new Map4D.OnMapModeChangeListener() {
-      @Override
-      public void onMapModeChange(boolean is3DMode) {
-        final Map<String, Object> arguments = new HashMap<>(2);
-        arguments.put("is3DMode", is3DMode);
-        methodChannel.invokeMethod("map#onModeChange", arguments);
-      }
-    });
   }
 
   private void initialMapSettings() {
@@ -183,7 +174,6 @@ public final class FMFMapViewController implements
     if (mapType != null) {
       map4D.setMapType(mapType);
     }
-    map4D.enable3DMode(enable3DMode);
     map4D.setBuildingsEnabled(this.buildingsEnabled);
     map4D.setPOIsEnabled(this.poisEnabled);
     map4D.getUiSettings().setZoomGesturesEnabled(zoomGesturesEnabled);
@@ -238,7 +228,12 @@ public final class FMFMapViewController implements
       case "map#enable3DMode": {
         enable3DMode = call.argument("enable3DMode");
         if (map4D != null) {
-          map4D.enable3DMode(enable3DMode);
+          if (enable3DMode) {
+            map4D.setMapType(MFMapType.MAP3D);
+          }
+          else if (map4D.getMapType() == MFMapType.MAP3D) {
+            map4D.setMapType(MFMapType.ROADMAP);
+          }
         }
         result.success(null);
         break;

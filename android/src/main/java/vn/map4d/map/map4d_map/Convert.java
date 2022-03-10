@@ -157,8 +157,12 @@ class Convert {
     switch (mapType) {
       case 0:
         return MFMapType.ROADMAP;
-      default:
+      case 1:
         return MFMapType.RASTER;
+      case 2:
+        return MFMapType.SATELLITE;
+      default:
+        return MFMapType.MAP3D;
     }
   }
 
