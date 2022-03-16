@@ -7,6 +7,8 @@ typedef void MFCameraPositionCallback(MFCameraPosition position);
 
 typedef void MFLatLngCallback(MFLatLng coordinate);
 
+@Deprecated(
+    'This type is no longer support, which is subject to removal in a future versions.')
 typedef void MFModeChangedCallback(bool is3DMode);
 
 typedef void MFMapPOICallback(String placeId, String name, MFLatLng location);

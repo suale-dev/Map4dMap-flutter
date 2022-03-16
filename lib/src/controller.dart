@@ -165,7 +165,8 @@ class MFMapViewController {
         <String, dynamic>{'bounds': bounds.toJson(), 'padding': padding});
   }
 
-  @Deprecated('This method was intended to set map type map 3D. It has been superseded by `MFMapView.mapType` property. This method is subject to removal in a future versions.')
+  @Deprecated(
+      'This method was intended to set map type map 3D. It has been superseded by `MFMapView.mapType` property. This method is subject to removal in a future versions.')
   Future<void> enable3DMode(bool isEnable) {
     return _channel.invokeMethod<bool>(
         'map#enable3DMode', <String, Object>{'enable3DMode': isEnable});

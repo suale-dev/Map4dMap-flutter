@@ -99,8 +99,7 @@ class MapUiBodyState extends State<MapUiBody> {
         break;
     }
     return TextButton(
-      child: Text(
-          'Map Type: $text'),
+      child: Text('Map Type: $text'),
       onPressed: () {
         setState(() {
           _mapType = newType;
