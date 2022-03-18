@@ -35,8 +35,9 @@ class FMFMapViewBuilder implements FMFMapViewOptionsSink {
   FMFMapViewController build(
     int id,
     Context context,
-    BinaryMessenger binaryMessenger) {
-    final FMFMapViewController controller = new FMFMapViewController(context, id, binaryMessenger, initialCameraPosition);
+    BinaryMessenger binaryMessenger,
+    LifecycleProvider lifecycleProvider) {
+    final FMFMapViewController controller = new FMFMapViewController(context, id, binaryMessenger, lifecycleProvider, initialCameraPosition);
     controller.init();
     controller.setMinMaxZoomPreference(minZoomPreference, maxZoomPreference);
     controller.setMyLocationEnabled(myLocationEnabled);

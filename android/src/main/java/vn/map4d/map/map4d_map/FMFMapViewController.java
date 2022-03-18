@@ -3,11 +3,15 @@ package vn.map4d.map.map4d_map;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.DefaultLifecycleObserver;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -38,6 +43,8 @@ import vn.map4d.map.core.OnMapReadyCallback;
 import vn.map4d.types.MFLocationCoordinate;
 
 public final class FMFMapViewController implements
+  DefaultLifecycleObserver,
+  ActivityPluginBinding.OnSaveInstanceStateListener,
   PlatformView,
   OnMapReadyCallback,
   FMFMapViewOptionsSink,
@@ -50,6 +57,7 @@ public final class FMFMapViewController implements
   @Nullable
   private MFMapView mapView;
   private final Context context;
+  private final LifecycleProvider lifecycleProvider;
   private boolean myLocationEnabled = false;
   private boolean myLocationButtonEnabled = false;
   private boolean trackCameraPosition = false;
@@ -88,13 +96,19 @@ public final class FMFMapViewController implements
   private List<Object> initialDirectionsRenderers;
   private List<Map<String, ?>> initialTileOverlays;
 
-  FMFMapViewController(@NonNull Context context, int id, BinaryMessenger binaryMessenger, @Nullable MFCameraPosition initialCameraPosition) {
+  FMFMapViewController(
+    @NonNull Context context,
+    int id,
+    BinaryMessenger binaryMessenger,
+    LifecycleProvider lifecycleProvider,
+    @Nullable MFCameraPosition initialCameraPosition) {
     this.mapView = new MFMapView(context, null);
     this.id = id;
     this.context = context;
     this.density = context.getResources().getDisplayMetrics().density;
     this.methodChannel = new MethodChannel(binaryMessenger, "plugin:map4d-map-view-type_" + id);
     methodChannel.setMethodCallHandler(this);
+    this.lifecycleProvider = lifecycleProvider;
     this.initialCameraPosition = initialCameraPosition;
     this.circlesController = new FMFCirclesController(methodChannel, density);
     this.polylinesController = new FMFPolylinesController(methodChannel, density);
@@ -107,6 +121,7 @@ public final class FMFMapViewController implements
   }
 
   void init() {
+    lifecycleProvider.getLifecycle().addObserver(this);
     this.mapView.getMapAsync(this);
   }
 
@@ -132,6 +147,10 @@ public final class FMFMapViewController implements
     methodChannel.setMethodCallHandler(null);
     setMap4dListener(null);
     destroyMapViewIfNecessary();
+    Lifecycle lifecycle = lifecycleProvider.getLifecycle();
+    if (lifecycle != null) {
+      lifecycle.removeObserver(this);
+    }
   }
 
   @Override
@@ -802,5 +821,55 @@ public final class FMFMapViewController implements
     arguments.put("name", name);
     arguments.put("location", Convert.latLngToJson(location));
     methodChannel.invokeMethod("map#onTapPlace", arguments);
+  }
+
+  // DefaultLifecycleObserver
+  @Override
+  public void onCreate(@NonNull LifecycleOwner owner) {
+    if (disposed) {
+      return;
+    }
+    mapView.onCreate(null);
+  }
+
+  @Override
+  public void onStart(@NonNull LifecycleOwner owner) {
+    if (disposed) {
+      return;
+    }
+    mapView.onStart();
+  }
+
+  @Override
+  public void onStop(@NonNull LifecycleOwner owner) {
+    if (disposed) {
+      return;
+    }
+    mapView.onStop();
+  }
+
+  @Override
+  public void onDestroy(@NonNull LifecycleOwner owner) {
+    owner.getLifecycle().removeObserver(this);
+    if (disposed) {
+      return;
+    }
+    destroyMapViewIfNecessary();
+  }
+
+  @Override
+  public void onSaveInstanceState(@NonNull Bundle bundle) {
+    if (disposed) {
+      return;
+    }
+    mapView.onSaveInstanceState(bundle);
+  }
+
+  @Override
+  public void onRestoreInstanceState(@Nullable Bundle bundle) {
+    if (disposed) {
+      return;
+    }
+    mapView.onCreate(bundle);
   }
 }

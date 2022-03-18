@@ -15,6 +15,7 @@ import vn.map4d.map.camera.MFCameraPosition;
 public class FMFMapViewFactory extends PlatformViewFactory {
 
   private final BinaryMessenger binaryMessenger;
+  private final LifecycleProvider lifecycleProvider;
 
   /** Store all mapViewController to use in map4d_map_utils flutter **/
   public static Map<Integer, FMFMapViewController> mapViewControllerMap;
@@ -25,9 +26,10 @@ public class FMFMapViewFactory extends PlatformViewFactory {
     }
   }
 
-  public FMFMapViewFactory(BinaryMessenger binaryMessenger) {
+  public FMFMapViewFactory(BinaryMessenger binaryMessenger, LifecycleProvider lifecycleProvider) {
     super(StandardMessageCodec.INSTANCE);
     this.binaryMessenger = binaryMessenger;
+    this.lifecycleProvider = lifecycleProvider;
   }
 
   @Override
@@ -65,7 +67,7 @@ public class FMFMapViewFactory extends PlatformViewFactory {
       builder.setInitialDirectionsRenderers(creationParams.get("directionsRenderersToAdd"));
     }
 
-    FMFMapViewController controller = builder.build(viewId, context, binaryMessenger);
+    FMFMapViewController controller = builder.build(viewId, context, binaryMessenger, lifecycleProvider);
     mapViewControllerMap.put(viewId, controller);
 
     return controller;
