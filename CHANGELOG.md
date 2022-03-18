@@ -1,3 +1,7 @@
+## 2.2.1
+
+* Update lifecycle for Android
+
 ## 2.2.0
 
 * Upgrade Map4dMap SDK dependencies to 2.1.0
