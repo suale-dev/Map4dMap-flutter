@@ -1,3 +1,7 @@
+## 2.2.2
+
+* Override onPause() and onResume() for lifecycle.
+
 ## 2.2.1
 
 * Update lifecycle for Android
