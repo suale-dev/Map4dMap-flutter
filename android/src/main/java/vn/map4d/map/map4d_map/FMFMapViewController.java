@@ -841,6 +841,14 @@ public final class FMFMapViewController implements
   }
 
   @Override
+  public void onResume(@NonNull LifecycleOwner owner) {
+  }
+
+  @Override
+  public void onPause(@NonNull LifecycleOwner owner) {
+  }
+
+  @Override
   public void onStop(@NonNull LifecycleOwner owner) {
     if (disposed) {
       return;
