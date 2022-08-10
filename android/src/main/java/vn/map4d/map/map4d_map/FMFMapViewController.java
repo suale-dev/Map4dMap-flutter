@@ -207,6 +207,7 @@ public final class FMFMapViewController implements
     map4D.setOnCameraMoveListener(listener);
     map4D.setOnCameraIdleListener(listener);
     map4D.setOnMarkerClickListener(listener);
+    map4D.setOnInfoWindowClickListener(listener);
     map4D.setOnMarkerDragListener(listener);
     map4D.setOnPolygonClickListener(listener);
     map4D.setOnPolylineClickListener(listener);
