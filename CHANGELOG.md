@@ -1,3 +1,7 @@
+## 2.3.0
+
+* Upgrade Map4dMap SDK dependencies to 2.4.0
+
 ## 2.2.2
 
 * Override onPause() and onResume() for lifecycle.
