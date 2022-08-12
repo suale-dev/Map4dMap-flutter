@@ -278,6 +278,25 @@
       result(nil);
       break;
     }
+    
+    /* map # convert latlng to screen coordinate */
+    case FMFMethodGetScreenCoordinate: {
+      CLLocationCoordinate2D coordinate = [Map4dFLTConvert toLocation:call.arguments[@"latLng"]];
+      CGPoint point = [_mapView.projection pointForCoordinate:coordinate];
+      result(@{
+        @"x": @((int)round(point.x)),
+        @"y": @((int)round(point.y))
+      });
+      break;
+    }
+      
+    /* map # convert screen coordinate to latlng */
+    case FMFMethodGetLatLng: {
+      CGPoint point = [Map4dFLTConvert pointFromJson:call.arguments[@"coordinate"]];
+      CLLocationCoordinate2D coordinate = [_mapView.projection coordinateForPoint:point];
+      result([Map4dFLTConvert locationToJson:coordinate]);
+      break;
+    }
 
     /* camera # move **/
     case FMFMethodMoveCamera: {

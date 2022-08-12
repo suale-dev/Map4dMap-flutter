@@ -30,6 +30,12 @@
   return CLLocationCoordinate2DMake([Map4dFLTConvert toDouble:data[0]], [Map4dFLTConvert toDouble:data[1]]);
 }
 
++ (CGPoint)pointFromJson:(NSDictionary *)data {
+  NSNumber *x = data[@"x"];
+  NSNumber *y = data[@"y"];
+  return CGPointMake([x integerValue], [y integerValue]);
+}
+
 + (CGPoint)toPoint:(NSArray*)data {
   return CGPointMake([Map4dFLTConvert toDouble:data[0]], [Map4dFLTConvert toDouble:data[1]]);
 }

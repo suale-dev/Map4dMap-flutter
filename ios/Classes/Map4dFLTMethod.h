@@ -39,6 +39,12 @@ typedef enum : NSUInteger {
   // map#waitForMap
   FMFMethodWaitForMap,
   
+  // map#getScreenCoordinate
+  FMFMethodGetScreenCoordinate,
+  
+  // map#getLatLng
+  FMFMethodGetLatLng,
+  
   // camera#move
   FMFMethodMoveCamera,
   

@@ -95,11 +95,11 @@ class _MyAppState extends State<MyApp> {
             )
           ],
         ),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: enable3Dmode,
-        //   tooltip: "MODE",
-        //   child: const Icon(Icons.mode_rounded),
-        // ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: enable3Dmode,
+          tooltip: "MODE",
+          child: const Icon(Icons.mode_rounded),
+        ),
       ),
     );
   }
@@ -144,7 +144,14 @@ class _MyAppState extends State<MyApp> {
 
   void enable3Dmode() {
     _is3DMode = !_is3DMode;
-    _controller.enable3DMode(_is3DMode);
+    // _controller.enable3DMode(_is3DMode);
+    const p = MFScreenCoordinate(x: 100, y: 200);
+    _controller.getLatLng(p).then((latlng) {
+      print('Convert point ${p.toJson()} to latlng: ${latlng.toJson()}');
+      _controller.getScreenCoordinate(latlng).then((value) => {
+        print('Convert latlng: ${latlng.toJson()} to value: ${value.toJson()}')
+      });
+    });
   }
 
   void onTap(MFLatLng coordinate) {
