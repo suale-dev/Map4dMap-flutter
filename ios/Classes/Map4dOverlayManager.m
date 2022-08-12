@@ -6,7 +6,9 @@
 //
 
 #import "Map4dOverlayManager.h"
+#import "Map4dFLTConvert.h"
 #import "FMFTileOverlay.h"
+#import "FMFImageOverlay.h"
 
 @interface Map4dOverlayManager()
 
@@ -15,6 +17,7 @@
 @property(nonatomic, weak) NSObject<FlutterPluginRegistrar>* registrar;
 
 @property(nonatomic, strong) NSMutableDictionary* tileOverlays;
+@property(nonatomic, strong) NSMutableDictionary* imageOverlays;
 
 @end
 
@@ -31,6 +34,7 @@
     _registrar = registrar;
     _mapView = mapView;
     _tileOverlays = [NSMutableDictionary dictionaryWithCapacity:1];
+    _imageOverlays = [NSMutableDictionary dictionaryWithCapacity:1];
   }
   return self;
 }
@@ -77,6 +81,36 @@
   FMFTileOverlay* overlay = _tileOverlays[tileOverlayId];
   if (overlay != nil) {
     [overlay clearTileCache];
+  }
+}
+
+- (void)addImageOverlays:(NSArray *)imageOverlaysToAdd {
+  for (NSDictionary *options in imageOverlaysToAdd) {
+    NSString *overlayId = options[@"imageOverlayId"];
+    UIImage *image = [Map4dFLTConvert extractIcon:options[@"image"] registrar:_registrar];
+    MFCoordinateBounds *bounds = [Map4dFLTConvert toCoordinateBounds:options[@"bounds"]];
+    FMFImageOverlay *imageOverlay = [[FMFImageOverlay alloc] initWithImage:image bounds:bounds];
+    [imageOverlay interpretOptions:options];
+    [imageOverlay addToMapView:_mapView];
+    _imageOverlays[overlayId] = imageOverlay;
+  }
+}
+
+- (void)changeImageOverlays:(NSArray *)imageOverlaysToChange {
+  for (NSDictionary *options in imageOverlaysToChange) {
+    NSString *overlayId = options[@"imageOverlayId"];
+    FMFImageOverlay *overlay = _imageOverlays[overlayId];
+    [overlay interpretOptions:options];
+  }
+}
+
+- (void)removeImageOverlayIds:(NSArray *)imageOverlayIdsToRemove {
+  for (NSString *overlayId in imageOverlayIdsToRemove) {
+    FMFImageOverlay *overlay = _imageOverlays[overlayId];
+    if (overlay) {
+      [overlay removeFromMapView];
+      [_imageOverlays removeObjectForKey:overlayId];
+    }
   }
 }
 

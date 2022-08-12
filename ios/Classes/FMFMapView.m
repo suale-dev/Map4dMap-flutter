@@ -178,10 +178,18 @@
   _overlayManager = [[Map4dOverlayManager alloc] init:_channel
                                               mapView:_mapView
                                             registrar:_registrar];
+  {
+    id tileOverlaysToAdd = args[@"tileOverlaysToAdd"];
+    if ([tileOverlaysToAdd isKindOfClass:[NSArray class]]) {
+      [_overlayManager addTileOverlays:tileOverlaysToAdd];
+    }
+  }
   
-  id tileOverlaysToAdd = args[@"tileOverlaysToAdd"];
-  if ([tileOverlaysToAdd isKindOfClass:[NSArray class]]) {
-    [_overlayManager addTileOverlays:tileOverlaysToAdd];
+  {
+    id imageOverlaysToAdd = args[@"imageOverlaysToAdd"];
+    if ([imageOverlaysToAdd isKindOfClass:[NSArray class]]) {
+      [_overlayManager addImageOverlays:imageOverlaysToAdd];
+    }
   }
 }
 
@@ -442,6 +450,24 @@
     case FMFMethodTileOverlaysClearTileCache: {
       id rawTileOverlayId = call.arguments[@"tileOverlayId"];
       [_overlayManager clearTileOverlayCache:rawTileOverlayId];
+      result(nil);
+      break;
+    }
+
+    /* image overlay # update **/
+    case FMFMethodImageOverlaysUpdate: {
+      id imageOverlaysToAdd = call.arguments[@"imageOverlaysToAdd"];
+      if ([imageOverlaysToAdd isKindOfClass:[NSArray class]]) {
+        [_overlayManager addImageOverlays:imageOverlaysToAdd];
+      }
+      id imageOverlaysToChange = call.arguments[@"imageOverlaysToChange"];
+      if ([imageOverlaysToChange isKindOfClass:[NSArray class]]) {
+        [_overlayManager changeImageOverlays:imageOverlaysToChange];
+      }
+      id imageOverlayIdsToRemove = call.arguments[@"imageOverlayIdsToRemove"];
+      if ([imageOverlayIdsToRemove isKindOfClass:[NSArray class]]) {
+        [_overlayManager removeImageOverlayIds:imageOverlayIdsToRemove];
+      }
       result(nil);
       break;
     }

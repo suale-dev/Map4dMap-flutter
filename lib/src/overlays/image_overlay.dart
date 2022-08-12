@@ -1,3 +1,4 @@
+import 'dart:ui' show hashValues;
 import 'package:flutter/foundation.dart';
 import 'package:map4d_map/map4d_map.dart';
 import 'package:meta/meta.dart' show immutable;
@@ -48,16 +49,14 @@ class MFImageOverlay implements MapsObject {
   /// Creates a new [MFImageOverlay] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
   MFImageOverlay copyWith({
-    MFBitmap? imageParam,
-    MFLatLngBounds? boundsParam,
     double? transparencyParam,
     int? zIndexParam,
     bool? visibleParam,
   }) {
     return MFImageOverlay(
       imageOverlayId: imageOverlayId,
-      image: imageParam ?? image,
-      bounds: boundsParam ?? bounds,
+      image: image,
+      bounds: bounds,
       transparency: transparencyParam ?? transparency,
       zIndex: zIndexParam ?? zIndex,
       visible: visibleParam ?? visible,
@@ -101,5 +100,5 @@ class MFImageOverlay implements MapsObject {
   }
 
   @override
-  int get hashCode => imageOverlayId.hashCode;
+  int get hashCode => hashValues(imageOverlayId, image, bounds, transparency, zIndex, visible);
 }

@@ -57,6 +57,9 @@ typedef enum : NSUInteger {
   // tileOverlays#clearTileCache
   FMFMethodTileOverlaysClearTileCache,
   
+  // imageOverlays#update
+  FMFMethodImageOverlaysUpdate,
+  
   // poi#update
   FMFMethodPOIUpdate,
   

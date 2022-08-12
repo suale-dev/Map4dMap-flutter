@@ -22,6 +22,10 @@
 - (void)removeTileOverlayIds:(NSArray *)tileOverlayIdsToRemove;
 - (void)clearTileOverlayCache:(NSString *)tileOverlayId;
 
+- (void)addImageOverlays:(NSArray *)imageOverlaysToAdd;
+- (void)changeImageOverlays:(NSArray *)imageOverlaysToChange;
+- (void)removeImageOverlayIds:(NSArray *)imageOverlayIdsToRemove;
+
 @end
 
 #endif /* Map4dOverlayManager_h */

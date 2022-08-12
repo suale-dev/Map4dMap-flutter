@@ -50,6 +50,7 @@
       /* overlays **/
       @"tileOverlays#update": @(FMFMethodTileOverlaysUpdate),
       @"tileOverlays#clearTileCache": @(FMFMethodTileOverlaysClearTileCache),
+      @"imageOverlays#update": @(FMFMethodImageOverlaysUpdate),
       /* directions renderer **/
       @"directionsRenderers#update": @(FMFMethodDirectionsRenderersUpdate)
     };
