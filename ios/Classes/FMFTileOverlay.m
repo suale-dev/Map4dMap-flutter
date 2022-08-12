@@ -43,13 +43,18 @@
 }
 
 //
-- (void)interpretTileOverlayOptions:(NSDictionary*)data {
-  NSNumber* visible = data[@"visible"];
+- (void)interpretTileOverlayOptions:(NSDictionary *)data {
+  NSNumber *transparency = data[@"transparency"];
+  if (transparency) {
+    _overlay.opacity = 1.0 - transparency.doubleValue;
+  }
+  
+  NSNumber *visible = data[@"visible"];
   if (visible != nil) {
     [self setVisible:[Map4dFLTConvert toBool:visible]];
   }
   
-  NSNumber* zIndex = data[@"zIndex"];
+  NSNumber *zIndex = data[@"zIndex"];
   if (zIndex != nil) {
     [self setZIndex:[Map4dFLTConvert toInt:zIndex]];
   }
