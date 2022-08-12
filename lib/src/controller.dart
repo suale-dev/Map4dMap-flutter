@@ -192,7 +192,7 @@ class MFMapViewController {
 
   /// Returns the [LatLng] for a `screenCoordinate` (in pixels) of the viewport.
   Future<MFLatLng> getLatLng(MFScreenCoordinate screenCoordinate) async {
-    final Map<String, dynamic> latLng = (await _channel.invokeMapMethod<String, dynamic>('map#getLatLng', <String, dynamic>{'coordinate': screenCoordinate.toJson()}))!;
+    final List<dynamic> latLng = (await _channel.invokeListMethod<dynamic>('map#getLatLng', <String, dynamic>{'coordinate': screenCoordinate.toJson()}))!;
     return MFLatLng.fromJson(latLng)!;
   }
 
