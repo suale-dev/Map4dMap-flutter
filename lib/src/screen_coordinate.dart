@@ -27,14 +27,12 @@ class MFScreenCoordinate {
     };
   }
 
-  /// Initialize a MFScreenCoordinate from an \[x, y\] array.
+  /// Initialize a MFScreenCoordinate from a map.
   static MFScreenCoordinate? fromJson(Object? json) {
-    if (json == null) {
+    if (json == null || !(json is Map<dynamic, dynamic>)) {
       return null;
     }
-    assert(json is List && json.length == 2);
-    final list = json as List;
-    return MFScreenCoordinate(x: list[0], y: list[1]);
+    return MFScreenCoordinate(x: json['x'], y: json['y']);
   }
 
   @override
