@@ -180,9 +180,20 @@ class MFMapViewController {
   /// in-memory cache of tiles. If you want to cache tiles for longer, you
   /// should implement an on-disk cache.
   Future<void> clearTileCache(MFTileOverlayId tileOverlayId) async {
-    assert(tileOverlayId != null);
     return _channel.invokeMethod<void>('tileOverlays#clearTileCache',
         <String, Object>{'tileOverlayId': tileOverlayId.value});
+  }
+
+  /// Returns the [MFScreenCoordinate] for a given viewport [LatLng].
+  Future<MFScreenCoordinate> getScreenCoordinate(MFLatLng latLng) async {
+    final Map<String, dynamic> coordinate = (await _channel.invokeMapMethod<String, dynamic>('map#getScreenCoordinate', <String, dynamic>{'latLng': latLng.toJson()}))!;
+    return MFScreenCoordinate.fromJson(coordinate)!;
+  }
+
+  /// Returns the [LatLng] for a `screenCoordinate` (in pixels) of the viewport.
+  Future<MFLatLng> getLatLng(MFScreenCoordinate screenCoordinate) async {
+    final Map<String, dynamic> latLng = (await _channel.invokeMapMethod<String, dynamic>('map#getLatLng', <String, dynamic>{'coordinate': screenCoordinate.toJson()}))!;
+    return MFLatLng.fromJson(latLng)!;
   }
 
   /// Updates configuration options of the map user interface.
@@ -192,7 +203,6 @@ class MFMapViewController {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updateMapOptions(Map<String, dynamic> optionsUpdate) {
-    assert(optionsUpdate != null);
     return _channel.invokeMethod<void>(
       'map#update',
       <String, dynamic>{'options': optionsUpdate},
@@ -206,9 +216,15 @@ class MFMapViewController {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updateTileOverlays(TileOverlayUpdates tileOverlayUpdates) {
-    assert(tileOverlayUpdates != null);
     return _channel.invokeMethod<void>(
         'tileOverlays#update', tileOverlayUpdates.toJson());
+  }
+
+
+  /// Updates image overlays configuration.
+  Future<void> _updateImageOverlays(ImageOverlayUpdates imageOverlayUpdates) {
+    return _channel.invokeMethod<void>(
+        'imageOverlays#update', imageOverlayUpdates.toJson());
   }
 
   /// Updates POI configuration.
@@ -218,7 +234,6 @@ class MFMapViewController {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updatePOIs(POIUpdates poiUpdates) {
-    assert(poiUpdates != null);
     return _channel.invokeMethod<void>('poi#update', poiUpdates.toJson());
   }
 
@@ -229,7 +244,6 @@ class MFMapViewController {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updateBuildings(BuildingUpdates buildingUpdates) {
-    assert(buildingUpdates != null);
     return _channel.invokeMethod<void>(
         'building#update', buildingUpdates.toJson());
   }
@@ -241,7 +255,6 @@ class MFMapViewController {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updatePolylines(PolylineUpdates polylineUpdates) {
-    assert(polylineUpdates != null);
     return _channel.invokeMethod<void>(
         'polylines#update', polylineUpdates.toJson());
   }
@@ -253,7 +266,6 @@ class MFMapViewController {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updatePolygons(PolygonUpdates polygonUpdates) {
-    assert(polygonUpdates != null);
     return _channel.invokeMethod<void>(
         'polygons#update', polygonUpdates.toJson());
   }
@@ -265,7 +277,6 @@ class MFMapViewController {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updateCircles(CircleUpdates circleUpdates) {
-    assert(circleUpdates != null);
     return _channel.invokeMethod<void>(
         'circles#update', circleUpdates.toJson());
   }
@@ -277,7 +288,6 @@ class MFMapViewController {
   ///
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updateMarkers(MarkerUpdates markerUpdates) {
-    assert(markerUpdates != null);
     return _channel.invokeMethod<void>(
         'markers#update', markerUpdates.toJson());
   }
@@ -290,7 +300,6 @@ class MFMapViewController {
   /// The returned [Future] completes after listeners have been notified.
   Future<void> _updateDirectionsRenderers(
       DirectionsRendererUpdates rendererUpdates) {
-    assert(rendererUpdates != null);
     return _channel.invokeMethod<void>(
         'directionsRenderers#update', rendererUpdates.toJson());
   }

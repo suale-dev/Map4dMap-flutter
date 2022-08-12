@@ -17,16 +17,18 @@ class MFTileOverlay implements MapsObject {
   const MFTileOverlay._({
     required this.tileOverlayId,
     this.urlPattern = '',
+    this.transparency = 0.0,
     this.zIndex = 0,
     this.visible = true,
-  });
+  }) : assert(transparency >= 0.0 && transparency <= 1.0);
 
   static MFTileOverlay newWithUrlPattern(
       MFTileOverlayId tileOverlayId, String urlPattern,
-      {int zIndex = 0, bool visible = true}) {
+      {double transparency = 0.0, int zIndex = 0, bool visible = true}) {
     return MFTileOverlay._(
         tileOverlayId: tileOverlayId,
         urlPattern: urlPattern,
+        transparency: transparency,
         zIndex: zIndex,
         visible: visible);
   }
@@ -39,6 +41,9 @@ class MFTileOverlay implements MapsObject {
 
   final String urlPattern;
 
+  /// The transparency of the tile overlay. The default transparency is 0 (opaque).
+  final double transparency;
+
   /// The tile overlay's zIndex, i.e., the order in which it will be drawn where
   /// overlays with larger values are drawn above those with lower values
   final int zIndex;
@@ -49,12 +54,14 @@ class MFTileOverlay implements MapsObject {
   /// Creates a new [MFTileOverlay] object whose values are the same as this instance,
   /// unless overwritten by the specified parameters.
   MFTileOverlay copyWith({
+    double? transparencyParam,
     int? zIndexParam,
     bool? visibleParam,
   }) {
     return MFTileOverlay._(
       tileOverlayId: tileOverlayId,
       urlPattern: urlPattern,
+      transparency: transparencyParam ?? transparency,
       zIndex: zIndexParam ?? zIndex,
       visible: visibleParam ?? visible,
     );
@@ -74,6 +81,7 @@ class MFTileOverlay implements MapsObject {
 
     addIfPresent('tileOverlayId', tileOverlayId.value);
     addIfPresent('urlPattern', urlPattern);
+    addIfPresent('transparency', transparency);
     addIfPresent('zIndex', zIndex);
     addIfPresent('visible', visible);
 
@@ -88,10 +96,11 @@ class MFTileOverlay implements MapsObject {
     return other is MFTileOverlay &&
         tileOverlayId == other.tileOverlayId &&
         urlPattern == other.urlPattern &&
+        transparency == other.transparency &&
         zIndex == other.zIndex &&
         visible == other.visible;
   }
 
   @override
-  int get hashCode => hashValues(tileOverlayId, urlPattern, zIndex, visible);
+  int get hashCode => hashValues(tileOverlayId, urlPattern, transparency, zIndex, visible);
 }
